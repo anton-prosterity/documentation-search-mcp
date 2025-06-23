@@ -212,6 +212,32 @@
                 "trending": "hot"
             },
             "tags": ["ai", "llm", "claude", "api"]
+        },
+        "promptflow": {
+            "url": "https://microsoft.github.io/promptflow/",
+            "category": "ai-framework",
+            "popularity": {
+                "overall_score": 78,
+                "github_stars": "8000+",
+                "learning_curve": "moderate",
+                "job_market": "growing",
+                "maturity": "evolving",
+                "trending": "hot"
+            },
+            "tags": ["ai", "llm", "workflows", "microsoft", "python"]
+        },
+        "autogen": {
+            "url": "https://microsoft.github.io/autogen/",
+            "category": "ai-framework",
+            "popularity": {
+                "overall_score": 83,
+                "github_stars": "15000+",
+                "learning_curve": "moderate",
+                "job_market": "hot",
+                "maturity": "evolving",
+                "trending": "explosive"
+            },
+            "tags": ["ai", "multi-agent", "llm", "microsoft", "python"]
         }
     },
     "popularity_weights": {
@@ -225,7 +251,7 @@
         "language": ["python", "javascript"],
         "web-framework": ["fastapi", "django", "flask", "express"],
         "frontend-framework": ["react"],
-        "ai-framework": ["langchain"],
+        "ai-framework": ["langchain", "promptflow", "autogen"],
         "ai-service": ["openai", "anthropic"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws"],
