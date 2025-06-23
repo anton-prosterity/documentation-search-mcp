@@ -135,6 +135,32 @@
             },
             "tags": ["cloud", "infrastructure", "devops", "scalability"]
         },
+        "google-cloud": {
+            "url": "https://cloud.google.com/docs",
+            "category": "cloud-platform",
+            "popularity": {
+                "overall_score": 90,
+                "github_stars": "N/A",
+                "learning_curve": "steep",
+                "job_market": "excellent",
+                "maturity": "very-stable",
+                "trending": "growing"
+            },
+            "tags": ["cloud", "infrastructure", "devops", "ai", "ml"]
+        },
+        "azure": {
+            "url": "https://docs.microsoft.com/en-us/azure/",
+            "category": "cloud-platform",
+            "popularity": {
+                "overall_score": 89,
+                "github_stars": "N/A",
+                "learning_curve": "steep",
+                "job_market": "excellent",
+                "maturity": "very-stable",
+                "trending": "growing"
+            },
+            "tags": ["cloud", "infrastructure", "devops", "microsoft", "enterprise"]
+        },
         "docker": {
             "url": "https://docs.docker.com/reference/",
             "category": "devops-tool",
@@ -254,7 +280,7 @@
         "ai-framework": ["langchain", "promptflow", "autogen"],
         "ai-service": ["openai", "anthropic"],
         "runtime": ["nodejs"],
-        "cloud-platform": ["aws"],
+        "cloud-platform": ["aws", "google-cloud", "azure"],
         "devops-tool": ["docker", "kubernetes"],
         "data-science": ["pandas", "streamlit"]
     }
