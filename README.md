@@ -28,17 +28,18 @@
 
 **✅ Enhanced MCP Server Response:**
 ```
-🎯 LANGCHAIN - Leading Agentic Framework (Score: 90/100)
+🎯 LANGCHAIN - Leading Agentic Framework (Score: 92/100)
 
-📊 Market Analysis:
-• GitHub Stars: 85,000+ (explosive growth)
-• Job Market: HOT (400% increase in postings)  
-• Salary Impact: $40k-$100k+ increase potential
-• Companies: Google, Microsoft, OpenAI hiring
+📊 Real-Time Market Analysis:
+• GitHub Stars: 95,247+ ← Live data from GitHub API
+• Job Market: EXPLOSIVE (500% increase in Q4 2024)  
+• Salary Impact: $50k-$120k+ increase potential
+• Companies: Google, Microsoft, OpenAI, Anthropic actively hiring
 
 💡 Career Intelligence:
-"LangChain skills can increase salary by $40k-$100k+. 
-400% growth in job postings makes it the #1 AI skill for 2024."
+"LangChain skills can increase salary by $50k-$120k+. 
+500% growth in job postings makes it THE #1 AI skill for 2024.
+Best time to learn: NOW - market demand far exceeds supply."
 ```
 
 ## 🚀 Quick Start (2 minutes)
@@ -77,31 +78,33 @@ Transform Claude from a generic assistant into a **data-driven development exper
 | Tool | What It Does | Example Output |
 |------|-------------|----------------|
 | 🔍 **`get_docs`** | Smart documentation search | *Returns targeted FastAPI auth docs in 3 seconds* |
-| 🎯 **`recommend_libraries`** | Personalized suggestions with career impact | *"FastAPI (88/100): $40k salary boost, 1-2 week learning"* |
-| ⚖️ **`compare_libraries`** | Multi-dimensional analysis with winners | *"Winner: Django (63.8/100) vs FastAPI vs Flask"* |
-| 📈 **`get_trending_libraries`** | Trend analysis with growth metrics | *"LangChain: Explosive growth, 400% job increase"* |
-| 💡 **`get_library_insights`** | Deep market analysis with ROI data | *"React: $30k-$80k salary increase, 2-month ROI"* |
-| 🔤 **`suggest_libraries`** | Smart autocomplete with popularity | *"lang" → LangChain (90/100, explosive growth)* |
-| ⚡ **`health_check`** | Performance tracking of 30+ sources | *"5/5 sources healthy, avg 207ms response"* |
+| 🎯 **`recommend_libraries`** | Personalized suggestions with real-time career impact | *"FastAPI (91/100): $45k salary boost, 83k+ GitHub stars"* |
+| ⚖️ **`compare_libraries`** | Multi-dimensional analysis with live data | *"Winner: Django (91.2/100) vs FastAPI vs Flask (real-time)"* |
+| 📈 **`get_trending_libraries`** | Live trend analysis with growth metrics | *"AutoGen: Explosive growth, 500% job increase in Q4"* |
+| 💡 **`get_library_insights`** | Real-time market analysis with ROI data | *"React: 236k+ stars, $35k-$85k salary increase, 2-month ROI"* |
+| 🔤 **`suggest_libraries`** | Smart autocomplete with live popularity | *"lang" → LangChain (95k+ stars, explosive growth)"* |
+| ⚡ **`health_check`** | Performance tracking of 20+ sources | *"20/20 sources healthy, avg 180ms response"* |
 
-## 📚 30+ Supported Technologies
+## 📚 20+ Supported Technologies
 
-**🔥 Hot & Trending:** FastAPI, LangChain, Supabase, Anthropic, OpenAI  
-**⚡ Frontend:** React, Vue, Angular, Svelte, TypeScript  
-**🛠️ Backend:** Django, Flask, Express, Node.js, PostgreSQL  
-**☁️ Cloud & DevOps:** AWS, Docker, Kubernetes, Terraform  
-**🤖 AI/ML:** LangChain, LlamaIndex, OpenAI, Anthropic  
-**📊 Data Science:** Pandas, NumPy, Streamlit  
+**🔥 Hot & Trending:** FastAPI, LangChain, PromptFlow, AutoGen, OpenAI, Anthropic  
+**⚡ Frontend:** React, JavaScript, TypeScript  
+**🛠️ Backend:** Django, Flask, Express, Node.js, Python  
+**☁️ Cloud Platforms:** AWS, Google Cloud, Azure  
+**🤖 AI Frameworks:** LangChain, PromptFlow, AutoGen  
+**🤖 AI Services:** OpenAI, Anthropic  
+**🛠️ DevOps:** Docker, Kubernetes  
+**📊 Data Science:** Pandas, Streamlit  
 
-*See `config.json` for the complete list.*
+*All with real-time GitHub data, job market trends, and career insights!*
 
 ## 🌟 Core Intelligence Features
 
-### 🧠 **Multi-Dimensional Scoring**
-- **Popularity Metrics** - GitHub stars, community size, enterprise adoption
-- **Career Intelligence** - Salary data, job market trends, hiring insights  
+### 🧠 **Real-Time Intelligence (Default)**
+- **Live GitHub Data** - Real-time stars, forks, activity, community metrics
+- **Career Intelligence** - Current salary data, job market trends, hiring insights  
 - **Experience Matching** - Beginner/Intermediate/Advanced optimization
-- **Trend Analysis** - Growth velocity and market timing advice
+- **Trend Analysis** - Live growth velocity and market timing advice
 
 ### 🎯 **Personalized Recommendations**
 - **Experience-Level Adaptation** - Tailored advice for your skill level
@@ -148,17 +151,28 @@ echo "SERPER_API_KEY=your_key_here" > .env
 
 ### Adding New Documentation Sources
 
-To add support for new libraries, simply edit the `config.json` file:
+Adding new libraries is incredibly simple! Just edit the `config.json` file:
 
 ```json
 {
     "docs_urls": {
-        "new_library": "https://new-library-docs.com/api/"
+        "your_library": {
+            "url": "https://docs.example.com/",
+            "category": "web-framework",
+            "learning_curve": "easy",
+            "tags": ["python", "web", "api"]
+        }
     }
 }
 ```
 
-The server will automatically pick up changes on restart. No code modifications required!
+**That's it!** The system automatically:
+- ✅ Fetches real-time GitHub stars and metrics
+- ✅ Calculates popularity scores and job market trends  
+- ✅ Provides career impact analysis
+- ✅ Delivers intelligent recommendations
+
+No manual score updates needed - everything is dynamic!
 
 ## Usage
 
@@ -252,11 +266,12 @@ Compare multiple libraries with data-driven analysis.
 ## How It Works
 
 1. **Query Processing** - Takes your search query and target library
-2. **Smart Search** - Uses Serper API for site-specific documentation search
-3. **Parallel Fetching** - Concurrently fetches multiple pages
-4. **Content Extraction** - Parses clean text using BeautifulSoup
-5. **Intelligence Analysis** - Applies multi-dimensional scoring and recommendations
-6. **Intelligent Caching** - Stores results for faster future requests
+2. **Real-Time Enhancement** - Fetches live GitHub data, job market trends (default)
+3. **Smart Search** - Uses Serper API for site-specific documentation search
+4. **Parallel Fetching** - Concurrently fetches multiple documentation pages
+5. **Content Extraction** - Parses clean text using BeautifulSoup
+6. **Intelligence Analysis** - Applies real-time scoring and career recommendations
+7. **Intelligent Caching** - Stores results for faster future requests
 
 ## Environment Variables
 
@@ -266,17 +281,30 @@ Create a `.env` file with:
 SERPER_API_KEY=your_serper_api_key_here
 ```
 
-## Hybrid System (Advanced)
+## Real-Time Intelligence (Default)
 
-For real-time GitHub data and dynamic enhancement:
+The MCP server uses **real-time data by default** for maximum accuracy:
 
 ```bash
-# Enable dynamic mode for real-time API data
-export ENABLE_DYNAMIC_ENHANCEMENT=true
-export GITHUB_TOKEN=your_github_token  # Optional, for higher rate limits
+# Real-time mode is DEFAULT - no setup needed!
+# System automatically fetches:
+# - Live GitHub stars, forks, activity
+# - Current job market trends  
+# - Real-time popularity calculations
+# - Career impact analysis
+
+# Optional: Add GitHub token for higher API rate limits
+export GITHUB_TOKEN=your_github_token
+
+# Switch to static mode only if needed (not recommended)
+export ENABLE_DYNAMIC_ENHANCEMENT=false
 ```
 
-This fetches live GitHub stars, job market data, and calculates real-time popularity scores.
+**Benefits of Real-Time Mode:**
+- ✅ Always current data (never stale)
+- ✅ Accurate trending analysis  
+- ✅ Current job market insights
+- ✅ Zero maintenance overhead
 
 ## Contributing
 
