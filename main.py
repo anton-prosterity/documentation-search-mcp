@@ -111,9 +111,13 @@ cache = SimpleCache(
 
 async def search_web_with_retry(query: str, max_retries: int = 3) -> dict:
     """Search web with exponential backoff retry logic"""
+    if not SERPER_API_KEY:
+        print("⚠️ SERPER_API_KEY not set - web search functionality will be limited")
+        return {"organic": []}
+    
     payload = json.dumps({"q": query, "num": 2})
     headers = {
-        "X-API-KEY": os.getenv("SERPER_API_KEY"),
+        "X-API-KEY": SERPER_API_KEY,
         "Content-Type": "application/json",
         "User-Agent": USER_AGENT
     }
@@ -226,16 +230,15 @@ async def fetch_url(url: str) -> str:
 
 @mcp.tool()
 async def get_docs(query: str, library: str):
-    f"""
+    """
     Search the latest docs for a given query and library.
-    Supports: {', '.join(sorted(docs_urls.keys()))}
 
     Args:
         query: The query to search for (e.g. "Chroma DB")
         library: The library to search in (e.g. "langchain")
 
     Returns:
-        Text from the docs
+        Text from the docs (limited to ~50KB for readability)
     """
     
     if library not in docs_urls:
@@ -255,11 +258,27 @@ async def get_docs(query: str, library: str):
     contents = await asyncio.gather(*tasks, return_exceptions=True)
     
     text = ""
+    max_length = 50000  # Limit to ~50KB for better readability
+    
     for i, content in enumerate(contents):
         if isinstance(content, Exception):
-            text += f"\n[Error fetching {results['organic'][i]['link']}: {content}]\n"
+            error_msg = f"\n[Error fetching {results['organic'][i]['link']}: {content}]\n"
+            if len(text) + len(error_msg) > max_length:
+                text += f"\n... [Results truncated at {max_length} characters for readability] ..."
+                break
+            text += error_msg
         else:
-            text += f"\n--- Source: {results['organic'][i]['link']} ---\n{content}\n"
+            source_header = f"\n--- Source: {results['organic'][i]['link']} ---\n"
+            new_content = source_header + content + "\n"
+            
+            if len(text) + len(new_content) > max_length:
+                # Add partial content if we have room
+                remaining_space = max_length - len(text) - 100  # Leave room for truncation message
+                if remaining_space > 500:  # Only add if we have meaningful space
+                    text += source_header + content[:remaining_space] + "\n"
+                text += f"\n... [Results truncated at {max_length} characters for readability] ..."
+                break
+            text += new_content
     
     return text.strip()
 
@@ -482,16 +501,16 @@ async def recommend_libraries(use_case: str, experience_level: str = "intermedia
                 if experience_level != "beginner" and popularity.get("trending") in ["hot", "explosive"]:
                     relevance_score += 7
                 
-                    recommendations.append({
-                        "library": lib_name,
-                        "score": min(relevance_score, 100),
-                        "popularity": popularity,
-                        "category": enhanced_lib_data.get("category", "unknown"),
-                        "tags": lib_tags,
-                        "url": enhanced_lib_data.get("url", ""),
-                        "reasoning": f"Score: {min(relevance_score, 100)}/100, Learning: {learning_curve}, Market: {popularity.get('job_market', 'unknown')}",
-                        "data_source": "real-time" if ENABLE_DYNAMIC_ENHANCEMENT and dynamic_enhancer else "static"
-                    })
+                recommendations.append({
+                    "library": lib_name,
+                    "score": min(relevance_score, 100),
+                    "popularity": popularity,
+                    "category": enhanced_lib_data.get("category", "unknown"),
+                    "tags": lib_tags,
+                    "url": enhanced_lib_data.get("url", ""),
+                    "reasoning": f"Score: {min(relevance_score, 100)}/100, Learning: {learning_curve}, Market: {popularity.get('job_market', 'unknown')}",
+                    "data_source": "real-time" if ENABLE_DYNAMIC_ENHANCEMENT and dynamic_enhancer else "static"
+                })
     
     # Sort by relevance score
     recommendations.sort(key=lambda x: x["score"], reverse=True)
