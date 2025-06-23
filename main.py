@@ -71,7 +71,7 @@ def load_config():
     return config
 
 # Dynamic enhancement support
-ENABLE_DYNAMIC_ENHANCEMENT = os.getenv("ENABLE_DYNAMIC_ENHANCEMENT", "false").lower() == "true"
+ENABLE_DYNAMIC_ENHANCEMENT = os.getenv("ENABLE_DYNAMIC_ENHANCEMENT", "true").lower() == "true"
 
 if ENABLE_DYNAMIC_ENHANCEMENT:
     try:
@@ -84,7 +84,7 @@ if ENABLE_DYNAMIC_ENHANCEMENT:
         ENABLE_DYNAMIC_ENHANCEMENT = False
 else:
     dynamic_enhancer = None
-    print("📊 Using static configuration (set ENABLE_DYNAMIC_ENHANCEMENT=true for real-time data)")
+    print("📊 Using static configuration (set ENABLE_DYNAMIC_ENHANCEMENT=false to disable real-time data)")
 
 # Load configuration
 config = load_config()
