@@ -1,8 +1,8 @@
 {
     "cache": {
-        "enabled": true,
         "ttl_hours": 24,
-        "max_entries": 1000
+        "max_entries": 1000,
+        "enabled": true
     },
     "docs_urls": {
         "python": {
@@ -11,14 +11,38 @@
             "popularity": {
                 "overall_score": 95,
                 "github_stars": "50000+",
-                "community_size": "huge",
                 "learning_curve": "moderate",
                 "job_market": "excellent",
-                "maturity": "stable",
-                "last_updated": "2024-12",
-                "trending": "stable"
+                "maturity": "very-stable",
+                "trending": "stable",
+                "community_size": "growing",
+                "last_updated": "2024-12"
             },
-            "tags": ["programming-language", "backend", "data-science", "ai"]
+            "tags": [
+                "programming-language",
+                "backend",
+                "data-science",
+                "ai"
+            ]
+        },
+        "javascript": {
+            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+            "category": "language",
+            "popularity": {
+                "overall_score": 93,
+                "github_stars": "N/A",
+                "learning_curve": "moderate",
+                "job_market": "excellent",
+                "maturity": "very-stable",
+                "trending": "stable",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "programming-language",
+                "frontend",
+                "backend"
+            ]
         },
         "react": {
             "url": "https://react.dev/reference/react",
@@ -26,14 +50,19 @@
             "popularity": {
                 "overall_score": 92,
                 "github_stars": "220000+",
-                "community_size": "huge",
                 "learning_curve": "moderate",
                 "job_market": "excellent",
                 "maturity": "stable",
-                "last_updated": "2024-12",
-                "trending": "growing"
+                "trending": "growing",
+                "community_size": "huge",
+                "last_updated": "2024-12"
             },
-            "tags": ["frontend", "ui", "javascript", "spa"]
+            "tags": [
+                "frontend",
+                "ui",
+                "javascript",
+                "spa"
+            ]
         },
         "fastapi": {
             "url": "https://fastapi.tiangolo.com/",
@@ -41,29 +70,39 @@
             "popularity": {
                 "overall_score": 88,
                 "github_stars": "70000+",
-                "community_size": "large",
                 "learning_curve": "easy",
                 "job_market": "growing",
                 "maturity": "stable",
-                "last_updated": "2024-12",
-                "trending": "hot"
+                "trending": "hot",
+                "community_size": "large",
+                "last_updated": "2024-12"
             },
-            "tags": ["python", "api", "async", "modern"]
+            "tags": [
+                "python",
+                "api",
+                "async",
+                "modern"
+            ]
         },
         "django": {
             "url": "https://docs.djangoproject.com/en/4.2/",
-            "category": "web-framework", 
+            "category": "web-framework",
             "popularity": {
                 "overall_score": 85,
                 "github_stars": "75000+",
-                "community_size": "huge",
                 "learning_curve": "steep",
                 "job_market": "excellent",
                 "maturity": "very-stable",
-                "last_updated": "2024-11",
-                "trending": "stable"
+                "trending": "stable",
+                "community_size": "large",
+                "last_updated": "2024-12"
             },
-            "tags": ["python", "web", "orm", "full-stack"]
+            "tags": [
+                "python",
+                "web",
+                "orm",
+                "full-stack"
+            ]
         },
         "langchain": {
             "url": "https://python.langchain.com/docs/get_started/introduction/",
@@ -71,14 +110,19 @@
             "popularity": {
                 "overall_score": 90,
                 "github_stars": "85000+",
-                "community_size": "large",
                 "learning_curve": "moderate",
                 "job_market": "hot",
                 "maturity": "evolving",
-                "last_updated": "2024-12",
-                "trending": "explosive"
+                "trending": "explosive",
+                "community_size": "large",
+                "last_updated": "2024-12"
             },
-            "tags": ["ai", "llm", "python", "chains"]
+            "tags": [
+                "ai",
+                "llm",
+                "python",
+                "chains"
+            ]
         },
         "nodejs": {
             "url": "https://nodejs.org/api/documentation.html",
@@ -86,14 +130,199 @@
             "popularity": {
                 "overall_score": 89,
                 "github_stars": "100000+",
-                "community_size": "huge",
                 "learning_curve": "moderate",
                 "job_market": "excellent",
                 "maturity": "stable",
-                "last_updated": "2024-12",
-                "trending": "stable"
+                "trending": "stable",
+                "community_size": "huge",
+                "last_updated": "2024-12"
             },
-            "tags": ["javascript", "runtime", "backend", "npm"]
+            "tags": [
+                "javascript",
+                "runtime",
+                "backend",
+                "npm"
+            ]
+        },
+        "flask": {
+            "url": "https://flask.palletsprojects.com/en/2.3.x/",
+            "category": "web-framework",
+            "popularity": {
+                "overall_score": 80,
+                "github_stars": "65000+",
+                "learning_curve": "easy",
+                "job_market": "growing",
+                "maturity": "stable",
+                "trending": "stable",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "python",
+                "web",
+                "lightweight",
+                "flexible"
+            ]
+        },
+        "express": {
+            "url": "https://expressjs.com/en/api.html",
+            "category": "web-framework",
+            "popularity": {
+                "overall_score": 87,
+                "github_stars": "63000+",
+                "learning_curve": "easy",
+                "job_market": "excellent",
+                "maturity": "stable",
+                "trending": "stable",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "javascript",
+                "nodejs",
+                "web",
+                "api"
+            ]
+        },
+        "aws": {
+            "url": "https://docs.aws.amazon.com/index.html",
+            "category": "cloud-platform",
+            "popularity": {
+                "overall_score": 94,
+                "github_stars": "N/A",
+                "learning_curve": "steep",
+                "job_market": "excellent",
+                "maturity": "very-stable",
+                "trending": "growing",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "cloud",
+                "infrastructure",
+                "devops",
+                "scalability"
+            ]
+        },
+        "docker": {
+            "url": "https://docs.docker.com/reference/",
+            "category": "devops-tool",
+            "popularity": {
+                "overall_score": 91,
+                "github_stars": "68000+",
+                "learning_curve": "moderate",
+                "job_market": "excellent",
+                "maturity": "stable",
+                "trending": "stable",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "containers",
+                "devops",
+                "deployment",
+                "infrastructure"
+            ]
+        },
+        "kubernetes": {
+            "url": "https://kubernetes.io/docs/home/",
+            "category": "devops-tool",
+            "popularity": {
+                "overall_score": 89,
+                "github_stars": "106000+",
+                "learning_curve": "steep",
+                "job_market": "hot",
+                "maturity": "stable",
+                "trending": "growing",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "orchestration",
+                "containers",
+                "devops",
+                "scaling"
+            ]
+        },
+        "pandas": {
+            "url": "https://pandas.pydata.org/docs/",
+            "category": "data-science",
+            "popularity": {
+                "overall_score": 86,
+                "github_stars": "41000+",
+                "learning_curve": "moderate",
+                "job_market": "hot",
+                "maturity": "stable",
+                "trending": "stable",
+                "community_size": "medium",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "python",
+                "data-analysis",
+                "data-science",
+                "dataframes"
+            ]
+        },
+        "streamlit": {
+            "url": "https://docs.streamlit.io/en/stable/",
+            "category": "data-science",
+            "popularity": {
+                "overall_score": 82,
+                "github_stars": "31000+",
+                "learning_curve": "easy",
+                "job_market": "growing",
+                "maturity": "evolving",
+                "trending": "hot",
+                "community_size": "medium",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "python",
+                "data-apps",
+                "visualization",
+                "prototyping"
+            ]
+        },
+        "openai": {
+            "url": "https://platform.openai.com/docs/api-reference/introduction",
+            "category": "ai-service",
+            "popularity": {
+                "overall_score": 93,
+                "github_stars": "N/A",
+                "learning_curve": "easy",
+                "job_market": "explosive",
+                "maturity": "evolving",
+                "trending": "explosive",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "ai",
+                "llm",
+                "gpt",
+                "api"
+            ]
+        },
+        "anthropic": {
+            "url": "https://docs.anthropic.com/en/docs/api-reference/overview",
+            "category": "ai-service",
+            "popularity": {
+                "overall_score": 85,
+                "github_stars": "N/A",
+                "learning_curve": "easy",
+                "job_market": "hot",
+                "maturity": "evolving",
+                "trending": "hot",
+                "community_size": "growing",
+                "last_updated": "2024-12"
+            },
+            "tags": [
+                "ai",
+                "llm",
+                "claude",
+                "api"
+            ]
         }
     },
     "popularity_weights": {
@@ -104,10 +333,39 @@
         "trending": 0.1
     },
     "categories": {
-        "language": ["python", "javascript"],
-        "web-framework": ["fastapi", "django", "flask", "express"],
-        "frontend-framework": ["react"],
-        "ai-framework": ["langchain", "llama-index"],
-        "runtime": ["nodejs"]
+        "language": [
+            "python",
+            "javascript"
+        ],
+        "web-framework": [
+            "fastapi",
+            "django",
+            "flask",
+            "express"
+        ],
+        "frontend-framework": [
+            "react"
+        ],
+        "ai-framework": [
+            "langchain"
+        ],
+        "ai-service": [
+            "openai",
+            "anthropic"
+        ],
+        "runtime": [
+            "nodejs"
+        ],
+        "cloud-platform": [
+            "aws"
+        ],
+        "devops-tool": [
+            "docker",
+            "kubernetes"
+        ],
+        "data-science": [
+            "pandas",
+            "streamlit"
+        ]
     }
-} 
+}
