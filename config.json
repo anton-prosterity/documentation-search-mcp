@@ -124,17 +124,120 @@
             "category": "ai-framework",
             "learning_curve": "moderate",
             "tags": ["ai", "multi-agent", "llm", "microsoft", "python"]
+        },
+        "numpy": {
+            "url": "https://numpy.org/doc/stable/",
+            "category": "data-science",
+            "learning_curve": "moderate",
+            "tags": ["python", "numerical", "arrays", "scientific-computing"]
+        },
+        "matplotlib": {
+            "url": "https://matplotlib.org/stable/contents.html",
+            "category": "data-science",
+            "learning_curve": "moderate",
+            "tags": ["python", "visualization", "plotting", "charts"]
+        },
+        "scikit-learn": {
+            "url": "https://scikit-learn.org/stable/user_guide.html",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["python", "machine-learning", "ml", "algorithms"]
+        },
+        "transformers": {
+            "url": "https://huggingface.co/docs/transformers/index",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["ai", "nlp", "transformers", "huggingface", "pytorch"]
+        },
+        "datasets": {
+            "url": "https://huggingface.co/docs/datasets/index",
+            "category": "ai-framework",
+            "learning_curve": "easy",
+            "tags": ["ai", "data", "huggingface", "ml-datasets"]
+        },
+        "accelerate": {
+            "url": "https://huggingface.co/docs/accelerate/index",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["ai", "pytorch", "distributed", "huggingface"]
+        },
+        "spacy": {
+            "url": "https://spacy.io/usage/spacy-101",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["nlp", "python", "text-processing", "linguistics"]
+        },
+        "networkx": {
+            "url": "https://networkx.org/documentation/stable/",
+            "category": "data-science",
+            "learning_curve": "moderate",
+            "tags": ["python", "graphs", "networks", "analysis"]
+        },
+        "requests": {
+            "url": "https://requests.readthedocs.io/en/latest/",
+            "category": "python-library",
+            "learning_curve": "easy",
+            "tags": ["python", "http", "api", "web-requests"]
+        },
+        "pillow": {
+            "url": "https://pillow.readthedocs.io/en/stable/",
+            "category": "python-library",
+            "learning_curve": "easy",
+            "tags": ["python", "image-processing", "pil", "graphics"]
+        },
+        "pymupdf": {
+            "url": "https://pymupdf.readthedocs.io/en/latest/",
+            "category": "python-library",
+            "learning_curve": "moderate",
+            "tags": ["python", "pdf", "document-processing", "text-extraction"]
+        },
+        "faiss-cpu": {
+            "url": "https://faiss.ai/",
+            "category": "ai-framework",
+            "learning_curve": "steep",
+            "tags": ["ai", "vector-search", "similarity", "facebook"]
+        },
+        "rank-bm25": {
+            "url": "https://github.com/dorianbrown/rank_bm25",
+            "category": "ai-framework",
+            "learning_curve": "easy",
+            "tags": ["python", "information-retrieval", "ranking", "search"]
+        },
+        "tqdm": {
+            "url": "https://tqdm.github.io/",
+            "category": "python-library",
+            "learning_curve": "easy",
+            "tags": ["python", "progress-bar", "utilities", "cli"]
+        },
+        "ipywidgets": {
+            "url": "https://ipywidgets.readthedocs.io/en/stable/",
+            "category": "data-science",
+            "learning_curve": "easy",
+            "tags": ["python", "jupyter", "widgets", "interactive"]
+        },
+        "rdflib": {
+            "url": "https://rdflib.readthedocs.io/en/stable/",
+            "category": "python-library",
+            "learning_curve": "steep",
+            "tags": ["python", "semantic-web", "rdf", "knowledge-graphs"]
+        },
+        "pyvis": {
+            "url": "https://pyvis.readthedocs.io/en/latest/",
+            "category": "data-science",
+            "learning_curve": "easy",
+            "tags": ["python", "network-visualization", "graphs", "interactive"]
         }
     },
     "categories": {
         "language": ["python", "javascript"],
         "web-framework": ["fastapi", "django", "flask", "express"],
         "frontend-framework": ["react"],
-        "ai-framework": ["langchain", "promptflow", "autogen"],
+        "ai-framework": ["langchain", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25"],
         "ai-service": ["openai", "anthropic"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
         "devops-tool": ["docker", "kubernetes"],
-        "data-science": ["pandas", "streamlit"]
+        "data-science": ["pandas", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis"],
+        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib"]
     }
 } 
