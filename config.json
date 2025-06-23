@@ -23,6 +23,24 @@
             "learning_curve": "moderate",
             "tags": ["frontend", "ui", "javascript", "spa"]
         },
+        "typescript": {
+            "url": "https://www.typescriptlang.org/docs/",
+            "category": "language",
+            "learning_curve": "moderate",
+            "tags": ["programming-language", "javascript", "static-typing", "frontend", "backend"]
+        },
+        "svelte": {
+            "url": "https://svelte.dev/docs",
+            "category": "frontend-framework",
+            "learning_curve": "easy",
+            "tags": ["frontend", "ui", "javascript", "spa", "reactive"]
+        },
+        "tailwind": {
+            "url": "https://tailwindcss.com/docs",
+            "category": "css-framework",
+            "learning_curve": "easy",
+            "tags": ["css", "utility-first", "styling", "frontend", "design"]
+        },
         "fastapi": {
             "url": "https://fastapi.tiangolo.com/",
             "category": "web-framework",
@@ -229,9 +247,10 @@
         }
     },
     "categories": {
-        "language": ["python", "javascript"],
+        "language": ["python", "javascript", "typescript"],
         "web-framework": ["fastapi", "django", "flask", "express"],
-        "frontend-framework": ["react"],
+        "frontend-framework": ["react", "svelte"],
+        "css-framework": ["tailwind"],
         "ai-framework": ["langchain", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25"],
         "ai-service": ["openai", "anthropic"],
         "runtime": ["nodejs"],
