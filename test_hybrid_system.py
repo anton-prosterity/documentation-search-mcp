@@ -97,39 +97,34 @@ async def test_hybrid_system():
     except Exception as e:
         print(f"⚠️  Comparison failed: {e}")
     
-    # Test 5: Simple config demonstration
-    print("\n📝 TEST 4: Simple Config Demonstration")
+    # Test 5: Configuration overview
+    print("\n📝 TEST 4: Configuration Overview")
     print("-" * 40)
     
-    # Show simple config size vs full config
+    # Show current config structure
     try:
-        with open("simple_config.json", "r") as f:
-            simple_config = json.load(f)
-        
         with open("config.json", "r") as f:
             full_config = json.load(f)
         
-        simple_size = len(json.dumps(simple_config))
         full_size = len(json.dumps(full_config))
-        reduction = ((full_size - simple_size) / full_size) * 100
+        lib_count = len(full_config["docs_urls"])
         
-        print(f"📁 Simple config: {simple_size:,} bytes")
-        print(f"📁 Full config: {full_size:,} bytes")
-        print(f"📉 Size reduction: {reduction:.1f}%")
+        print(f"📁 Config size: {full_size:,} bytes")
+        print(f"📚 Libraries supported: {lib_count}")
         
-        # Show what's in simple config
-        simple_lib = list(simple_config["docs_urls"].values())[0]
-        print(f"\n📋 Simple config contains:")
-        for key in simple_lib.keys():
+        # Show what's in config
+        sample_lib = list(full_config["docs_urls"].values())[0]
+        print(f"\n📋 Config structure:")
+        for key in sample_lib.keys():
             print(f"   ✅ {key}")
         
-        print(f"\n📋 What gets added dynamically:")
-        dynamic_fields = ["popularity", "metrics", "github_stars", "job_market", "trending"]
+        print(f"\n📋 Dynamic mode enhances with real-time:")
+        dynamic_fields = ["live GitHub stars", "current job market data", "real-time trending analysis"]
         for field in dynamic_fields:
             print(f"   🚀 {field}")
     
     except FileNotFoundError:
-        print("📁 Simple config not found - using full config")
+        print("📁 Config file not found")
     
     print("\n✅ HYBRID SYSTEM TEST COMPLETE")
     print("=" * 60)
