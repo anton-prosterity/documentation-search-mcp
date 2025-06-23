@@ -65,9 +65,26 @@ class SimpleCache:
 
 # Load configuration from external file
 def load_config():
+    """Load configuration with enhanced popularity data"""
     with open("config.json", "r") as f:
         config = json.load(f)
     return config
+
+# Dynamic enhancement support
+ENABLE_DYNAMIC_ENHANCEMENT = os.getenv("ENABLE_DYNAMIC_ENHANCEMENT", "false").lower() == "true"
+
+if ENABLE_DYNAMIC_ENHANCEMENT:
+    try:
+        from dynamic_enhancer import DynamicEnhancer
+        dynamic_enhancer = DynamicEnhancer()
+        print("🚀 Dynamic enhancement enabled - real-time API data will be used")
+    except ImportError:
+        print("⚠️ Dynamic enhancer not available, falling back to static config")
+        dynamic_enhancer = None
+        ENABLE_DYNAMIC_ENHANCEMENT = False
+else:
+    dynamic_enhancer = None
+    print("📊 Using static configuration (set ENABLE_DYNAMIC_ENHANCEMENT=true for real-time data)")
 
 # Load configuration
 config = load_config()
@@ -376,6 +393,28 @@ async def get_cache_stats():
         "memory_usage_estimate": f"{len(str(cache.cache)) / 1024:.2f} KB"
     }
 
+async def enhance_library_data_if_enabled(lib_name: str, lib_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Enhance library data with real-time APIs if dynamic enhancement is enabled"""
+    if ENABLE_DYNAMIC_ENHANCEMENT and dynamic_enhancer:
+        # Check cache first
+        cache_key = f"enhanced_{lib_name}"
+        if cache:
+            cached = cache.get(cache_key)
+            if cached:
+                return json.loads(cached)
+        
+        try:
+            enhanced = await dynamic_enhancer.enhance_library(lib_name, lib_data)
+            # Cache for 6 hours (SimpleCache doesn't use TTL parameter)
+            if cache:
+                cache.set(cache_key, json.dumps(enhanced))
+            return enhanced
+        except Exception as e:
+            print(f"⚠️ Dynamic enhancement failed for {lib_name}: {e}")
+            return lib_data
+    
+    return lib_data
+
 @mcp.tool()
 async def recommend_libraries(use_case: str, experience_level: str = "intermediate"):
     """
@@ -414,13 +453,18 @@ async def recommend_libraries(use_case: str, experience_level: str = "intermedia
     recommendations = []
     
     for lib_name, lib_data in docs_data.items():
-        if isinstance(lib_data, dict) and "popularity" in lib_data:
-            # Check if library matches use case
-            lib_tags = lib_data.get("tags", [])
-            tag_match = any(tag in lib_tags for tag in relevant_tags)
+        if isinstance(lib_data, dict):
+            # Enhance with real-time data if available
+            enhanced_lib_data = await enhance_library_data_if_enabled(lib_name, lib_data)
             
-            if tag_match or not relevant_tags:  # Include all if no specific use case
-                popularity = lib_data["popularity"]
+            # Check if enhanced data has popularity metrics (or use static)
+            if "popularity" in enhanced_lib_data:
+                # Check if library matches use case
+                lib_tags = enhanced_lib_data.get("tags", [])
+                tag_match = any(tag in lib_tags for tag in relevant_tags)
+                
+                if tag_match or not relevant_tags:  # Include all if no specific use case
+                    popularity = enhanced_lib_data["popularity"]
                 
                 # Calculate relevance score
                 relevance_score = popularity["overall_score"]
@@ -438,15 +482,16 @@ async def recommend_libraries(use_case: str, experience_level: str = "intermedia
                 if experience_level != "beginner" and popularity.get("trending") in ["hot", "explosive"]:
                     relevance_score += 7
                 
-                recommendations.append({
-                    "library": lib_name,
-                    "score": min(relevance_score, 100),
-                    "popularity": popularity,
-                    "category": lib_data.get("category", "unknown"),
-                    "tags": lib_tags,
-                    "url": lib_data.get("url", ""),
-                    "reasoning": f"Score: {min(relevance_score, 100)}/100, Learning: {learning_curve}, Market: {popularity.get('job_market', 'unknown')}"
-                })
+                    recommendations.append({
+                        "library": lib_name,
+                        "score": min(relevance_score, 100),
+                        "popularity": popularity,
+                        "category": enhanced_lib_data.get("category", "unknown"),
+                        "tags": lib_tags,
+                        "url": enhanced_lib_data.get("url", ""),
+                        "reasoning": f"Score: {min(relevance_score, 100)}/100, Learning: {learning_curve}, Market: {popularity.get('job_market', 'unknown')}",
+                        "data_source": "real-time" if ENABLE_DYNAMIC_ENHANCEMENT and dynamic_enhancer else "static"
+                    })
     
     # Sort by relevance score
     recommendations.sort(key=lambda x: x["score"], reverse=True)
@@ -480,8 +525,12 @@ async def compare_libraries(library_names: list):
     for lib_name in library_names:
         if lib_name in docs_data and isinstance(docs_data[lib_name], dict):
             lib_data = docs_data[lib_name]
-            if "popularity" in lib_data:
-                popularity = lib_data["popularity"]
+            
+            # Enhance with real-time data if available
+            enhanced_lib_data = await enhance_library_data_if_enabled(lib_name, lib_data)
+            
+            if "popularity" in enhanced_lib_data:
+                popularity = enhanced_lib_data["popularity"]
                 
                 # Calculate weighted score
                 weights = config.get("popularity_weights", {})
@@ -504,9 +553,10 @@ async def compare_libraries(library_names: list):
                     "job_market": popularity.get("job_market", "unknown"),
                     "maturity": popularity.get("maturity", "unknown"),
                     "trending": popularity.get("trending", "stable"),
-                    "category": lib_data.get("category", "unknown"),
+                    "category": enhanced_lib_data.get("category", "unknown"),
                     "pros": _get_library_pros(popularity),
-                    "cons": _get_library_cons(popularity)
+                    "cons": _get_library_cons(popularity),
+                    "data_source": "real-time" if ENABLE_DYNAMIC_ENHANCEMENT and dynamic_enhancer else "static"
                 })
     
     if comparison["libraries"]:
