@@ -357,7 +357,7 @@ class DynamicEnhancer:
             "last_updated": datetime.now().strftime("%Y-%m")
         }
 
-async def enhance_simple_config(config_file: str = "simple_config.json") -> Dict[str, Any]:
+async def enhance_simple_config(config_file: str = "config.json") -> Dict[str, Any]:
     """Enhance simple config with real-time data"""
     
     # Load simple config
