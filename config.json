@@ -1,4 +1,9 @@
 {
+    "cache": {
+        "ttl_hours": 24,
+        "max_entries": 1000,
+        "enabled": true
+    },
     "docs_urls": {
         "python": "https://docs.python.org/3/",
         "javascript": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
