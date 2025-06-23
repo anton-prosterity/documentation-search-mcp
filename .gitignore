@@ -9,3 +9,11 @@ wheels/
 # Virtual environments
 .venv
 .env
+
+# Local documentation files (not tracked in git)
+CURSOR_COMMUNITY_POST.md
+DEMO_VIDEO_SCRIPT.md
+DYNAMIC_CONFIG_ANALYSIS.md
+HYBRID_SETUP_GUIDE.md
+TECHNICAL_DEEP_DIVE.md
+TEST_CURSOR_INTEGRATION.md
