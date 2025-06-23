@@ -1,0 +1,113 @@
+{
+    "cache": {
+        "enabled": true,
+        "ttl_hours": 24,
+        "max_entries": 1000
+    },
+    "docs_urls": {
+        "python": {
+            "url": "https://docs.python.org/3/",
+            "category": "language",
+            "popularity": {
+                "overall_score": 95,
+                "github_stars": "50000+",
+                "community_size": "huge",
+                "learning_curve": "moderate",
+                "job_market": "excellent",
+                "maturity": "stable",
+                "last_updated": "2024-12",
+                "trending": "stable"
+            },
+            "tags": ["programming-language", "backend", "data-science", "ai"]
+        },
+        "react": {
+            "url": "https://react.dev/reference/react",
+            "category": "frontend-framework",
+            "popularity": {
+                "overall_score": 92,
+                "github_stars": "220000+",
+                "community_size": "huge",
+                "learning_curve": "moderate",
+                "job_market": "excellent",
+                "maturity": "stable",
+                "last_updated": "2024-12",
+                "trending": "growing"
+            },
+            "tags": ["frontend", "ui", "javascript", "spa"]
+        },
+        "fastapi": {
+            "url": "https://fastapi.tiangolo.com/",
+            "category": "web-framework",
+            "popularity": {
+                "overall_score": 88,
+                "github_stars": "70000+",
+                "community_size": "large",
+                "learning_curve": "easy",
+                "job_market": "growing",
+                "maturity": "stable",
+                "last_updated": "2024-12",
+                "trending": "hot"
+            },
+            "tags": ["python", "api", "async", "modern"]
+        },
+        "django": {
+            "url": "https://docs.djangoproject.com/en/4.2/",
+            "category": "web-framework", 
+            "popularity": {
+                "overall_score": 85,
+                "github_stars": "75000+",
+                "community_size": "huge",
+                "learning_curve": "steep",
+                "job_market": "excellent",
+                "maturity": "very-stable",
+                "last_updated": "2024-11",
+                "trending": "stable"
+            },
+            "tags": ["python", "web", "orm", "full-stack"]
+        },
+        "langchain": {
+            "url": "https://python.langchain.com/docs/get_started/introduction/",
+            "category": "ai-framework",
+            "popularity": {
+                "overall_score": 90,
+                "github_stars": "85000+",
+                "community_size": "large",
+                "learning_curve": "moderate",
+                "job_market": "hot",
+                "maturity": "evolving",
+                "last_updated": "2024-12",
+                "trending": "explosive"
+            },
+            "tags": ["ai", "llm", "python", "chains"]
+        },
+        "nodejs": {
+            "url": "https://nodejs.org/api/documentation.html",
+            "category": "runtime",
+            "popularity": {
+                "overall_score": 89,
+                "github_stars": "100000+",
+                "community_size": "huge",
+                "learning_curve": "moderate",
+                "job_market": "excellent",
+                "maturity": "stable",
+                "last_updated": "2024-12",
+                "trending": "stable"
+            },
+            "tags": ["javascript", "runtime", "backend", "npm"]
+        }
+    },
+    "popularity_weights": {
+        "github_stars": 0.3,
+        "community_size": 0.2,
+        "job_market": 0.25,
+        "maturity": 0.15,
+        "trending": 0.1
+    },
+    "categories": {
+        "language": ["python", "javascript"],
+        "web-framework": ["fastapi", "django", "flask", "express"],
+        "frontend-framework": ["react"],
+        "ai-framework": ["langchain", "llama-index"],
+        "runtime": ["nodejs"]
+    }
+} 
