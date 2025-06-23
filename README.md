@@ -53,11 +53,15 @@ uv sync
 # 2. Get your free API key from serper.dev
 echo "SERPER_API_KEY=your_key_here" > .env
 
-# 3. Test the server
+# 3. Test the server functionality
+python test_debug.py
+# ✅ Should show successful FastAPI authentication search
+
+# 4. Test the MCP server
 python main.py
 # Press Ctrl+C when you see it waiting for input ✅
 
-# 4. Add to Cursor (Settings → Features → MCP):
+# 5. Add to Cursor (Settings → Features → MCP):
 ```
 
 ```json
@@ -306,13 +310,55 @@ export ENABLE_DYNAMIC_ENHANCEMENT=false
 - ✅ Current job market insights
 - ✅ Zero maintenance overhead
 
+## Testing
+
+### Running Tests
+
+The project includes test files to verify functionality:
+
+```bash
+# Test with a simple query
+python test_simple.py
+
+# Test with debug information and FastAPI authentication search
+python test_debug.py
+```
+
+### Test Files
+
+- **`test_simple.py`** - Basic functionality test with a simple query
+- **`test_debug.py`** - Comprehensive test with debug information for FastAPI authentication
+
+These tests help verify that:
+- The documentation search is working correctly
+- API keys are properly configured
+- Documentation sources are accessible
+- Results are returned in the expected format
+
+## Project Structure
+
+```
+documentation-search-mcp/
+├── main.py                 # Main MCP server implementation
+├── dynamic_enhancer.py     # Real-time GitHub data enhancement
+├── config.json            # Documentation sources configuration
+├── test_simple.py         # Simple functionality test
+├── test_debug.py          # Debug test with detailed output
+├── pyproject.toml         # Project dependencies
+├── README.md              # This file
+├── CONTRIBUTING.md        # Contribution guidelines
+├── LICENSE                # MIT License
+└── .env                   # Environment variables (create this)
+```
+
 ## Contributing
 
 To add support for new libraries:
 
 1. Add the library and its documentation URL to `config.json`
-2. Test that the documentation site returns useful content
-3. Submit a pull request
+2. Test that the documentation site returns useful content using the test files
+3. Run `python test_debug.py` to verify the new library works
+4. Submit a pull request
 
 ## Troubleshooting
 
@@ -327,6 +373,13 @@ To add support for new libraries:
 - **Tool not appearing**: Ensure paths are correct and dependencies are installed
 - **Environment variables**: Verify `SERPER_API_KEY` is set in MCP configuration
 - **Virtual environment**: Use the correct Python path from your venv
+
+### Development and Debugging
+
+- **Test functionality**: Run `python test_debug.py` to verify everything is working
+- **Check API key**: The debug test shows if your SERPER_API_KEY is properly set
+- **Verify documentation sources**: Check that target libraries are accessible from your network
+- **Debug output**: Use `test_debug.py` for detailed logging and error information
 
 ## 🎯 Ready to Transform Your Development Workflow?
 
