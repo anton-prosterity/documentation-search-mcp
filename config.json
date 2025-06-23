@@ -8,270 +8,123 @@
         "python": {
             "url": "https://docs.python.org/3/",
             "category": "language",
-            "popularity": {
-                "overall_score": 95,
-                "github_stars": "50000+",
-                "learning_curve": "moderate",
-                "job_market": "excellent",
-                "maturity": "very-stable",
-                "trending": "stable"
-            },
+            "learning_curve": "moderate",
             "tags": ["programming-language", "backend", "data-science", "ai"]
         },
         "javascript": {
             "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
             "category": "language",
-            "popularity": {
-                "overall_score": 93,
-                "github_stars": "N/A",
-                "learning_curve": "moderate",
-                "job_market": "excellent",
-                "maturity": "very-stable",
-                "trending": "stable"
-            },
+            "learning_curve": "moderate",
             "tags": ["programming-language", "frontend", "backend"]
         },
         "react": {
             "url": "https://react.dev/reference/react",
             "category": "frontend-framework",
-            "popularity": {
-                "overall_score": 92,
-                "github_stars": "220000+",
-                "learning_curve": "moderate",
-                "job_market": "excellent",
-                "maturity": "stable",
-                "trending": "growing"
-            },
+            "learning_curve": "moderate",
             "tags": ["frontend", "ui", "javascript", "spa"]
         },
         "fastapi": {
             "url": "https://fastapi.tiangolo.com/",
             "category": "web-framework",
-            "popularity": {
-                "overall_score": 88,
-                "github_stars": "70000+",
-                "learning_curve": "easy",
-                "job_market": "growing",
-                "maturity": "stable",
-                "trending": "hot"
-            },
+            "learning_curve": "easy",
             "tags": ["python", "api", "async", "modern"]
         },
         "django": {
             "url": "https://docs.djangoproject.com/en/4.2/",
             "category": "web-framework",
-            "popularity": {
-                "overall_score": 85,
-                "github_stars": "75000+",
-                "learning_curve": "steep",
-                "job_market": "excellent",
-                "maturity": "very-stable",
-                "trending": "stable"
-            },
+            "learning_curve": "steep",
             "tags": ["python", "web", "orm", "full-stack"]
         },
         "langchain": {
             "url": "https://python.langchain.com/docs/get_started/introduction/",
             "category": "ai-framework",
-            "popularity": {
-                "overall_score": 90,
-                "github_stars": "85000+",
-                "learning_curve": "moderate",
-                "job_market": "hot",
-                "maturity": "evolving",
-                "trending": "explosive"
-            },
+            "learning_curve": "moderate",
             "tags": ["ai", "llm", "python", "chains"]
         },
         "nodejs": {
             "url": "https://nodejs.org/api/documentation.html",
             "category": "runtime",
-            "popularity": {
-                "overall_score": 89,
-                "github_stars": "100000+",
-                "learning_curve": "moderate",
-                "job_market": "excellent",
-                "maturity": "stable",
-                "trending": "stable"
-            },
+            "learning_curve": "moderate",
             "tags": ["javascript", "runtime", "backend", "npm"]
         },
         "flask": {
             "url": "https://flask.palletsprojects.com/en/2.3.x/",
             "category": "web-framework",
-            "popularity": {
-                "overall_score": 80,
-                "github_stars": "65000+",
-                "learning_curve": "easy",
-                "job_market": "growing",
-                "maturity": "stable",
-                "trending": "stable"
-            },
+            "learning_curve": "easy",
             "tags": ["python", "web", "lightweight", "flexible"]
         },
         "express": {
             "url": "https://expressjs.com/en/api.html",
             "category": "web-framework",
-            "popularity": {
-                "overall_score": 87,
-                "github_stars": "63000+",
-                "learning_curve": "easy",
-                "job_market": "excellent",
-                "maturity": "stable",
-                "trending": "stable"
-            },
+            "learning_curve": "easy",
             "tags": ["javascript", "nodejs", "web", "api"]
         },
         "aws": {
             "url": "https://docs.aws.amazon.com/index.html",
             "category": "cloud-platform",
-            "popularity": {
-                "overall_score": 94,
-                "github_stars": "N/A",
-                "learning_curve": "steep",
-                "job_market": "excellent",
-                "maturity": "very-stable",
-                "trending": "growing"
-            },
+            "learning_curve": "steep",
             "tags": ["cloud", "infrastructure", "devops", "scalability"]
         },
         "google-cloud": {
             "url": "https://cloud.google.com/docs",
             "category": "cloud-platform",
-            "popularity": {
-                "overall_score": 90,
-                "github_stars": "N/A",
-                "learning_curve": "steep",
-                "job_market": "excellent",
-                "maturity": "very-stable",
-                "trending": "growing"
-            },
+            "learning_curve": "steep",
             "tags": ["cloud", "infrastructure", "devops", "ai", "ml"]
         },
         "azure": {
             "url": "https://docs.microsoft.com/en-us/azure/",
             "category": "cloud-platform",
-            "popularity": {
-                "overall_score": 89,
-                "github_stars": "N/A",
-                "learning_curve": "steep",
-                "job_market": "excellent",
-                "maturity": "very-stable",
-                "trending": "growing"
-            },
+            "learning_curve": "steep",
             "tags": ["cloud", "infrastructure", "devops", "microsoft", "enterprise"]
         },
         "docker": {
             "url": "https://docs.docker.com/reference/",
             "category": "devops-tool",
-            "popularity": {
-                "overall_score": 91,
-                "github_stars": "68000+",
-                "learning_curve": "moderate",
-                "job_market": "excellent",
-                "maturity": "stable",
-                "trending": "stable"
-            },
+            "learning_curve": "moderate",
             "tags": ["containers", "devops", "deployment", "infrastructure"]
         },
         "kubernetes": {
             "url": "https://kubernetes.io/docs/home/",
             "category": "devops-tool",
-            "popularity": {
-                "overall_score": 89,
-                "github_stars": "106000+",
-                "learning_curve": "steep",
-                "job_market": "hot",
-                "maturity": "stable",
-                "trending": "growing"
-            },
+            "learning_curve": "steep",
             "tags": ["orchestration", "containers", "devops", "scaling"]
         },
         "pandas": {
             "url": "https://pandas.pydata.org/docs/",
             "category": "data-science",
-            "popularity": {
-                "overall_score": 86,
-                "github_stars": "41000+",
-                "learning_curve": "moderate",
-                "job_market": "hot",
-                "maturity": "stable",
-                "trending": "stable"
-            },
+            "learning_curve": "moderate",
             "tags": ["python", "data-analysis", "data-science", "dataframes"]
         },
         "streamlit": {
             "url": "https://docs.streamlit.io/en/stable/",
             "category": "data-science",
-            "popularity": {
-                "overall_score": 82,
-                "github_stars": "31000+",
-                "learning_curve": "easy",
-                "job_market": "growing",
-                "maturity": "evolving",
-                "trending": "hot"
-            },
+            "learning_curve": "easy",
             "tags": ["python", "data-apps", "visualization", "prototyping"]
         },
         "openai": {
             "url": "https://platform.openai.com/docs/api-reference/introduction",
             "category": "ai-service",
-            "popularity": {
-                "overall_score": 93,
-                "github_stars": "N/A",
-                "learning_curve": "easy",
-                "job_market": "explosive",
-                "maturity": "evolving",
-                "trending": "explosive"
-            },
+            "learning_curve": "easy",
             "tags": ["ai", "llm", "gpt", "api"]
         },
         "anthropic": {
             "url": "https://docs.anthropic.com/en/docs/api-reference/overview",
             "category": "ai-service",
-            "popularity": {
-                "overall_score": 85,
-                "github_stars": "N/A",
-                "learning_curve": "easy",
-                "job_market": "hot",
-                "maturity": "evolving",
-                "trending": "hot"
-            },
+            "learning_curve": "easy",
             "tags": ["ai", "llm", "claude", "api"]
         },
         "promptflow": {
             "url": "https://microsoft.github.io/promptflow/",
             "category": "ai-framework",
-            "popularity": {
-                "overall_score": 78,
-                "github_stars": "8000+",
-                "learning_curve": "moderate",
-                "job_market": "growing",
-                "maturity": "evolving",
-                "trending": "hot"
-            },
+            "learning_curve": "moderate",
             "tags": ["ai", "llm", "workflows", "microsoft", "python"]
         },
         "autogen": {
             "url": "https://microsoft.github.io/autogen/",
             "category": "ai-framework",
-            "popularity": {
-                "overall_score": 83,
-                "github_stars": "15000+",
-                "learning_curve": "moderate",
-                "job_market": "hot",
-                "maturity": "evolving",
-                "trending": "explosive"
-            },
+            "learning_curve": "moderate",
             "tags": ["ai", "multi-agent", "llm", "microsoft", "python"]
         }
-    },
-    "popularity_weights": {
-        "github_stars": 0.3,
-        "community_size": 0.2,
-        "job_market": 0.25,
-        "maturity": 0.15,
-        "trending": 0.1
     },
     "categories": {
         "language": ["python", "javascript"],
