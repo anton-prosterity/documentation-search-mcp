@@ -65,8 +65,13 @@ Create `.cursor/mcp.json` in your project root:
 {
   "mcpServers": {
     "documentation-search-enhanced": {
-      "command": "/path/to/.venv/bin/python",
-      "args": ["/path/to/main.py"],
+      "command": "/path/to/.local/bin/uv", 
+      "args": [
+        "--directory",
+        "/path/to/documentation-search-mcp",
+        "run", 
+        "main.py"
+      ],
       "env": {
         "SERPER_API_KEY": "your_key_here"
       }
@@ -198,6 +203,27 @@ python main.py
 
 2. Add the MCP server configuration:
 
+**Option A: Using UV (Recommended)**
+```json
+{
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "/path/to/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/path/to/documentation-search-mcp",
+        "run",
+        "main.py"
+      ],
+      "env": {
+        "SERPER_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+**Option B: Using Python Virtual Environment**
 ```json
 {
   "mcpServers": {
@@ -212,12 +238,21 @@ python main.py
 }
 ```
 
-3. Replace paths with your actual file locations
+3. Replace paths with your actual file locations:
+   - **For UV**: Update the `--directory` path to your project location
+   - **For Python venv**: Update both the Python executable and script paths
 4. Restart Cursor to load the configuration
 
 **Configuration Options:**
 - **Project-specific** (`.cursor/mcp.json`): Use this for MCP servers specific to a project
 - **Global** (`~/.cursor/mcp.json`): Use this for MCP servers you want available across all projects
+
+**Path Examples:**
+- UV command: Usually `~/.local/bin/uv` or `/usr/local/bin/uv`
+- Project directory: Full path to your cloned repository  
+- Python venv: `path/to/your/project/.venv/bin/python`
+
+⚠️ **Security Note:** Keep your `.cursor/mcp.json` file private and never commit it to version control with real API keys. Consider using environment variables or a separate `.env` file for sensitive data.
 
 #### Adding to Claude Desktop
 
