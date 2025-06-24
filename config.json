@@ -244,6 +244,24 @@
             "category": "data-science",
             "learning_curve": "easy",
             "tags": ["python", "network-visualization", "graphs", "interactive"]
+        },
+        "duckdb": {
+            "url": "https://duckdb.org/docs/",
+            "category": "database",
+            "learning_curve": "easy",
+            "tags": ["python", "database", "sql", "analytics", "olap", "data-analysis"]
+        },
+        "papermill": {
+            "url": "https://papermill.readthedocs.io/en/latest/",
+            "category": "data-science",
+            "learning_curve": "moderate",
+            "tags": ["python", "jupyter", "notebooks", "automation", "parameterization"]
+        },
+        "openpyxl": {
+            "url": "https://openpyxl.readthedocs.io/en/stable/",
+            "category": "python-library",
+            "learning_curve": "easy",
+            "tags": ["python", "excel", "xlsx", "spreadsheet", "data-processing"]
         }
     },
     "categories": {
@@ -256,7 +274,8 @@
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
         "devops-tool": ["docker", "kubernetes"],
-        "data-science": ["pandas", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis"],
-        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib"]
+        "database": ["duckdb"],
+        "data-science": ["pandas", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill"],
+        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl"]
     }
 } 
