@@ -57,15 +57,21 @@ echo "SERPER_API_KEY=your_key_here" > .env
 python main.py
 # Press Ctrl+C when you see it waiting for input ✅
 
-# 4. Add to Cursor (Settings → Features → MCP):
+# 4. Add to Cursor (.cursor/mcp.json):
 ```
 
+Create `.cursor/mcp.json` in your project root:
 ```json
 {
-  "name": "documentation-search-enhanced",
-  "command": "/path/to/.venv/bin/python",
-  "args": ["/path/to/main.py"],
-  "env": {"SERPER_API_KEY": "your_key_here"}
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/main.py"],
+      "env": {
+        "SERPER_API_KEY": "your_key_here"
+      }
+    }
+  }
 }
 ```
 
@@ -186,23 +192,32 @@ python main.py
 
 #### Adding to Cursor
 
-1. Open Cursor Settings (Cmd/Ctrl + ,)
-2. Navigate to "Features" → "Model Context Protocol"
-3. Add a new MCP server configuration:
+1. Create an MCP configuration file in your project:
+   - **Project-specific**: Create `.cursor/mcp.json` in your project root
+   - **Global**: Create `~/.cursor/mcp.json` in your home directory
+
+2. Add the MCP server configuration:
 
 ```json
 {
-  "name": "documentation-search",
-  "command": "/path/to/.venv/bin/python",
-  "args": ["/path/to/main.py"],
-  "env": {
-    "SERPER_API_KEY": "your_api_key_here"
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/main.py"],
+      "env": {
+        "SERPER_API_KEY": "your_api_key_here"
+      }
+    }
   }
 }
 ```
 
-4. Replace paths with your actual file locations
-5. Save and restart Cursor
+3. Replace paths with your actual file locations
+4. Restart Cursor to load the configuration
+
+**Configuration Options:**
+- **Project-specific** (`.cursor/mcp.json`): Use this for MCP servers specific to a project
+- **Global** (`~/.cursor/mcp.json`): Use this for MCP servers you want available across all projects
 
 #### Adding to Claude Desktop
 
