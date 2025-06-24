@@ -297,7 +297,7 @@ The MCP server uses **real-time data by default** for maximum accuracy:
 export GITHUB_TOKEN=your_github_token
 
 # Switch to static mode only if needed (not recommended)
-export ENABLE_DYNAMIC_ENHANCEMENT=false
+
 ```
 
 **Benefits of Real-Time Mode:**
@@ -311,7 +311,7 @@ export ENABLE_DYNAMIC_ENHANCEMENT=false
 ```
 documentation-search-mcp/
 ├── main.py                 # Main MCP server implementation
-├── dynamic_enhancer.py     # Real-time GitHub data enhancement
+├── dynamic_enhancer.py     # Optional enhancement module (not used)
 ├── config.json            # Documentation sources configuration
 ├── pyproject.toml         # Project dependencies
 ├── README.md              # This file
