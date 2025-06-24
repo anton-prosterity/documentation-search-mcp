@@ -262,6 +262,24 @@
             "category": "python-library",
             "learning_curve": "easy",
             "tags": ["python", "excel", "xlsx", "spreadsheet", "data-processing"]
+        },
+        "boto3": {
+            "url": "https://boto3.amazonaws.com/v1/documentation/api/latest/index.html",
+            "category": "cloud-library",
+            "learning_curve": "moderate",
+            "tags": ["python", "aws", "cloud", "sdk", "s3", "ec2", "lambda"]
+        },
+        "jupysql": {
+            "url": "https://jupysql.ploomber.io/en/latest/",
+            "category": "data-science",
+            "learning_curve": "easy",
+            "tags": ["python", "jupyter", "sql", "database", "notebooks", "analytics"]
+        },
+        "protobuf": {
+            "url": "https://protobuf.dev/getting-started/pythontutorial/",
+            "category": "python-library",
+            "learning_curve": "moderate",
+            "tags": ["python", "serialization", "protocol-buffers", "data-format", "google"]
         }
     },
     "categories": {
@@ -273,9 +291,10 @@
         "ai-service": ["openai", "anthropic"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
+        "cloud-library": ["boto3"],
         "devops-tool": ["docker", "kubernetes"],
         "database": ["duckdb"],
-        "data-science": ["pandas", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill"],
-        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl"]
+        "data-science": ["pandas", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill", "jupysql"],
+        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl", "protobuf"]
     }
 } 
