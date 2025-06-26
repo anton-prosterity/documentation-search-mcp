@@ -1,0 +1,16 @@
+[project]
+name = "pytest-test-project"
+version = "0.1.0"
+description = "A new FastAPI project."
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"

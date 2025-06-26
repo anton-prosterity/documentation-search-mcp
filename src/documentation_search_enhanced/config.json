@@ -1,300 +1,907 @@
 {
+    "version": "1.0.0",
+    "server_config": {
+        "name": "documentation-search-enhanced",
+        "version": "1.0.0",
+        "logging_level": "INFO",
+        "max_concurrent_requests": 10,
+        "request_timeout_seconds": 30,
+        "auto_approve": {
+            "get_docs": true,
+            "suggest_libraries": true,
+            "health_check": true,
+            "get_cache_stats": true,
+            "clear_cache": false
+        },
+        "features": {
+            "caching_enabled": true,
+            "real_time_search": true,
+            "github_integration": true,
+            "rate_limiting": true,
+            "analytics": true
+        }
+    },
     "cache": {
         "ttl_hours": 24,
         "max_entries": 1000,
-        "enabled": true
+        "enabled": true,
+        "persistence_enabled": false,
+        "cleanup_interval_minutes": 60
+    },
+    "rate_limiting": {
+        "enabled": true,
+        "requests_per_minute": 60,
+        "burst_requests": 10
     },
     "docs_urls": {
         "python": {
             "url": "https://docs.python.org/3/",
             "category": "language",
             "learning_curve": "moderate",
-            "tags": ["programming-language", "backend", "data-science", "ai"]
+            "tags": ["programming-language", "backend", "data-science", "ai"],
+            "priority": "high",
+            "auto_approve": true
         },
         "javascript": {
             "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
             "category": "language",
             "learning_curve": "moderate",
-            "tags": ["programming-language", "frontend", "backend"]
+            "tags": ["programming-language", "frontend", "backend"],
+            "priority": "high",
+            "auto_approve": true
         },
         "react": {
             "url": "https://react.dev/reference/react",
             "category": "frontend-framework",
             "learning_curve": "moderate",
-            "tags": ["frontend", "ui", "javascript", "spa"]
+            "tags": ["frontend", "ui", "javascript", "spa"],
+            "priority": "high",
+            "auto_approve": true
         },
         "typescript": {
             "url": "https://www.typescriptlang.org/docs/",
             "category": "language",
             "learning_curve": "moderate",
-            "tags": ["programming-language", "javascript", "static-typing", "frontend", "backend"]
+            "tags": ["programming-language", "javascript", "static-typing", "frontend", "backend"],
+            "priority": "high",
+            "auto_approve": true
         },
         "svelte": {
             "url": "https://svelte.dev/docs",
             "category": "frontend-framework",
             "learning_curve": "easy",
-            "tags": ["frontend", "ui", "javascript", "spa", "reactive"]
+            "tags": ["frontend", "ui", "javascript", "spa", "reactive"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "tailwind": {
             "url": "https://tailwindcss.com/docs",
             "category": "css-framework",
             "learning_curve": "easy",
-            "tags": ["css", "utility-first", "styling", "frontend", "design"]
+            "tags": ["css", "utility-first", "styling", "frontend", "design"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "fastapi": {
             "url": "https://fastapi.tiangolo.com/",
             "category": "web-framework",
             "learning_curve": "easy",
-            "tags": ["python", "api", "async", "modern"]
+            "tags": ["python", "api", "async", "modern"],
+            "priority": "high",
+            "auto_approve": true
         },
         "django": {
             "url": "https://docs.djangoproject.com/en/4.2/",
             "category": "web-framework",
             "learning_curve": "steep",
-            "tags": ["python", "web", "orm", "full-stack"]
+            "tags": ["python", "web", "orm", "full-stack"],
+            "priority": "high",
+            "auto_approve": true
         },
         "langchain": {
             "url": "https://python.langchain.com/docs/get_started/introduction/",
             "category": "ai-framework",
             "learning_curve": "moderate",
-            "tags": ["ai", "llm", "python", "chains"]
+            "tags": ["ai", "llm", "python", "chains"],
+            "priority": "high",
+            "auto_approve": true
         },
         "nodejs": {
             "url": "https://nodejs.org/api/documentation.html",
             "category": "runtime",
             "learning_curve": "moderate",
-            "tags": ["javascript", "runtime", "backend", "npm"]
+            "tags": ["javascript", "runtime", "backend", "npm"],
+            "priority": "high",
+            "auto_approve": true
         },
         "flask": {
             "url": "https://flask.palletsprojects.com/en/2.3.x/",
             "category": "web-framework",
             "learning_curve": "easy",
-            "tags": ["python", "web", "lightweight", "flexible"]
+            "tags": ["python", "web", "lightweight", "flexible"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "express": {
             "url": "https://expressjs.com/en/api.html",
             "category": "web-framework",
             "learning_curve": "easy",
-            "tags": ["javascript", "nodejs", "web", "api"]
+            "tags": ["javascript", "nodejs", "web", "api"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "aws": {
             "url": "https://docs.aws.amazon.com/index.html",
             "category": "cloud-platform",
             "learning_curve": "steep",
-            "tags": ["cloud", "infrastructure", "devops", "scalability"]
+            "tags": ["cloud", "infrastructure", "devops", "scalability"],
+            "priority": "high",
+            "auto_approve": false
         },
         "google-cloud": {
             "url": "https://cloud.google.com/docs",
             "category": "cloud-platform",
             "learning_curve": "steep",
-            "tags": ["cloud", "infrastructure", "devops", "ai", "ml"]
+            "tags": ["cloud", "infrastructure", "devops", "ai", "ml"],
+            "priority": "high",
+            "auto_approve": false
         },
         "azure": {
             "url": "https://docs.microsoft.com/en-us/azure/",
             "category": "cloud-platform",
             "learning_curve": "steep",
-            "tags": ["cloud", "infrastructure", "devops", "microsoft", "enterprise"]
+            "tags": ["cloud", "infrastructure", "devops", "microsoft", "enterprise"],
+            "priority": "high",
+            "auto_approve": false
         },
         "docker": {
             "url": "https://docs.docker.com/reference/",
             "category": "devops-tool",
             "learning_curve": "moderate",
-            "tags": ["containers", "devops", "deployment", "infrastructure"]
+            "tags": ["containers", "devops", "deployment", "infrastructure"],
+            "priority": "high",
+            "auto_approve": true
         },
         "kubernetes": {
             "url": "https://kubernetes.io/docs/home/",
             "category": "devops-tool",
             "learning_curve": "steep",
-            "tags": ["orchestration", "containers", "devops", "scaling"]
+            "tags": ["orchestration", "containers", "devops", "scaling"],
+            "priority": "medium",
+            "auto_approve": false
         },
         "pandas": {
             "url": "https://pandas.pydata.org/docs/",
             "category": "data-science",
             "learning_curve": "moderate",
-            "tags": ["python", "data-analysis", "data-science", "dataframes"]
+            "tags": ["python", "data-analysis", "data-science", "dataframes"],
+            "priority": "high",
+            "auto_approve": true
         },
         "streamlit": {
             "url": "https://docs.streamlit.io/en/stable/",
             "category": "data-science",
             "learning_curve": "easy",
-            "tags": ["python", "data-apps", "visualization", "prototyping"]
+            "tags": ["python", "data-apps", "visualization", "prototyping"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "openai": {
             "url": "https://platform.openai.com/docs/api-reference/introduction",
             "category": "ai-service",
             "learning_curve": "easy",
-            "tags": ["ai", "llm", "gpt", "api"]
+            "tags": ["ai", "llm", "gpt", "api"],
+            "priority": "high",
+            "auto_approve": true
         },
         "anthropic": {
             "url": "https://docs.anthropic.com/en/docs/api-reference/overview",
             "category": "ai-service",
             "learning_curve": "easy",
-            "tags": ["ai", "llm", "claude", "api"]
+            "tags": ["ai", "llm", "claude", "api"],
+            "priority": "high",
+            "auto_approve": true
         },
         "promptflow": {
             "url": "https://microsoft.github.io/promptflow/",
             "category": "ai-framework",
             "learning_curve": "moderate",
-            "tags": ["ai", "llm", "workflows", "microsoft", "python"]
+            "tags": ["ai", "llm", "workflows", "microsoft", "python"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "autogen": {
             "url": "https://microsoft.github.io/autogen/",
             "category": "ai-framework",
             "learning_curve": "moderate",
-            "tags": ["ai", "multi-agent", "llm", "microsoft", "python"]
+            "tags": ["ai", "multi-agent", "llm", "microsoft", "python"],
+            "priority": "high",
+            "auto_approve": true
         },
         "numpy": {
             "url": "https://numpy.org/doc/stable/",
             "category": "data-science",
             "learning_curve": "moderate",
-            "tags": ["python", "numerical", "arrays", "scientific-computing"]
+            "tags": ["python", "numerical", "arrays", "scientific-computing"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "matplotlib": {
             "url": "https://matplotlib.org/stable/contents.html",
             "category": "data-science",
             "learning_curve": "moderate",
-            "tags": ["python", "visualization", "plotting", "charts"]
+            "tags": ["python", "visualization", "plotting", "charts"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "scikit-learn": {
             "url": "https://scikit-learn.org/stable/user_guide.html",
             "category": "ai-framework",
             "learning_curve": "moderate",
-            "tags": ["python", "machine-learning", "ml", "algorithms"]
+            "tags": ["python", "machine-learning", "ml", "algorithms"],
+            "priority": "high",
+            "auto_approve": true
         },
         "transformers": {
             "url": "https://huggingface.co/docs/transformers/index",
             "category": "ai-framework",
             "learning_curve": "moderate",
-            "tags": ["ai", "nlp", "transformers", "huggingface", "pytorch"]
+            "tags": ["ai", "nlp", "transformers", "huggingface", "pytorch"],
+            "priority": "high",
+            "auto_approve": true
         },
         "datasets": {
             "url": "https://huggingface.co/docs/datasets/index",
             "category": "ai-framework",
             "learning_curve": "easy",
-            "tags": ["ai", "data", "huggingface", "ml-datasets"]
+            "tags": ["ai", "data", "huggingface", "ml-datasets"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "accelerate": {
             "url": "https://huggingface.co/docs/accelerate/index",
             "category": "ai-framework",
             "learning_curve": "moderate",
-            "tags": ["ai", "pytorch", "distributed", "huggingface"]
+            "tags": ["ai", "pytorch", "distributed", "huggingface"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "spacy": {
             "url": "https://spacy.io/usage/spacy-101",
             "category": "ai-framework",
             "learning_curve": "moderate",
-            "tags": ["nlp", "python", "text-processing", "linguistics"]
+            "tags": ["nlp", "python", "text-processing", "linguistics"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "networkx": {
             "url": "https://networkx.org/documentation/stable/",
             "category": "data-science",
             "learning_curve": "moderate",
-            "tags": ["python", "graphs", "networks", "analysis"]
+            "tags": ["python", "graphs", "networks", "analysis"],
+            "priority": "low",
+            "auto_approve": true
         },
         "requests": {
             "url": "https://requests.readthedocs.io/en/latest/",
             "category": "python-library",
             "learning_curve": "easy",
-            "tags": ["python", "http", "api", "web-requests"]
+            "tags": ["python", "http", "api", "web-requests"],
+            "priority": "high",
+            "auto_approve": true
         },
         "pillow": {
             "url": "https://pillow.readthedocs.io/en/stable/",
             "category": "python-library",
             "learning_curve": "easy",
-            "tags": ["python", "image-processing", "pil", "graphics"]
+            "tags": ["python", "image-processing", "pil", "graphics"],
+            "priority": "low",
+            "auto_approve": true
         },
         "pymupdf": {
             "url": "https://pymupdf.readthedocs.io/en/latest/",
             "category": "python-library",
             "learning_curve": "moderate",
-            "tags": ["python", "pdf", "document-processing", "text-extraction"]
+            "tags": ["python", "pdf", "document-processing", "text-extraction"],
+            "priority": "low",
+            "auto_approve": true
         },
         "faiss-cpu": {
             "url": "https://faiss.ai/",
             "category": "ai-framework",
             "learning_curve": "steep",
-            "tags": ["ai", "vector-search", "similarity", "facebook"]
+            "tags": ["ai", "vector-search", "similarity", "facebook"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "rank-bm25": {
             "url": "https://github.com/dorianbrown/rank_bm25",
             "category": "ai-framework",
             "learning_curve": "easy",
-            "tags": ["python", "information-retrieval", "ranking", "search"]
+            "tags": ["python", "information-retrieval", "ranking", "search"],
+            "priority": "low",
+            "auto_approve": true
         },
         "tqdm": {
             "url": "https://tqdm.github.io/",
             "category": "python-library",
             "learning_curve": "easy",
-            "tags": ["python", "progress-bar", "utilities", "cli"]
+            "tags": ["python", "progress-bar", "utilities", "cli"],
+            "priority": "low",
+            "auto_approve": true
         },
         "ipywidgets": {
             "url": "https://ipywidgets.readthedocs.io/en/stable/",
             "category": "data-science",
             "learning_curve": "easy",
-            "tags": ["python", "jupyter", "widgets", "interactive"]
+            "tags": ["python", "jupyter", "widgets", "interactive"],
+            "priority": "low",
+            "auto_approve": true
         },
         "rdflib": {
             "url": "https://rdflib.readthedocs.io/en/stable/",
             "category": "python-library",
             "learning_curve": "steep",
-            "tags": ["python", "semantic-web", "rdf", "knowledge-graphs"]
+            "tags": ["python", "semantic-web", "rdf", "knowledge-graphs"],
+            "priority": "low",
+            "auto_approve": true
         },
         "pyvis": {
             "url": "https://pyvis.readthedocs.io/en/latest/",
             "category": "data-science",
             "learning_curve": "easy",
-            "tags": ["python", "network-visualization", "graphs", "interactive"]
+            "tags": ["python", "network-visualization", "graphs", "interactive"],
+            "priority": "low",
+            "auto_approve": true
         },
         "duckdb": {
             "url": "https://duckdb.org/docs/",
             "category": "database",
             "learning_curve": "easy",
-            "tags": ["python", "database", "sql", "analytics", "olap", "data-analysis"]
+            "tags": ["python", "database", "sql", "analytics", "olap", "data-analysis"],
+            "priority": "medium",
+            "auto_approve": true
         },
         "papermill": {
             "url": "https://papermill.readthedocs.io/en/latest/",
             "category": "data-science",
             "learning_curve": "moderate",
-            "tags": ["python", "jupyter", "notebooks", "automation", "parameterization"]
+            "tags": ["python", "jupyter", "notebooks", "automation", "parameterization"],
+            "priority": "low",
+            "auto_approve": true
         },
         "openpyxl": {
             "url": "https://openpyxl.readthedocs.io/en/stable/",
             "category": "python-library",
             "learning_curve": "easy",
-            "tags": ["python", "excel", "xlsx", "spreadsheet", "data-processing"]
+            "tags": ["python", "excel", "xlsx", "spreadsheet", "data-processing"],
+            "priority": "low",
+            "auto_approve": true
         },
         "boto3": {
             "url": "https://boto3.amazonaws.com/v1/documentation/api/latest/index.html",
             "category": "cloud-library",
             "learning_curve": "moderate",
-            "tags": ["python", "aws", "cloud", "sdk", "s3", "ec2", "lambda"]
+            "tags": ["python", "aws", "cloud", "sdk", "s3", "ec2", "lambda"],
+            "priority": "high",
+            "auto_approve": false
         },
         "jupysql": {
             "url": "https://jupysql.ploomber.io/en/latest/",
             "category": "data-science",
             "learning_curve": "easy",
-            "tags": ["python", "jupyter", "sql", "database", "notebooks", "analytics"]
+            "tags": ["python", "jupyter", "sql", "database", "notebooks", "analytics"],
+            "priority": "low",
+            "auto_approve": true
         },
         "protobuf": {
             "url": "https://protobuf.dev/getting-started/pythontutorial/",
             "category": "python-library",
             "learning_curve": "moderate",
-            "tags": ["python", "serialization", "protocol-buffers", "data-format", "google"]
+            "tags": ["python", "serialization", "protocol-buffers", "data-format", "google"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "pytorch": {
+            "url": "https://pytorch.org/docs/stable/index.html",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["ai", "deep-learning", "neural-networks", "python"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "tensorflow": {
+            "url": "https://www.tensorflow.org/api_docs/python/tf",
+            "category": "ai-framework",
+            "learning_curve": "steep",
+            "tags": ["ai", "deep-learning", "google", "machine-learning"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "opencv": {
+            "url": "https://docs.opencv.org/4.x/",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["computer-vision", "image-processing", "ai", "python"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "ollama": {
+            "url": "https://ollama.com/docs",
+            "category": "ai-service",
+            "learning_curve": "easy",
+            "tags": ["ai", "local-llm", "self-hosted", "inference"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "nextjs": {
+            "url": "https://nextjs.org/docs",
+            "category": "frontend-framework",
+            "learning_curve": "moderate",
+            "tags": ["react", "ssr", "frontend", "fullstack", "vercel"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "vuejs": {
+            "url": "https://vuejs.org/guide/introduction.html",
+            "category": "frontend-framework",
+            "learning_curve": "easy",
+            "tags": ["frontend", "progressive", "javascript", "spa"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "angular": {
+            "url": "https://angular.io/docs",
+            "category": "frontend-framework",
+            "learning_curve": "steep",
+            "tags": ["frontend", "typescript", "spa", "google"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "astro": {
+            "url": "https://docs.astro.build/en/getting-started/",
+            "category": "frontend-framework",
+            "learning_curve": "easy",
+            "tags": ["static-site", "performance", "modern", "islands"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "sqlalchemy": {
+            "url": "https://docs.sqlalchemy.org/en/20/",
+            "category": "database",
+            "learning_curve": "moderate",
+            "tags": ["python", "orm", "sql", "database"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "prisma": {
+            "url": "https://www.prisma.io/docs",
+            "category": "database",
+            "learning_curve": "easy",
+            "tags": ["orm", "typescript", "javascript", "database"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "postgresql": {
+            "url": "https://www.postgresql.org/docs/current/",
+            "category": "database",
+            "learning_curve": "moderate",
+            "tags": ["sql", "relational", "database", "postgres"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "redis": {
+            "url": "https://redis.io/docs/",
+            "category": "database",
+            "learning_curve": "easy",
+            "tags": ["cache", "nosql", "in-memory", "performance"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "pytest": {
+            "url": "https://docs.pytest.org/en/stable/",
+            "category": "testing",
+            "learning_curve": "easy",
+            "tags": ["python", "testing", "unit-tests", "fixtures"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "jest": {
+            "url": "https://jestjs.io/docs/getting-started",
+            "category": "testing",
+            "learning_curve": "easy",
+            "tags": ["javascript", "testing", "unit-tests", "mocking"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "cypress": {
+            "url": "https://docs.cypress.io/guides/overview/why-cypress",
+            "category": "testing",
+            "learning_curve": "easy",
+            "tags": ["e2e", "testing", "frontend", "automation"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "terraform": {
+            "url": "https://developer.hashicorp.com/terraform/docs",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["infrastructure", "iac", "cloud", "automation"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "ansible": {
+            "url": "https://docs.ansible.com/ansible/latest/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["automation", "configuration", "deployment"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "nginx": {
+            "url": "https://nginx.org/en/docs/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["web-server", "reverse-proxy", "load-balancer"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "httpx": {
+            "url": "https://www.python-httpx.org/",
+            "category": "python-library",
+            "learning_curve": "easy",
+            "tags": ["python", "http", "async", "modern"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "pydantic": {
+            "url": "https://docs.pydantic.dev/latest/",
+            "category": "python-library",
+            "learning_curve": "easy",
+            "tags": ["python", "validation", "serialization", "type-safety"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "vite": {
+            "url": "https://vitejs.dev/guide/",
+            "category": "build-tool",
+            "learning_curve": "easy",
+            "tags": ["build", "bundler", "fast", "modern", "frontend"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "webpack": {
+            "url": "https://webpack.js.org/concepts/",
+            "category": "build-tool",
+            "learning_curve": "moderate",
+            "tags": ["build", "bundler", "module", "frontend"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "react-native": {
+            "url": "https://reactnative.dev/docs/getting-started",
+            "category": "mobile-framework",
+            "learning_curve": "moderate",
+            "tags": ["mobile", "cross-platform", "react", "ios", "android"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "flutter": {
+            "url": "https://docs.flutter.dev/",
+            "category": "mobile-framework",
+            "learning_curve": "moderate",
+            "tags": ["mobile", "cross-platform", "dart", "google", "ui"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "redux": {
+            "url": "https://redux.js.org/introduction/getting-started",
+            "category": "state-management",
+            "learning_curve": "moderate",
+            "tags": ["state", "react", "predictable", "flux"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "zustand": {
+            "url": "https://docs.pmnd.rs/zustand/getting-started/introduction",
+            "category": "state-management",
+            "learning_curve": "easy",
+            "tags": ["state", "react", "simple", "modern"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "bootstrap": {
+            "url": "https://getbootstrap.com/docs/5.3/getting-started/introduction/",
+            "category": "css-framework",
+            "learning_curve": "easy",
+            "tags": ["css", "responsive", "components", "popular"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "mui": {
+            "url": "https://mui.com/material-ui/getting-started/",
+            "category": "css-framework",
+            "learning_curve": "moderate",
+            "tags": ["react", "material-design", "components", "ui"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "graphql": {
+            "url": "https://graphql.org/learn/",
+            "category": "api-framework",
+            "learning_curve": "moderate",
+            "tags": ["api", "query-language", "flexible", "modern"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "apollo-client": {
+            "url": "https://www.apollographql.com/docs/react/",
+            "category": "api-framework",
+            "learning_curve": "moderate",
+            "tags": ["graphql", "client", "react", "caching"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "jsonwebtoken": {
+            "url": "https://github.com/auth0/node-jsonwebtoken#readme",
+            "category": "security",
+            "learning_curve": "easy",
+            "tags": ["jwt", "authentication", "security", "tokens"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "bcrypt": {
+            "url": "https://github.com/kelektiv/node.bcrypt.js#readme",
+            "category": "security",
+            "learning_curve": "easy",
+            "tags": ["password", "hashing", "security", "encryption"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "socket.io": {
+            "url": "https://socket.io/docs/v4/",
+            "category": "real-time",
+            "learning_curve": "easy",
+            "tags": ["websockets", "real-time", "communication", "events"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "firebase": {
+            "url": "https://firebase.google.com/docs",
+            "category": "backend-service",
+            "learning_curve": "easy",
+            "tags": ["google", "baas", "database", "authentication", "hosting"],
+            "priority": "high",
+            "auto_approve": false
+        },
+        "supabase": {
+            "url": "https://supabase.com/docs",
+            "category": "backend-service",
+            "learning_curve": "easy",
+            "tags": ["open-source", "baas", "postgresql", "real-time"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "electron": {
+            "url": "https://www.electronjs.org/docs/latest/",
+            "category": "desktop-framework",
+            "learning_curve": "moderate",
+            "tags": ["desktop", "cross-platform", "web-technologies"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "npm": {
+            "url": "https://docs.npmjs.com/",
+            "category": "package-manager",
+            "learning_curve": "easy",
+            "tags": ["javascript", "packages", "dependencies", "registry"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "go": {
+            "url": "https://go.dev/doc/",
+            "category": "language",
+            "learning_curve": "moderate",
+            "tags": ["programming-language", "google", "concurrent", "fast"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "rust": {
+            "url": "https://doc.rust-lang.org/book/",
+            "category": "language",
+            "learning_curve": "steep",
+            "tags": ["programming-language", "systems", "memory-safe", "performance"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "zod": {
+            "url": "https://zod.dev/",
+            "category": "data-validation",
+            "learning_curve": "easy",
+            "tags": ["typescript", "validation", "schema", "type-safe"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "joi": {
+            "url": "https://joi.dev/api/",
+            "category": "data-validation",
+            "learning_curve": "easy",
+            "tags": ["javascript", "validation", "schema", "object"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "axios": {
+            "url": "https://axios-http.com/docs/intro",
+            "category": "http-client",
+            "learning_curve": "easy",
+            "tags": ["http", "requests", "promise", "browser", "nodejs"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "auth0": {
+            "url": "https://auth0.com/docs",
+            "category": "authentication",
+            "learning_curve": "easy",
+            "tags": ["authentication", "identity", "oauth", "enterprise"],
+            "priority": "high",
+            "auto_approve": false
+        },
+        "nextauth": {
+            "url": "https://next-auth.js.org/",
+            "category": "authentication",
+            "learning_curve": "easy",
+            "tags": ["nextjs", "authentication", "oauth", "providers"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "dayjs": {
+            "url": "https://day.js.org/docs/en/installation/installation",
+            "category": "utility",
+            "learning_curve": "easy",
+            "tags": ["date", "time", "moment", "lightweight"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "html": {
+            "url": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+            "category": "web-platform",
+            "learning_curve": "easy",
+            "tags": ["html", "markup", "elements", "semantic", "accessibility", "forms", "media"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "css": {
+            "url": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+            "category": "web-platform",
+            "learning_curve": "moderate",
+            "tags": ["css", "styling", "layout", "responsive", "animations", "grid", "flexbox"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "web-apis": {
+            "url": "https://developer.mozilla.org/en-US/docs/Web/API",
+            "category": "web-platform",
+            "learning_curve": "moderate",
+            "tags": ["browser-apis", "dom", "fetch", "websockets", "webrtc", "canvas", "webgl"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "pwa": {
+            "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
+            "category": "web-platform",
+            "learning_curve": "moderate",
+            "tags": ["pwa", "service-workers", "offline", "mobile", "native", "manifest"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "git": {
+            "url": "https://git-scm.com/docs",
+            "category": "version-control",
+            "learning_curve": "moderate",
+            "tags": ["git", "version-control", "collaboration", "workflow", "branching", "merge"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "mongodb": {
+            "url": "https://docs.mongodb.com/",
+            "category": "database",
+            "learning_curve": "moderate",
+            "tags": ["nosql", "database", "json", "scalability", "mern", "atlas", "aggregation"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "github-actions": {
+            "url": "https://docs.github.com/en/actions",
+            "category": "ci-cd",
+            "learning_curve": "moderate",
+            "tags": ["ci", "cd", "automation", "github", "workflows", "deployment", "testing"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "openapi": {
+            "url": "https://swagger.io/docs/",
+            "category": "api-documentation",
+            "learning_curve": "easy",
+            "tags": ["api", "documentation", "swagger", "rest", "specification", "openapi"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "prometheus": {
+            "url": "https://prometheus.io/docs/",
+            "category": "monitoring",
+            "learning_curve": "moderate",
+            "tags": ["monitoring", "metrics", "observability", "alerting", "time-series"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "grafana": {
+            "url": "https://grafana.com/docs/",
+            "category": "monitoring",
+            "learning_curve": "easy",
+            "tags": ["visualization", "dashboards", "metrics", "monitoring", "analytics"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "elasticsearch": {
+            "url": "https://www.elastic.co/guide/",
+            "category": "search-analytics",
+            "learning_curve": "moderate",
+            "tags": ["search", "analytics", "full-text", "logging", "elastic", "lucene"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "celery": {
+            "url": "https://docs.celeryproject.org/",
+            "category": "task-queue",
+            "learning_curve": "moderate",
+            "tags": ["python", "async", "tasks", "queue", "background", "distributed"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "eslint": {
+            "url": "https://eslint.org/docs/",
+            "category": "code-quality",
+            "learning_curve": "easy",
+            "tags": ["javascript", "linting", "code-quality", "static-analysis", "typescript"],
+            "priority": "high",
+            "auto_approve": true
         }
     },
     "categories": {
-        "language": ["python", "javascript", "typescript"],
+        "language": ["python", "javascript", "typescript", "go", "rust"],
+        "web-platform": ["html", "css", "web-apis", "pwa"],
+        "version-control": ["git"],
+        "ci-cd": ["github-actions"],
+        "api-documentation": ["openapi"],
+        "monitoring": ["prometheus", "grafana"],
+        "search-analytics": ["elasticsearch"],
+        "task-queue": ["celery"],
+        "code-quality": ["eslint"],
         "web-framework": ["fastapi", "django", "flask", "express"],
-        "frontend-framework": ["react", "svelte"],
-        "css-framework": ["tailwind"],
-        "ai-framework": ["langchain", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25"],
-        "ai-service": ["openai", "anthropic"],
+        "frontend-framework": ["react", "svelte", "nextjs", "vuejs", "angular", "astro"],
+        "mobile-framework": ["react-native", "flutter"],
+        "css-framework": ["tailwind", "bootstrap", "mui"],
+        "build-tool": ["vite", "webpack"],
+        "state-management": ["redux", "zustand"],
+        "api-framework": ["graphql", "apollo-client"],
+        "ai-framework": ["langchain", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv"],
+        "ai-service": ["openai", "anthropic", "ollama"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
         "cloud-library": ["boto3"],
-        "devops-tool": ["docker", "kubernetes"],
-        "database": ["duckdb"],
+        "devops-tool": ["docker", "kubernetes", "terraform", "ansible", "nginx"],
+        "testing": ["pytest", "jest", "cypress"],
+        "database": ["duckdb", "sqlalchemy", "prisma", "postgresql", "redis", "mongodb"],
         "data-science": ["pandas", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill", "jupysql"],
-        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl", "protobuf"]
+        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl", "protobuf", "httpx", "pydantic"],
+        "security": ["jsonwebtoken", "bcrypt"],
+        "real-time": ["socket.io"],
+        "backend-service": ["firebase", "supabase"],
+        "desktop-framework": ["electron"],
+        "package-manager": ["npm"],
+        "data-validation": ["pydantic", "zod", "joi"],
+        "http-client": ["axios"],
+        "authentication": ["auth0", "nextauth"],
+        "utility": ["dayjs"]
     }
 } 
