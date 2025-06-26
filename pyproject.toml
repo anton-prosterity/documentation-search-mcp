@@ -4,15 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "documentation-search-enhanced"
-version = "1.0.0"
-description = "Enhanced MCP server for searching documentation across popular libraries with caching and real-time web search"
+version = "1.3.0"
+description = "Enhanced MCP server for searching documentation with OSINT vulnerability scanning, security analysis, and AWS-style deployment"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
 authors = [
     { name = "Anton Mishel", email = "your-email@example.com" },
 ]
-keywords = ["mcp", "documentation", "search", "fastapi", "langchain", "ai", "assistant"]
+keywords = ["mcp", "documentation", "search", "fastapi", "langchain", "ai", "assistant", "security", "vulnerability", "osint", "osv"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -29,6 +29,7 @@ dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.9.4",
     "python-dotenv>=1.0.0",
+    "PyYAML>=6.0.1",
 ]
 
 [project.urls]
@@ -57,4 +58,9 @@ include = [
     "config.json",
     "README.md",
     "LICENSE",
+]
+
+[dependency-groups]
+dev = [
+    "twine>=6.1.0",
 ]
