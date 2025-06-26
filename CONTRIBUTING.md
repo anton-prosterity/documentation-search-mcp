@@ -7,28 +7,26 @@ Thank you for your interest in contributing! This project thrives on community c
 ### 📚 **Add New Libraries**
 The easiest way to contribute! Add support for new documentation sources:
 
-1. **Add to `config.json`:**
+1. **Add to `src/documentation_search_enhanced/config.json`:**
 ```json
 {
-  "your_library": {
-    "url": "https://docs.yourlibrary.com/",
-    "category": "web-framework",
-    "popularity": {
-      "overall_score": 75,
-      "github_stars": "10000+",
+  "docs_urls": {
+    "your_library": {
+      "url": "https://docs.yourlibrary.com/",
+      "category": "web-framework",
       "learning_curve": "moderate",
-      "job_market": "growing",
-      "maturity": "stable",
-      "trending": "growing"
-    },
-    "tags": ["python", "web", "api"]
+      "tags": ["python", "web", "api"]
+    }
+  },
+  "categories": {
+    "web-framework": ["fastapi", "django", "flask", "your_library"]
   }
 }
 ```
 
 2. **Test it works:**
 ```bash
-python main.py
+python src/documentation_search_enhanced/main.py
 # Test search functionality
 ```
 
@@ -80,7 +78,8 @@ uv sync
 echo "SERPER_API_KEY=your_key_here" > .env
 
 # 4. Test the setup
-python main.py
+python src/documentation_search_enhanced/main.py
+# Press Ctrl+C when you see it waiting for input ✅
 ```
 
 ## 📋 Pull Request Guidelines

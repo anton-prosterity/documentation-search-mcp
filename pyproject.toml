@@ -1,11 +1,60 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "documentation"
-version = "0.1.0"
-description = "Add your description here"
+name = "documentation-search-enhanced"
+version = "1.0.0"
+description = "Enhanced MCP server for searching documentation across popular libraries with caching and real-time web search"
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.12"
+authors = [
+    { name = "Anton Mishel", email = "your-email@example.com" },
+]
+keywords = ["mcp", "documentation", "search", "fastapi", "langchain", "ai", "assistant"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+]
+
 dependencies = [
     "beautifulsoup4>=4.13.4",
     "httpx>=0.28.1",
     "mcp[cli]>=1.9.4",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/antonmishel/documentation-search-mcp"
+Repository = "https://github.com/antonmishel/documentation-search-mcp"
+Issues = "https://github.com/antonmishel/documentation-search-mcp/issues"
+
+[project.scripts]
+documentation-search-enhanced = "documentation_search_enhanced.main:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "twine>=4.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/documentation_search_enhanced"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/documentation_search_enhanced",
+    "config.json",
+    "README.md",
+    "LICENSE",
 ]
