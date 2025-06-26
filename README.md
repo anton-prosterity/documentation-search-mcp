@@ -4,10 +4,43 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![AWS-Style](https://img.shields.io/badge/AWS--Style-Deployment-orange.svg)](https://github.com/awslabs/mcp)
 
 > **Transform Claude into your personal development advisor** 🤖✨
 > 
 > An intelligent MCP server that gives Claude real-time access to documentation, library popularity data, and career insights. Make smarter technology choices with data-driven recommendations tailored to your experience level.
+
+> 🔥 **NEW: AWS-Style Deployment** - No local setup required! Run directly with `uvx documentation-search-enhanced@latest` just like AWS MCP servers.
+
+---
+
+## 🎯 What This Does
+
+**Transforms your AI assistant into a documentation expert!**
+
+Instead of Claude saying *"I don't have access to current documentation"*, it now:
+
+1. **🔍 Searches live documentation** from 45+ popular libraries
+2. **📚 Returns current, accurate code examples** 
+3. **🎯 Provides contextual recommendations** based on your needs
+4. **⚡ Caches results** for lightning-fast follow-up questions
+
+## 🚀 AWS-Style Deployment Ready
+
+This MCP server follows the **exact same deployment pattern** as AWS MCP servers:
+
+```bash
+# Just like AWS MCP servers - zero setup required!
+uvx documentation-search-enhanced@latest
+```
+
+Same professional experience:
+- ✅ No local cloning or setup
+- ✅ Automatic dependency management  
+- ✅ Always up-to-date with `@latest`
+- ✅ Works with any MCP-compatible AI assistant
+
+---
 
 ## ⭐ Why This MCP Server is Different
 
@@ -15,7 +48,8 @@
 📊 **Data-Driven Insights** - Real popularity scores, job market trends, and learning time estimates  
 🚀 **Career-Focused** - Salary insights, trending technologies, and market positioning  
 ⚡ **Lightning Fast** - Smart caching delivers responses in 2-5 seconds  
-🔧 **Drop-in Ready** - Works with Cursor, Claude Desktop, and any MCP-compatible tool  
+🔧 **AWS-Style Deployment** - Same professional deployment model as AWS MCP servers - just run `uvx documentation-search-enhanced@latest`  
+🛠️ **Universal Compatibility** - Works with Cursor, Claude Desktop, Windsurf, and any MCP-compatible tool  
 
 ### 🎬 See the Transformation
 
@@ -42,36 +76,66 @@
 Best time to learn: NOW - market demand far exceeds supply."
 ```
 
-## 🚀 Quick Start (2 minutes)
+## 🚀 Quick Start (30 seconds)
+
+> **No local setup required!** Run directly with `uvx` just like AWS MCP servers.
 
 ```bash
-# 1. Clone and setup
-git clone https://github.com/anton-prosterity/documentation-search-mcp.git
-cd documentation-search-mcp
-uv sync
+# 1. Install and run directly (no cloning needed)
+uvx documentation-search-enhanced@latest
 
 # 2. Get your free API key from serper.dev
-echo "SERPER_API_KEY=your_key_here" > .env
-
-# 3. Test the MCP server
-python main.py
-# Press Ctrl+C when you see it waiting for input ✅
-
-# 4. Add to Cursor (.cursor/mcp.json):
+export SERPER_API_KEY="your_key_here"
 ```
 
+### 🔧 Add to Your AI Assistant
+
+#### For Cursor
+
 Create `.cursor/mcp.json` in your project root:
+
 ```json
 {
   "mcpServers": {
     "documentation-search-enhanced": {
-      "command": "/path/to/.local/bin/uv", 
-      "args": [
-        "--directory",
-        "/path/to/documentation-search-mcp",
-        "run", 
-        "main.py"
-      ],
+      "command": "uvx",
+      "args": ["documentation-search-enhanced@latest"],
+      "env": {
+        "SERPER_API_KEY": "your_key_here"
+      }
+    }
+  }
+}
+```
+
+#### For Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "uvx",
+      "args": ["documentation-search-enhanced@latest"],
+      "env": {
+        "SERPER_API_KEY": "your_key_here"
+      }
+    }
+  }
+}
+```
+
+#### For Windsurf
+
+Add to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "uvx",
+      "args": ["documentation-search-enhanced@latest"],
       "env": {
         "SERPER_API_KEY": "your_key_here"
       }
@@ -81,6 +145,83 @@ Create `.cursor/mcp.json` in your project root:
 ```
 
 **That's it!** 🎉 Claude now has intelligent development superpowers.
+
+## 🎯 Quick Reference
+
+| Command | What It Does | Example |
+|---------|--------------|---------|
+| `uvx documentation-search-enhanced@latest` | Install/run MCP server | One-time setup |
+| Get docs for library | Search documentation | "*Find FastAPI authentication examples*" |
+| Get library suggestions | Auto-complete libraries | "*What libraries start with 'lang'?*" |
+| Check system health | Monitor performance | "*Check if documentation sources are working*" |
+| Compare technologies | Side-by-side analysis | "*Compare FastAPI vs Django for APIs*" |
+
+### 🔑 Supported Libraries (45+)
+
+**🔥 AI & ML**: langchain, openai, anthropic, transformers, scikit-learn, spacy  
+**🌐 Web Frameworks**: fastapi, django, flask, express  
+**⚛️ Frontend**: react, svelte, javascript, typescript  
+**☁️ Cloud**: aws, google-cloud, azure, boto3  
+**🐍 Python**: pandas, numpy, matplotlib, requests, streamlit  
+**🛠️ DevOps**: docker, kubernetes  
+**💾 Data**: duckdb, jupyter, papermill  
+
+### ✨ Benefits of AWS-Style Deployment
+
+✅ **Zero Local Setup** - No cloning, no path management  
+✅ **Automatic Updates** - Always get the latest version with `@latest`  
+✅ **Isolated Environment** - `uvx` handles dependencies automatically  
+✅ **Universal Compatibility** - Works with any MCP-compatible AI assistant  
+✅ **No Maintenance** - No local virtual environments to manage  
+
+### 🔄 Update to Latest Version
+
+```bash
+# The @latest tag automatically gets the newest version
+# Just restart your AI assistant to get updates
+```
+
+---
+
+## 🏠 Local Development (Optional)
+
+If you want to contribute or customize:
+
+```bash
+# 1. Clone and setup
+git clone https://github.com/antonmishel/documentation-search-mcp.git
+cd documentation-search-mcp
+uv sync
+
+# 2. Get your free API key from serper.dev
+echo "SERPER_API_KEY=your_key_here" > .env
+
+# 3. Test the MCP server
+python src/documentation_search_enhanced/main.py
+# Press Ctrl+C when you see it waiting for input ✅
+
+# 4. Add to Cursor (.cursor/mcp.json):
+```
+
+For local development:
+```json
+{
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "/path/to/.local/bin/uv", 
+      "args": [
+        "--directory",
+        "/path/to/documentation-search-mcp",
+        "run", 
+        "src/documentation_search_enhanced/main.py"
+      ],
+      "env": {
+        "SERPER_API_KEY": "your_key_here"
+      }
+    }
+  }
+}
+```
 
 ## 🛠️ 7 Specialized AI Tools
 
@@ -128,41 +269,18 @@ Transform Claude from a generic assistant into a **data-driven development exper
 - **Pros/Cons Analysis** - Detailed advantage/disadvantage breakdowns
 - **Market Position Mapping** - Leader/Strong/Moderate/Niche classifications
 
-## Setup
+## Prerequisites
 
-### Prerequisites
+- **Serper API Key**: Get your free key from [serper.dev](https://serper.dev)
+- **UV Package Manager**: Install with `curl -LsSf https://astral.sh/uv/install.sh | sh`
 
-- Python 3.8+
-- UV package manager (recommended) or pip
-
-### Installation
-
-1. Clone this repository:
-```bash
-git clone https://github.com/anton-prosterity/documentation-search-mcp.git
-cd documentation-search-mcp
-```
-
-2. Install dependencies:
-```bash
-uv sync
-```
-
-3. Set up your environment variables:
-```bash
-echo "SERPER_API_KEY=your_key_here" > .env
-```
-
-4. Get a Serper API key:
-   - Visit [serper.dev](https://serper.dev)
-   - Sign up for a free account
-   - Copy your API key to the `.env` file
+That's it! No Python installation, no virtual environments, no dependency management needed.
 
 ## Configuration
 
 ### Adding New Documentation Sources
 
-Adding new libraries is incredibly simple! Just edit the `config.json` file:
+Adding new libraries is incredibly simple! Just edit `src/documentation_search_enhanced/config.json`:
 
 ```json
 {
@@ -173,145 +291,218 @@ Adding new libraries is incredibly simple! Just edit the `config.json` file:
             "learning_curve": "easy",
             "tags": ["python", "web", "api"]
         }
+    },
+    "categories": {
+        "web-framework": ["fastapi", "django", "flask", "your_library"]
     }
 }
 ```
 
 **That's it!** The system automatically:
-- ✅ Fetches real-time GitHub stars and metrics
-- ✅ Calculates popularity scores and job market trends  
-- ✅ Provides career impact analysis
-- ✅ Delivers intelligent recommendations
+- ✅ Makes the library searchable immediately
+- ✅ Includes it in suggestions and recommendations
+- ✅ Provides intelligent categorization
+- ✅ Delivers contextual help
 
-No manual score updates needed - everything is dynamic!
+For step-by-step contribution guide, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Usage
 
 ### Running the Server
 
 ```bash
-python main.py
+# AWS-style deployment (recommended)
+uvx documentation-search-enhanced@latest
+
+# Local development (if you've cloned the repo)
+python src/documentation_search_enhanced/main.py
 ```
 
 ### Integration with AI Tools
 
-#### Adding to Cursor
+The server integrates seamlessly with any MCP-compatible AI assistant. Simply add the configuration above to your AI tool's MCP settings and restart.
 
-1. Create an MCP configuration file in your project:
-   - **Project-specific**: Create `.cursor/mcp.json` in your project root
-   - **Global**: Create `~/.cursor/mcp.json` in your home directory
+#### Configuration Files
 
-2. Add the MCP server configuration:
+- **Cursor**: `.cursor/mcp.json` (project-specific) or `~/.cursor/mcp.json` (global)
+- **Claude Desktop**: 
+  - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+  - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- **Windsurf**: `~/.codeium/windsurf/mcp_config.json`
 
-**Option A: Using UV (Recommended)**
-```json
-{
-  "mcpServers": {
-    "documentation-search-enhanced": {
-      "command": "/path/to/.local/bin/uv",
-      "args": [
-        "--directory",
-        "/path/to/documentation-search-mcp",
-        "run",
-        "main.py"
-      ],
-      "env": {
-        "SERPER_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
+#### Security Best Practices
 
-**Option B: Using Python Virtual Environment**
-```json
-{
-  "mcpServers": {
-    "documentation-search-enhanced": {
-      "command": "/path/to/.venv/bin/python",
-      "args": ["/path/to/main.py"],
-      "env": {
-        "SERPER_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
-
-3. Replace paths with your actual file locations:
-   - **For UV**: Update the `--directory` path to your project location
-   - **For Python venv**: Update both the Python executable and script paths
-4. Restart Cursor to load the configuration
-
-**Configuration Options:**
-- **Project-specific** (`.cursor/mcp.json`): Use this for MCP servers specific to a project
-- **Global** (`~/.cursor/mcp.json`): Use this for MCP servers you want available across all projects
-
-**Path Examples:**
-- UV command: Usually `~/.local/bin/uv` or `/usr/local/bin/uv`
-- Project directory: Full path to your cloned repository  
-- Python venv: `path/to/your/project/.venv/bin/python`
-
-⚠️ **Security Note:** Keep your `.cursor/mcp.json` file private and never commit it to version control with real API keys. Consider using environment variables or a separate `.env` file for sensitive data.
-
-#### Adding to Claude Desktop
-
-1. Locate your Claude Desktop configuration file:
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-2. Add the MCP server configuration:
-
-```json
-{
-  "mcpServers": {
-    "documentation-search": {
-      "command": "/path/to/.venv/bin/python",
-      "args": ["/path/to/main.py"],
-      "env": {
-        "SERPER_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
-
-3. Replace paths with your actual file locations
-4. Restart Claude Desktop
+⚠️ **Important**: Keep your API keys secure and never commit them to version control. The MCP configuration files should be private and not shared publicly.
 
 ### Available Tools
 
 #### 1. `get_docs` - Documentation Search
 Search for specific information within library documentation.
 
-**Parameters:**
-- `query` (string): Your search query
-- `library` (string): The library to search in
-
 **Example:**
+```
+🤖 You: "Using the documentation-search-enhanced MCP server, find FastAPI authentication examples"
+
+Claude: I'll search the FastAPI documentation for authentication examples.
+
+📚 FastAPI Authentication Examples:
+
+From FastAPI's security documentation:
+
+**OAuth2 with Password Bearer**
 ```python
-get_docs(query="authentication middleware", library="fastapi")
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@app.post("/token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    # Authenticate user and return token
+    return {"access_token": access_token, "token_type": "bearer"}
 ```
 
-#### 2. `recommend_libraries` - Smart Recommendations
-Get personalized library suggestions based on your use case and experience level.
+**JWT Authentication**
+```python
+from jose import JWTError, jwt
+from datetime import datetime, timedelta
 
-**Parameters:**
-- `use_case` (string): Project type (e.g., "web-api", "frontend", "ai")
-- `experience_level` (string): Your skill level ("beginner", "intermediate", "advanced")
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+```
+```
 
-#### 3. `compare_libraries` - Technology Comparison
-Compare multiple libraries with data-driven analysis.
+#### 2. `suggest_libraries` - Smart Auto-complete
+Get library suggestions based on partial names.
 
-**Parameters:**
-- `library_names` (list): Libraries to compare
+**Example:**
+```
+🤖 You: "What libraries start with 'lang'?"
 
-#### 4. Additional Tools
-- `suggest_libraries` - Auto-complete library names
-- `get_trending_libraries` - Find trending technologies
-- `get_library_insights` - Deep analysis of specific libraries
-- `health_check` - Monitor documentation source availability
-- `clear_cache` - Clear cached content
+Claude: Here are libraries matching "lang":
+
+• **langchain** - AI framework for building applications with LLMs
+• **language-tool** - Grammar and spell checking
+• **langdetect** - Language detection library
+
+Would you like more details about any of these?
+```
+
+#### 3. `health_check` - System Status
+Monitor the health of documentation sources.
+
+**Example:**
+```
+🤖 You: "Check if the documentation sources are working"
+
+Claude: 📊 Documentation Health Status:
+
+✅ **fastapi**: Healthy (142ms response)
+✅ **langchain**: Healthy (203ms response) 
+✅ **react**: Healthy (186ms response)
+✅ **django**: Healthy (167ms response)
+✅ **openai**: Healthy (124ms response)
+
+📈 **Cache Stats**: 47 active entries, 12% utilization
+🚀 **Overall Status**: All systems operational
+```
+
+#### 4. Real-World Usage Scenarios
+
+**Scenario 1: Learning New Technology**
+```
+🤖 You: "I'm new to web development. What's the easiest Python web framework to start with?"
+
+Claude: Based on the documentation and current trends:
+
+🎯 **Flask** - Perfect for Beginners (Score: 88/100)
+• **Learning Curve**: Easy (2-3 weeks to proficiency)
+• **Documentation Quality**: Excellent, beginner-friendly
+• **Community**: Large, helpful community
+• **Job Market**: Strong demand, good entry-level opportunities
+
+📚 **Getting Started with Flask**:
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+**Next Steps**: Try the Flask tutorial, build a simple blog, then explore Flask-SQLAlchemy for databases.
+```
+
+**Scenario 2: Technology Comparison**
+```
+🤖 You: "Compare FastAPI vs Django for building APIs"
+
+Claude: 🔍 **FastAPI vs Django** - Comprehensive Analysis
+
+**FastAPI** (Winner for APIs - 94/100)
+✅ **Pros**:
+- Automatic API documentation (Swagger/OpenAPI)
+- Built-in async support
+- Type hints integration
+- 3x faster performance
+- Modern Python features
+
+**Django** (Better for Full-Stack - 89/100)  
+✅ **Pros**:
+- Mature ecosystem
+- Built-in admin interface
+- Comprehensive ORM
+- Better for full-stack applications
+- Larger community
+
+**🎯 Recommendation**: 
+- Choose **FastAPI** for pure APIs, microservices, high-performance needs
+- Choose **Django** for full-stack web applications with admin interfaces
+```
+
+**Scenario 3: Debugging and Problem Solving**
+```
+🤖 You: "I'm getting CORS errors in my FastAPI app. How do I fix this?"
+
+Claude: 🔧 **FastAPI CORS Configuration**
+
+From FastAPI documentation:
+
+```python
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
+# For production, be more specific:
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "https://yourdomain.com"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
+```
+
+**🔐 Security Note**: Never use `allow_origins=["*"]` in production with `allow_credentials=True`.
+```
 
 ## How It Works
 
@@ -325,6 +516,24 @@ Compare multiple libraries with data-driven analysis.
 
 ## Environment Variables
 
+### For AWS-Style Deployment (Recommended)
+Set in your MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "uvx",
+      "args": ["documentation-search-enhanced@latest"],
+      "env": {
+        "SERPER_API_KEY": "your_serper_api_key_here"
+      }
+    }
+  }
+}
+```
+
+### For Local Development
 Create a `.env` file with:
 
 ```env
@@ -360,14 +569,20 @@ export GITHUB_TOKEN=your_github_token
 
 ```
 documentation-search-mcp/
-├── main.py                 # Main MCP server implementation
-├── dynamic_enhancer.py     # Optional enhancement module (not used)
-├── config.json            # Documentation sources configuration
-├── pyproject.toml         # Project dependencies
-├── README.md              # This file
-├── CONTRIBUTING.md        # Contribution guidelines
-├── LICENSE                # MIT License
-└── .env                   # Environment variables (create this)
+├── src/
+│   └── documentation_search_enhanced/
+│       ├── __init__.py           # Package initialization
+│       ├── main.py              # Main MCP server implementation
+│       └── config.json          # Documentation sources configuration
+├── dynamic_enhancer.py          # Optional enhancement module (not used)
+├── pyproject.toml              # Project dependencies and packaging
+├── publish_to_pypi.sh          # Publishing script for AWS-style deployment
+├── test_publish.sh             # Test publishing script
+├── PUBLISHING_GUIDE.md         # Step-by-step publishing guide
+├── README.md                   # This file
+├── CONTRIBUTING.md             # Contribution guidelines
+├── LICENSE                     # MIT License
+└── .env                        # Environment variables (create this for local dev)
 ```
 
 ## Contributing
@@ -382,15 +597,59 @@ To add support for new libraries:
 
 ### Common Issues
 
-- **"Library not supported"**: Check that the library name matches an entry in `config.json`
-- **"No results found"**: Try a more general search query
-- **Timeout errors**: Some documentation sites may be slow; this is handled gracefully
+**❌ "Library not supported"**
+```
+Solution: Check available libraries with suggest_libraries tool
+Available: python, javascript, react, fastapi, django, langchain, openai, anthropic, etc.
+```
 
-### Integration Issues
+**❌ "No results found"**
+```
+Solution: Try broader search terms
+❌ "FastAPI OAuth implementation with custom scopes"
+✅ "FastAPI authentication" or "FastAPI security"
+```
 
-- **Tool not appearing**: Ensure paths are correct and dependencies are installed
-- **Environment variables**: Verify `SERPER_API_KEY` is set in MCP configuration
-- **Virtual environment**: Use the correct Python path from your venv
+**❌ Tool not appearing in AI assistant**
+```
+1. Verify MCP configuration file location:
+   - Cursor: .cursor/mcp.json
+   - Claude Desktop: ~/Library/Application Support/Claude/claude_desktop_config.json
+   
+2. Check configuration syntax:
+   - JSON must be valid
+   - Use "uvx" command for AWS-style deployment
+   - Include SERPER_API_KEY in env section
+   
+3. Restart your AI assistant after configuration changes
+```
+
+**❌ "SERPER_API_KEY not set" error**
+```
+1. Get free API key from https://serper.dev
+2. Add to MCP configuration:
+   "env": {
+     "SERPER_API_KEY": "your_key_here"
+   }
+3. Restart AI assistant
+```
+
+**❌ "uvx command not found"**
+```
+Install UV package manager:
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Performance Issues
+
+**🐌 Slow responses**
+- First search is slower (cache warming)
+- Subsequent searches are much faster
+- Use health_check tool to monitor performance
+
+**🔧 Clear cache if issues persist**
+- Use clear_cache tool in your AI assistant
+- This forces fresh fetches from documentation sources
 
 
 
@@ -399,9 +658,9 @@ To add support for new libraries:
 ### ⭐ **Star this repository** if you find it valuable!
 
 ### 🚀 **Get Started Now**
-1. **Clone:** `git clone https://github.com/anton-prosterity/documentation-search-mcp.git`
-2. **Setup:** `uv sync && echo "SERPER_API_KEY=your_key" > .env`
-3. **Integrate:** Add to Cursor/Claude Desktop (see Setup above)
+1. **Install:** `uvx documentation-search-enhanced@latest`
+2. **API Key:** Get free key from [serper.dev](https://serper.dev)
+3. **Configure:** Add to your AI assistant (see Quick Start above)
 4. **Experience:** Ask Claude "*What's the best framework for my project?*"
 
 ### 🤝 **Join the Community**
