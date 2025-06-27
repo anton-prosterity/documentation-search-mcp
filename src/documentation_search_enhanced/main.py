@@ -11,6 +11,7 @@ from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 from importlib import resources
 from .smart_search import smart_search, SearchResult
+from .rate_limiter import RateLimiter
 #Load the environment variables
 load_dotenv()
 
@@ -97,6 +98,12 @@ cache = SimpleCache(
     ttl_hours=cache_config.get("ttl_hours", 24),
     max_entries=cache_config.get("max_entries", 1000)
 ) if cache_config.get("enabled", False) else None
+
+rate_limit_config = config.get("rate_limiting", {"enabled": False})
+limiter = RateLimiter(
+    requests=rate_limit_config.get("requests_per_minute", 60),
+    per_seconds=60
+) if rate_limit_config.get("enabled", False) else None
 
 async def search_web_with_retry(query: str, max_retries: int = 3) -> dict:
     """Search web with exponential backoff retry logic"""
@@ -229,7 +236,10 @@ async def get_docs(query: str, libraries: Union[str, List[str]]):
     Returns:
         Text from the docs (limited to ~50KB for readability)
     """
-    
+    # --- Rate Limiting Check ---
+    if limiter and not limiter.is_allowed():
+        return {"error": "Rate limit exceeded. Please try again in a minute."}
+
     if isinstance(libraries, str):
         libraries = [libraries]
 
@@ -441,6 +451,10 @@ async def semantic_search(query: str, libraries: Union[str, List[str]], context:
     Returns:
         Enhanced search results with relevance scores and metadata, ranked across all libraries.
     """
+    # --- Rate Limiting Check ---
+    if limiter and not limiter.is_allowed():
+        return {"error": "Rate limit exceeded. Please try again in a minute."}
+
     if isinstance(libraries, str):
         libraries = [libraries]
 
