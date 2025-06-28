@@ -3,8 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![AWS-Style](https://img.shields.io/badge/AWS--Style-Deployment-orange.svg)](https://github.com/awslabs/mcp)
+[![PyPI version](https://badge.fury.io/py/documentation-search-enhanced.svg)](https://badge.fury.io/py/documentation-search-enhanced)
 
 > An enhanced MCP server for documentation search, security analysis, and developer productivity.
 > Deploys instantly with `uvx`, just like official AWS MCP servers.
@@ -13,10 +12,10 @@
 | :--- | :--- | :--- |
 | 📚 **Multi-Lib Search** | Search across 104+ docs simultaneously | `"Compare state management in react vs vue"` |
 | 🛡️ **Project Security** | Scan all dependencies for vulnerabilities | `"Are there any security issues in my project?"` |
-| 🏗️ **Project Generation**| Create boilerplate for new projects | `"Create a new fastapi project called my-api"` |
+| 🏗️ **Project Generation**| Create boilerplate for new projects | `"Create a new fastapi project"` |
 | 🐳 **Docker Environments**| Set up local services like Postgres/Redis | `"Set up a postgres database for me"` |
 | 🎓 **Learning Paths** | Get a structured learning plan | `"Give me a learning path for devops"` |
-| ⚖️ **Security Comparison**| Compare security scores of libraries | `"Compare security of flask vs django"` |
+| ⚖️ **Security Comparison**| Compare security scores of libraries | `"Compare flask vs django"` |
 
 ## 🚀 MCP Value Proposition: From Minutes to Seconds
 
@@ -31,49 +30,25 @@ To understand the impact of this MCP server, let's compare a common, critical de
 | &nbsp;&nbsp;&nbsp; a. Google `"[library-name] vulnerability"`. | |
 | &nbsp;&nbsp;&nbsp; b. Open its PyPI page, look for warnings. | |
 | &nbsp;&nbsp;&nbsp; c. Open its GitHub page, find the "Security" tab. | |
-| &nbsp;&nbsp;&nbsp; d. Manually check if any listed CVEs apply to your specific version. | |
+| &nbsp;&nbsp;&nbsp; d. Manually check if CVEs apply to your version. | |
 | 3. Try to mentally aggregate the risk level. | |
-| 4. Miss one? Your project is still at risk. | |
 | --- | --- |
 | **_Time Required: 15-30 minutes_** | **_Time Required: ~5 seconds_** |
-| **_Output: A vague sense of security and 20 open browser tabs._** | **_Output: A precise, actionable JSON report._** |
-| | <br> ```json { "summary": { "dependency_file": "pyproject.toml", "total_dependencies": 25, "vulnerable_count": 2, "overall_project_risk": "High" }, "vulnerable_packages": [ { "library": "requests", "version": "2.25.0", "security_score": 35, "summary": "High severity CVE found..." } ] } ``` |
+| **_Output: A vague sense of security._** | **_Output: A precise, actionable JSON report._** |
+| | <br> ```json { "summary": { "vulnerable_count": 2, "overall_project_risk": "High" }, "vulnerable_packages": [ { "library": "requests", "security_score": 35 } ] } ``` |
 
 This is the core value: **automating tedious, complex, and critical developer workflows** to deliver instant, accurate, and actionable insights.
 
-## 🎯 What This Does
+## 🚀 Quick Start
 
-**Transforms your AI assistant into a documentation expert!**
-
-Instead of your AI assistant saying *"I don't have access to current documentation"*, it now:
-
-1. **🔍 Searches live documentation** from 104+ popular libraries.
-2. **📚 Returns current, accurate code examples**.
-3. **🎯 Provides contextual recommendations** based on your needs.
-4. **⚡ Caches results** for lightning-fast follow-up questions.
-
-## 🚀 AWS-Style Deployment Ready
-
-This MCP server follows the **exact same deployment pattern** as AWS MCP servers:
-
+### 1. Install & Run
 ```bash
-# Just like AWS MCP servers - zero setup required!
+# No git clone required! Needs Python 3.12+
 uvx documentation-search-enhanced@latest
 ```
 
-Same professional experience:
-- ✅ No local cloning or setup
-- ✅ Automatic dependency management
-- ✅ Always up-to-date with `@latest`
-- ✅ Works with any MCP-compatible AI assistant
-
----
-
-## 🔧 Add to Your AI Assistant
-
-#### For Cursor
-
-Create `.cursor/mcp.json` in your project root:
+### 2. Configure with your AI Assistant
+Add to your Claude Desktop or Cursor configuration:
 
 ```json
 {
@@ -82,36 +57,16 @@ Create `.cursor/mcp.json` in your project root:
       "command": "uvx",
       "args": ["documentation-search-enhanced@latest"],
       "env": {
-        "SERPER_API_KEY": "your_key_here"
+        "SERPER_API_KEY": "your_serper_api_key_here"
       }
     }
   }
 }
 ```
-
-#### For Claude Desktop
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
-
-```json
-{
-  "mcpServers": {
-    "documentation-search-enhanced": {
-      "command": "uvx",
-      "args": ["documentation-search-enhanced@latest"],
-      "env": {
-        "SERPER_API_KEY": "your_key_here"
-      }
-    }
-  }
-}
-```
-
-**That's it!** 🎉 Your AI assistant now has development superpowers.
 
 ## 🛠️ Available Tools
 
-A summary of the tools provided by this MCP server.
+This server provides a powerful suite of tools to enhance your development workflow:
 
 | Tool | Description |
 | :--- | :--- |
@@ -119,43 +74,34 @@ A summary of the tools provided by this MCP server.
 | `semantic_search`| Performs AI-powered semantic search across multiple libraries, ranking results by relevance. |
 | `get_learning_path`| Generates a structured learning curriculum for a technology or skill level. |
 | `get_code_examples`| Finds curated code examples for a specific topic. |
-| `scan_project_dependencies`| **(New!)** Scans your project's dependencies for known security vulnerabilities. |
+| `scan_project_dependencies`| **(New!)** Scans your project's dependencies (`pyproject.toml`, etc.) for known security vulnerabilities. |
 | `generate_project_starter`| **(New!)** Creates boilerplate for new FastAPI or React projects. |
 | `manage_dev_environment`| **(New!)** Generates a `docker-compose.yml` for services like Postgres or Redis. |
 | `get_security_summary`| Provides a quick security score and summary for a single library. |
 | `compare_library_security`| Compares the security posture of multiple libraries side-by-side. |
 | `suggest_libraries`| Autocompletes library names. |
+| `get_current_config`| **(New!)** Returns the active configuration, which you can save and modify for local overrides. |
 | `health_check`| Checks the status of documentation sources. |
 
-## 🏠 Local Development (Optional)
+## ⚙️ Customization
 
-If you want to contribute or customize:
+You can customize the server by creating a `config.json` file in your project directory.
+
+1.  **Get the default config:** Ask your AI assistant, `"get the current configuration"`.
+2.  **Save as `config.json`:** Save the output to a `config.json` file in your project's root.
+3.  **Modify:** Add your own private documentation URLs or change settings.
+
+The server will automatically use your local `config.json` if it exists.
+
+## 🏠 Local Development
+
+If you want to contribute or customize the server's code:
 ```bash
 git clone https://github.com/antonmishel/documentation-search-mcp.git
 cd documentation-search-mcp
 uv sync
 echo "SERPER_API_KEY=your_key_here" > .env
 uv run python src/documentation_search_enhanced/main.py
-```
-
-## Project Structure
-```
-documentation-search-mcp/
-├── src/
-│   └── documentation_search_enhanced/
-│       ├── __init__.py              # Package initialization
-│       ├── main.py                  # Main MCP server implementation
-│       ├── config.json              # Documentation sources configuration
-│       ├── config_manager.py        # Environment-aware configuration
-│       ├── vulnerability_scanner.py # Security vulnerability scanning
-│       ├── project_scanner.py       # Scans project dependency files
-│       ├── project_generator.py     # Generates project boilerplate
-│       └── docker_manager.py        # Manages Docker environments
-├── pyproject.toml                   # Project dependencies and packaging
-├── publish_to_pypi.sh               # Publishing script
-├── samples/                         # Usage examples and configs
-├── CHANGELOG.md                     # Version history
-└── README.md                        # This file
 ```
 
 ## Contributing
@@ -214,10 +160,11 @@ Based on my analysis of the [AWS MCP repository](https://github.com/awslabs/mcp)
 4. **Project-Aware Security Scan** - Scans `pyproject.toml`, etc. for vulnerabilities.
 5. **Project Boilerplate Generation** - Creates starter projects from templates.
 6. **Local Dev Environment Management** - Generates `docker-compose.yml` for services.
+7. **Configuration Validation** - Ensures `config.json` is valid on startup, providing clear errors.
 
 ### 🚀 **High Priority Enhancements** 
 
-#### 7. **Rate Limiting & Resource Management**
+#### 8. **Rate Limiting & Resource Management**
 ```python
 # Add to main.py
 from asyncio import Semaphore
@@ -234,7 +181,7 @@ class RateLimiter:
         # Implementation...
 ```
 
-#### 8. **Auto-Approve Tool Integration**
+#### 9. **Auto-Approve Tool Integration**
 ```python
 # Modify tools to respect auto-approve settings
 @mcp.tool()
@@ -248,7 +195,7 @@ async def get_docs(query: str, library: str):
         pass
 ```
 
-#### 9. **Enhanced Analytics & Metrics**
+#### 10. **Enhanced Analytics & Metrics**
 ```python
 # Add usage analytics like AWS MCP servers
 class AnalyticsTracker:
@@ -261,7 +208,7 @@ class AnalyticsTracker:
         }
 ```
 
-#### 10. **Plugin Architecture** 
+#### 11. **Plugin Architecture** 
 ```python
 # Enable community extensions
 class PluginManager:
@@ -278,7 +225,7 @@ class PluginManager:
 
 ### 🎯 **Medium Priority Enhancements**
 
-#### 11. **Persistent Caching**
+#### 12. **Persistent Caching**
 ```python
 # Add SQLite-based persistent cache
 import sqlite3
@@ -289,24 +236,6 @@ class PersistentCache(SimpleCache):
         super().__init__()
         self.db_path = db_path
         self._init_db()
-```
-
-#### 12. **Configuration Validation**
-```python
-# Add pydantic-based config validation
-from pydantic import BaseModel, validator
-
-class ServerConfig(BaseModel):
-    name: str
-    version: str
-    logging_level: str = "INFO"
-    max_concurrent_requests: int = 10
-    
-    @validator('logging_level')
-    def validate_log_level(cls, v):
-        if v not in ['ERROR', 'WARN', 'INFO', 'DEBUG']:
-            raise ValueError('Invalid log level')
-        return v
 ```
 
 #### 13. **Health Check Enhancements**
@@ -384,10 +313,11 @@ async def trending_topics(category: str = "ai"):
 ### **Phase 3 (Done)**
 7. ✅ Local Dev Environment Management
 
-### **Phase 4 (Next)**
-8. 🔄 Rate Limiting Implementation
-9. 🔄 Auto-Approve Tool Integration
-10. Analytics & Metrics Tracking
+### **Phase 4 (Current)**
+8. ✅ Configuration Validation
+9. 🔄 Rate Limiting Implementation
+10. 🔄 Auto-Approve Tool Integration
+11. Analytics & Metrics Tracking
 
 ## 🚀 **Expected Benefits**
 
@@ -487,3 +417,25 @@ Get a broader perspective by searching across multiple libraries at once.
 ### 🚀 New in Version 1.2: Project-Aware Tools
 
 #### Project Security Audit
+
+## Configuration
+
+Your MCP server comes pre-configured with 104 popular libraries, but you can easily customize it.
+
+### How to Customize Your Configuration
+
+1.  **Get the Default Configuration:**
+    Ask your AI assistant: `"Show me the current configuration"`
+    This will output the entire `config.json` content.
+
+2.  **Create a Local `config.json`:**
+    -   Save the output from the previous step into a file named `config.json` in your project's root directory.
+
+3.  **Modify Your Local Config:**
+    -   Add your own private documentation URLs, internal libraries, or tweak any settings.
+
+The MCP server will **automatically detect and use your local `config.json`** instead of the default one.
+
+### Adding New Documentation Sources
+
+To add a new library, simply edit your local `config.json` and add a new entry to the `docs_urls` and `categories` sections:

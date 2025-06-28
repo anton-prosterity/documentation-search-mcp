@@ -11,7 +11,10 @@ from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 from importlib import resources
 from .smart_search import smart_search, SearchResult
-from .rate_limiter import RateLimiter
+from .web_scraper import scraper
+from collections import deque
+from .config_validator import validate_config, Config as AppConfig
+import sys
 #Load the environment variables
 load_dotenv()
 
@@ -62,30 +65,54 @@ class SimpleCache:
         for key in expired_keys:
             del self.cache[key]
 
-# Load configuration from external file
-def load_config():
-    """Load configuration with enhanced popularity data"""
+def load_config() -> AppConfig:
+    """Load and validate the configuration file.
+
+    Priority:
+    1. Looks for `config.json` in the current working directory.
+    2. Falls back to the `config.json` bundled with the package.
+    """
+    config_data = None
+    local_config_path = os.path.join(os.getcwd(), "config.json")
+
     try:
-        # Try to load from package resources first (for installed package)
-        try:
-            config_text = resources.read_text("documentation_search_enhanced", "config.json")
-            config = json.loads(config_text)
-        except (FileNotFoundError, ModuleNotFoundError):
-            # Fallback to relative path (for development)
-            config_path = os.path.join(os.path.dirname(__file__), "..", "..", "config.json")
-            with open(config_path, "r") as f:
-                config = json.load(f)
-    except Exception:
-        # Final fallback to current directory
-        with open("config.json", "r") as f:
-            config = json.load(f)
-    return config
+        # 1. Prioritize local config file
+        if os.path.exists(local_config_path):
+            print("📝 Found local config.json. Loading...", file=sys.stderr)
+            with open(local_config_path, "r") as f:
+                config_data = json.load(f)
+        else:
+            # 2. Fallback to packaged config
+            try:
+                config_text = resources.read_text("documentation_search_enhanced", "config.json")
+                config_data = json.loads(config_text)
+            except (FileNotFoundError, ModuleNotFoundError):
+                # This is a critical failure if the package is broken
+                print("FATAL: Packaged config.json not found.", file=sys.stderr)
+                raise
+                
+    except Exception as e:
+        print(f"FATAL: Could not read config.json. Error: {e}", file=sys.stderr)
+        raise
+
+    if not config_data:
+        raise FileNotFoundError("Could not find or load config.json")
+        
+    try:
+        validated_config = validate_config(config_data)
+        print("✅ Configuration successfully loaded and validated.", file=sys.stderr)
+        return validated_config
+    except Exception as e: # Pydantic's ValidationError
+        print(f"❌ FATAL: Configuration validation failed. Please check your config.json.", file=sys.stderr)
+        print(e, file=sys.stderr)
+        raise
 
 # Load configuration
-config = load_config()
+config_model = load_config()
+config = config_model.model_dump() # Use the dict version for existing logic
 docs_urls = {}
 # Handle both old simple URL format and new enhanced format
-for lib_name, lib_data in config["docs_urls"].items():
+for lib_name, lib_data in config.get("docs_urls", {}).items():
     if isinstance(lib_data, dict):
         docs_urls[lib_name] = lib_data.get("url", "")
     else:
@@ -99,16 +126,10 @@ cache = SimpleCache(
     max_entries=cache_config.get("max_entries", 1000)
 ) if cache_config.get("enabled", False) else None
 
-rate_limit_config = config.get("rate_limiting", {"enabled": False})
-limiter = RateLimiter(
-    requests=rate_limit_config.get("requests_per_minute", 60),
-    per_seconds=60
-) if rate_limit_config.get("enabled", False) else None
-
 async def search_web_with_retry(query: str, max_retries: int = 3) -> dict:
     """Search web with exponential backoff retry logic"""
     if not SERPER_API_KEY:
-        print("⚠️ SERPER_API_KEY not set - web search functionality will be limited")
+        print("⚠️ SERPER_API_KEY not set - web search functionality will be limited", file=sys.stderr)
         return {"organic": []}
     
     payload = json.dumps({"q": query, "num": 2})
@@ -130,90 +151,44 @@ async def search_web_with_retry(query: str, max_retries: int = 3) -> dict:
                 
         except httpx.TimeoutException:
             if attempt == max_retries - 1:
-                print(f"Timeout after {max_retries} attempts for query: {query}")
+                print(f"Timeout after {max_retries} attempts for query: {query}", file=sys.stderr)
                 return {"organic": []}
             await asyncio.sleep(2 ** attempt)  # Exponential backoff
             
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 429:  # Rate limited
                 if attempt == max_retries - 1:
-                    print(f"Rate limited after {max_retries} attempts")
+                    print(f"Rate limited after {max_retries} attempts", file=sys.stderr)
                     return {"organic": []}
                 await asyncio.sleep(2 ** (attempt + 2))  # Longer wait for rate limits
             else:
-                print(f"HTTP error {e.response.status_code}: {e}")
+                print(f"HTTP error {e.response.status_code}: {e}", file=sys.stderr)
                 return {"organic": []}
                 
         except Exception as e:
             if attempt == max_retries - 1:
-                print(f"Unexpected error after {max_retries} attempts: {e}")
+                print(f"Unexpected error after {max_retries} attempts: {e}", file=sys.stderr)
                 return {"organic": []}
             await asyncio.sleep(2 ** attempt)
     
     return {"organic": []}
 
 async def fetch_url_with_cache(url: str, max_retries: int = 3) -> str:
-    """Fetch URL content with caching and retry logic"""
-    # Generate cache key
+    """Fetch URL content with caching and a Playwright-based scraper."""
     cache_key = hashlib.md5(url.encode()).hexdigest()
     
-    # Check cache first
     if cache:
         cached_content = cache.get(cache_key)
         if cached_content:
             return cached_content
     
-    # Fetch with retry logic
-    for attempt in range(max_retries):
-        try:
-            async with httpx.AsyncClient() as client:
-                response = await client.get(
-                    url, 
-                    timeout=httpx.Timeout(30.0, read=60.0),
-                    headers={"User-Agent": USER_AGENT},
-                    follow_redirects=True
-                )
-                response.raise_for_status()
-                
-                # Parse content
-                soup = BeautifulSoup(response.text, "html.parser")
-                
-                # Remove script and style elements
-                for script in soup(["script", "style", "nav", "footer", "header"]):
-                    script.decompose()
-                
-                # Get text and clean it up
-                text = soup.get_text()
-                lines = (line.strip() for line in text.splitlines())
-                chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-                text = ' '.join(chunk for chunk in chunks if chunk)
-                
-                # Cache the result
-                if cache and text:
-                    cache.set(cache_key, text)
-                
-                return text
-                
-        except httpx.TimeoutException:
-            if attempt == max_retries - 1:
-                return f"Timeout error fetching {url}"
-            await asyncio.sleep(2 ** attempt)
-            
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code == 404:
-                return f"Page not found: {url}"
-            elif e.response.status_code == 403:
-                return f"Access forbidden: {url}"
-            elif attempt == max_retries - 1:
-                return f"HTTP error {e.response.status_code} for {url}"
-            await asyncio.sleep(2 ** attempt)
-            
-        except Exception as e:
-            if attempt == max_retries - 1:
-                return f"Error fetching {url}: {str(e)}"
-            await asyncio.sleep(2 ** attempt)
+    # Use the new Playwright scraper
+    content = await scraper.scrape_url(url)
     
-    return f"Failed to fetch {url} after {max_retries} attempts"
+    if cache and "Error:" not in content:
+        cache.set(cache_key, content)
+        
+    return content
 
 # Backward compatibility aliases
 async def search_web(query: str) -> dict:
@@ -236,10 +211,6 @@ async def get_docs(query: str, libraries: Union[str, List[str]]):
     Returns:
         Text from the docs (limited to ~50KB for readability)
     """
-    # --- Rate Limiting Check ---
-    if limiter and not limiter.is_allowed():
-        return {"error": "Rate limit exceeded. Please try again in a minute."}
-
     if isinstance(libraries, str):
         libraries = [libraries]
 
@@ -249,17 +220,17 @@ async def get_docs(query: str, libraries: Union[str, List[str]]):
 
     for library in libraries:
         # Check auto-approve settings
-        config = load_config()
+        config = config_model.model_dump()
         lib_config = config.get("docs_urls", {}).get(library, {})
         auto_approve = lib_config.get("auto_approve", True)
         
         if not auto_approve:
             # For libraries marked as requiring approval (like AWS, cloud services)
-            print(f"⚠️  Requesting approval to search {library} documentation...")
+            print(f"⚠️  Requesting approval to search {library} documentation...", file=sys.stderr)
         
         if library not in docs_urls:
             # Instead of raising an error, we'll just note it and continue
-            print(f"⚠️ Library '{library}' not supported by this tool. Skipping.")
+            print(f"⚠️ Library '{library}' not supported by this tool. Skipping.", file=sys.stderr)
             continue
         
         search_query = f"site:{docs_urls[library]} {query}"
@@ -451,10 +422,6 @@ async def semantic_search(query: str, libraries: Union[str, List[str]], context:
     Returns:
         Enhanced search results with relevance scores and metadata, ranked across all libraries.
     """
-    # --- Rate Limiting Check ---
-    if limiter and not limiter.is_allowed():
-        return {"error": "Rate limit exceeded. Please try again in a minute."}
-
     if isinstance(libraries, str):
         libraries = [libraries]
 
@@ -912,7 +879,7 @@ async def get_code_examples(library: str, topic: str, language: str = "python"):
         
         if not results:
             # Fallback to regular search
-            config = load_config()
+            config = config_model.model_dump()
             if library not in docs_urls:
                 return {"error": f"Library {library} not supported"}
             
@@ -1339,7 +1306,7 @@ async def scan_project_dependencies(project_path: str = "."):
         }
 
     total_deps = len(dependencies)
-    print(f"🔎 Found {total_deps} dependencies in '{filename}'. Scanning for vulnerabilities...")
+    print(f"🔎 Found {total_deps} dependencies in '{filename}'. Scanning for vulnerabilities...", file=sys.stderr)
 
     scan_tasks = [
         vulnerability_scanner.scan_library(name, ecosystem) 
@@ -1453,6 +1420,20 @@ async def manage_dev_environment(service: str, project_path: str = "."):
         return {"error": str(e)}
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
+
+
+@mcp.tool()
+async def get_current_config():
+    """
+    Returns the current, active configuration of the MCP server.
+    This allows users to view the default config and use it as a template for local overrides.
+    """
+    try:
+        # The `config` global is a dictionary created from the Pydantic model
+        # at startup, so it represents the active configuration.
+        return config
+    except Exception as e:
+        return {"error": f"Could not retrieve configuration: {str(e)}"}
 
 
 def main():
