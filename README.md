@@ -17,28 +17,6 @@
 | 🎓 **Learning Paths** | Get a structured learning plan | `"Give me a learning path for devops"` |
 | ⚖️ **Security Comparison**| Compare security scores of libraries | `"Compare flask vs django"` |
 
-## 🚀 MCP Value Proposition: From Minutes to Seconds
-
-To understand the impact of this MCP server, let's compare a common, critical developer task with and without the tool.
-
-**Scenario: "Are there any vulnerabilities in my project's dependencies?"**
-
-| Without MCP (The Manual Grind) | With MCP (The Instant Audit) |
-| :--- | :--- |
-| 1. Open your `pyproject.toml` or `requirements.txt`. | 1. Ask your AI assistant: |
-| 2. For **each** of your 25 dependencies: | <br> `Are there any vulnerabilities in my project?` |
-| &nbsp;&nbsp;&nbsp; a. Google `"[library-name] vulnerability"`. | |
-| &nbsp;&nbsp;&nbsp; b. Open its PyPI page, look for warnings. | |
-| &nbsp;&nbsp;&nbsp; c. Open its GitHub page, find the "Security" tab. | |
-| &nbsp;&nbsp;&nbsp; d. Manually check if CVEs apply to your version. | |
-| 3. Try to mentally aggregate the risk level. | |
-| --- | --- |
-| **_Time Required: 15-30 minutes_** | **_Time Required: ~5 seconds_** |
-| **_Output: A vague sense of security._** | **_Output: A precise, actionable JSON report._** |
-| | <br> ```json { "summary": { "vulnerable_count": 2, "overall_project_risk": "High" }, "vulnerable_packages": [ { "library": "requests", "security_score": 35 } ] } ``` |
-
-This is the core value: **automating tedious, complex, and critical developer workflows** to deliver instant, accurate, and actionable insights.
-
 ## 🚀 Quick Start
 
 ### 1. Install & Run
