@@ -1436,6 +1436,309 @@ async def get_current_config():
         return {"error": f"Could not retrieve configuration: {str(e)}"}
 
 
+@mcp.tool()
+async def snyk_scan_library(library_name: str, version: str = "latest", ecosystem: str = "pypi"):
+    """
+    Scan a library using Snyk for comprehensive security analysis.
+    
+    Args:
+        library_name: Name of the library to scan
+        version: Version of the library (default: "latest") 
+        ecosystem: Package ecosystem ("pypi", "npm", "maven", etc.)
+    
+    Returns:
+        Detailed security report from Snyk including vulnerabilities, licenses, and remediation advice
+    """
+    from .snyk_integration import snyk_integration
+    
+    try:
+        # Test connection first
+        connection_test = await snyk_integration.test_connection()
+        if connection_test["status"] != "connected":
+            return {
+                "error": "Snyk integration not configured",
+                "details": connection_test.get("error", "Unknown error"),
+                "setup_instructions": [
+                    "1. Sign up for Snyk account at https://snyk.io",
+                    "2. Get API token from your Snyk account settings",
+                    "3. Set SNYK_API_KEY environment variable",
+                    "4. Optionally set SNYK_ORG_ID for organization-specific scans"
+                ]
+            }
+        
+        # Perform the scan
+        package_info = await snyk_integration.scan_package(library_name, version, ecosystem)
+        
+        return {
+            "library": library_name,
+            "version": version,
+            "ecosystem": ecosystem,
+            "scan_timestamp": datetime.now().isoformat(),
+            "vulnerability_summary": {
+                "total": len(package_info.vulnerabilities),
+                "critical": package_info.severity_counts.get("critical", 0),
+                "high": package_info.severity_counts.get("high", 0),
+                "medium": package_info.severity_counts.get("medium", 0),
+                "low": package_info.severity_counts.get("low", 0)
+            },
+            "vulnerabilities": [
+                {
+                    "id": vuln.id,
+                    "title": vuln.title,
+                    "severity": vuln.severity.value,
+                    "cvss_score": vuln.cvss_score,
+                    "cve": vuln.cve,
+                    "is_patchable": vuln.is_patchable,
+                    "upgrade_path": vuln.upgrade_path[:3] if vuln.upgrade_path else [],
+                    "snyk_url": f"https://snyk.io/vuln/{vuln.id}"
+                }
+                for vuln in package_info.vulnerabilities[:10]  # Limit to top 10
+            ],
+            "license_info": [
+                {
+                    "name": license.name,
+                    "type": license.type,
+                    "spdx_id": license.spdx_id,
+                    "is_deprecated": license.is_deprecated
+                }
+                for license in package_info.licenses
+            ],
+            "recommendations": [
+                "🔍 Review all critical and high severity vulnerabilities",
+                "📦 Update to latest secure version if available",
+                "⚖️ Ensure license compliance with your organization's policies",
+                "🔄 Set up continuous monitoring for this package"
+            ]
+        }
+        
+    except Exception as e:
+        return {
+            "error": f"Snyk scan failed: {str(e)}",
+            "library": library_name,
+            "version": version
+        }
+
+
+@mcp.tool()
+async def snyk_scan_project(project_path: str = "."):
+    """
+    Scan entire project dependencies using Snyk.
+    
+    Args:
+        project_path: Path to the project directory (default: current directory)
+    
+    Returns:
+        Comprehensive security report for all project dependencies
+    """
+    from .snyk_integration import snyk_integration
+    from .project_scanner import find_and_parse_dependencies
+    
+    try:
+        # Find project dependencies
+        dep_result = find_and_parse_dependencies(project_path)
+        if not dep_result:
+            return {
+                "error": "No supported dependency files found",
+                "supported_files": ["pyproject.toml", "requirements.txt", "package.json"],
+                "project_path": project_path
+            }
+        
+        filename, ecosystem, dependencies = dep_result
+        manifest_path = os.path.join(project_path, filename)
+        
+        # Test Snyk connection
+        connection_test = await snyk_integration.test_connection()
+        if connection_test["status"] != "connected":
+            return {
+                "error": "Snyk integration not configured",
+                "details": connection_test.get("error", "Unknown error")
+            }
+        
+        # Scan the project manifest
+        scan_result = await snyk_integration.scan_project_manifest(manifest_path, ecosystem)
+        
+        if "error" in scan_result:
+            return scan_result
+            
+        # Enhance with additional analysis
+        high_priority_vulns = [
+            vuln for vuln in scan_result["vulnerabilities"] 
+            if vuln.get("severity") in ["critical", "high"]
+        ]
+        
+        return {
+            "project_path": project_path,
+            "manifest_file": filename,
+            "ecosystem": ecosystem,
+            "scan_timestamp": scan_result["scan_timestamp"],
+            "summary": {
+                **scan_result["summary"],
+                "high_priority_vulnerabilities": len(high_priority_vulns),
+                "security_score": max(0, 100 - (
+                    len([v for v in scan_result["vulnerabilities"] if v.get("severity") == "critical"]) * 25 +
+                    len([v for v in scan_result["vulnerabilities"] if v.get("severity") == "high"]) * 15 +
+                    len([v for v in scan_result["vulnerabilities"] if v.get("severity") == "medium"]) * 5 +
+                    len([v for v in scan_result["vulnerabilities"] if v.get("severity") == "low"]) * 1
+                ))
+            },
+            "high_priority_vulnerabilities": high_priority_vulns[:10],
+            "license_issues": scan_result["license_issues"],
+            "remediation_summary": {
+                "patches_available": len([v for v in scan_result["vulnerabilities"] if v.get("is_patchable")]),
+                "upgrades_available": len([v for v in scan_result["vulnerabilities"] if v.get("upgrade_path")]),
+                "total_fixable": len([v for v in scan_result["vulnerabilities"] 
+                                   if v.get("is_patchable") or v.get("upgrade_path")])
+            },
+            "next_steps": [
+                "🚨 Address all critical vulnerabilities immediately",
+                "📦 Update packages with available security patches",
+                "🔍 Review medium and low priority issues", 
+                "⚖️ Check license compliance for flagged packages",
+                "🔄 Set up continuous monitoring with Snyk"
+            ]
+        }
+        
+    except Exception as e:
+        return {
+            "error": f"Project scan failed: {str(e)}",
+            "project_path": project_path
+        }
+
+
+@mcp.tool()
+async def snyk_license_check(project_path: str = ".", policy: str = "permissive"):
+    """
+    Check license compliance for project dependencies using Snyk.
+    
+    Args:
+        project_path: Path to the project directory
+        policy: License policy to apply ("permissive", "copyleft-limited", "strict")
+    
+    Returns:
+        License compliance report with risk assessment
+    """
+    from .snyk_integration import snyk_integration
+    from .project_scanner import find_and_parse_dependencies
+    
+    try:
+        # Find project dependencies
+        dep_result = find_and_parse_dependencies(project_path)
+        if not dep_result:
+            return {"error": "No supported dependency files found"}
+        
+        filename, ecosystem, dependencies = dep_result
+        
+        # Convert dependencies to list of tuples
+        packages = [(name, version) for name, version in dependencies.items()]
+        
+        # Get license compliance report
+        compliance_report = await snyk_integration.get_license_compliance(packages, ecosystem)
+        
+        # Apply policy-specific analysis
+        policy_rules = {
+            "permissive": {
+                "allowed": {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC"},
+                "restricted": {"GPL-2.0", "GPL-3.0", "LGPL-2.1", "LGPL-3.0", "AGPL-3.0"},
+                "name": "Permissive Policy"
+            },
+            "copyleft-limited": {
+                "allowed": {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "LGPL-2.1", "LGPL-3.0"},
+                "restricted": {"GPL-2.0", "GPL-3.0", "AGPL-3.0"},
+                "name": "Limited Copyleft Policy"
+            },
+            "strict": {
+                "allowed": {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause"},
+                "restricted": {"GPL-2.0", "GPL-3.0", "LGPL-2.1", "LGPL-3.0", "AGPL-3.0"},
+                "name": "Strict Policy"
+            }
+        }
+        
+        selected_policy = policy_rules.get(policy, policy_rules["permissive"])
+        
+        # Risk assessment
+        risk_assessment = {
+            "policy_applied": selected_policy["name"],
+            "overall_compliance": "compliant" if compliance_report["non_compliant_packages"] == 0 else "non-compliant",
+            "risk_level": "low" if compliance_report["non_compliant_packages"] == 0 else 
+                         "high" if compliance_report["non_compliant_packages"] > 5 else "medium",
+            "action_required": compliance_report["non_compliant_packages"] > 0
+        }
+        
+        return {
+            "project_path": project_path,
+            "policy": selected_policy["name"],
+            "scan_timestamp": datetime.now().isoformat(),
+            "compliance_summary": compliance_report,
+            "risk_assessment": risk_assessment,
+            "recommendations": [
+                "📋 Review all non-compliant packages",
+                "🔄 Find alternative packages with compatible licenses",
+                "⚖️ Consult legal team for high-risk licenses",
+                "📝 Document license decisions for audit trail"
+            ]
+        }
+        
+    except Exception as e:
+        return {
+            "error": f"License check failed: {str(e)}",
+            "project_path": project_path
+        }
+
+
+@mcp.tool()
+async def snyk_monitor_project(project_path: str = "."):
+    """
+    Set up continuous monitoring for a project with Snyk.
+    
+    Args:
+        project_path: Path to the project directory
+    
+    Returns:
+        Status of monitoring setup and project details
+    """
+    from .snyk_integration import snyk_integration
+    
+    try:
+        # Test connection and get organization info
+        connection_test = await snyk_integration.test_connection()
+        if connection_test["status"] != "connected":
+            return {
+                "error": "Snyk integration not configured",
+                "details": connection_test.get("error", "Unknown error"),
+                "setup_required": [
+                    "Set SNYK_API_KEY environment variable",
+                    "Set SNYK_ORG_ID environment variable",
+                    "Ensure you have organization admin privileges"
+                ]
+            }
+        
+        # Set up monitoring
+        monitor_result = await snyk_integration.monitor_project(project_path)
+        
+        if "error" in monitor_result:
+            return monitor_result
+        
+        return {
+            "status": "success",
+            "monitoring_enabled": True,
+            "project_details": monitor_result,
+            "organization": connection_test.get("organizations", []),
+            "next_steps": [
+                "🔔 Configure alert preferences in Snyk dashboard",
+                "📊 Review security reports regularly",
+                "🔄 Enable automatic PRs for security updates",
+                "📈 Set up integration with CI/CD pipeline"
+            ],
+            "dashboard_url": "https://app.snyk.io/org/your-org/projects"
+        }
+        
+    except Exception as e:
+        return {
+            "error": f"Monitoring setup failed: {str(e)}",
+            "project_path": project_path
+        }
+
+
 def main():
     """Main entry point for the MCP server."""
     mcp.run(transport="stdio")
