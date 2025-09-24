@@ -73,7 +73,7 @@ def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "Hello, World!"}
-"""
+""",
     },
     "react-vite": {
         "index.html": """
@@ -191,9 +191,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   padding: 2rem;
   text-align: center;
 }
-"""
-    }
+""",
+    },
 }
+
 
 class ProjectCreationSummary(TypedDict):
     project_name: str
@@ -203,7 +204,10 @@ class ProjectCreationSummary(TypedDict):
     files_created: List[str]
     user_summary: NotRequired[str]
 
-def generate_project(project_name: str, template_name: str, base_path: str = ".") -> ProjectCreationSummary:
+
+def generate_project(
+    project_name: str, template_name: str, base_path: str = "."
+) -> ProjectCreationSummary:
     """
     Generates a new project from a template.
 
@@ -216,14 +220,16 @@ def generate_project(project_name: str, template_name: str, base_path: str = "."
         A dictionary summarizing the created files and directories.
     """
     if template_name not in TEMPLATES:
-        raise ValueError(f"Template '{template_name}' not found. Available templates: {list(TEMPLATES.keys())}")
+        raise ValueError(
+            f"Template '{template_name}' not found. Available templates: {list(TEMPLATES.keys())}"
+        )
 
     project_path = os.path.join(base_path, project_name)
     if os.path.exists(project_path):
         raise FileExistsError(f"Directory '{project_path}' already exists.")
 
     os.makedirs(project_path)
-    
+
     template = TEMPLATES[template_name]
     created_files = []
     created_dirs = {project_path}
@@ -232,7 +238,7 @@ def generate_project(project_name: str, template_name: str, base_path: str = "."
         # Handle nested directories
         full_path = os.path.join(project_path, file_path)
         dir_name = os.path.dirname(full_path)
-        
+
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
             created_dirs.add(dir_name)
@@ -242,7 +248,7 @@ def generate_project(project_name: str, template_name: str, base_path: str = "."
 
         with open(full_path, "w", encoding="utf-8") as f:
             f.write(formatted_content.strip())
-        
+
         created_files.append(full_path)
 
     return {
@@ -250,5 +256,5 @@ def generate_project(project_name: str, template_name: str, base_path: str = "."
         "template_used": template_name,
         "project_path": project_path,
         "directories_created": sorted(list(created_dirs)),
-        "files_created": sorted(created_files)
-    } 
+        "files_created": sorted(created_files),
+    }

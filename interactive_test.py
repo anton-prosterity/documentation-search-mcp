@@ -2,7 +2,17 @@
 """Interactive test menu for Documentation Search Enhanced MCP Server"""
 
 import asyncio
-from src.documentation_search_enhanced.main import *
+
+from src.documentation_search_enhanced.main import (
+    compare_library_security,
+    get_code_examples,
+    get_docs,
+    get_learning_path,
+    get_security_summary,
+    health_check,
+    semantic_search,
+    suggest_libraries,
+)
 
 async def interactive_menu():
     while True:
@@ -32,8 +42,8 @@ async def interactive_menu():
                 library = input("Enter library name: ")
                 query = input("Enter search query: ")
                 docs = await get_docs(query, library)
-                print(f"\nRetrieved {len(docs)} characters")
-                print(f"Preview: {docs[:500]}...")
+                print("\nRetrieved structured documentation summary:")
+                print(docs.get("summary_markdown", "(no summary available)"))
                 
             elif choice == "3":
                 library = input("Enter library name: ")

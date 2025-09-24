@@ -5,9 +5,10 @@ Scans project directories to find and parse dependency files.
 
 import os
 import json
-from typing import List, Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional
 import re
 import tomllib
+
 
 def _parse_requirement(req: str) -> Tuple[str, str]:
     """Parses a requirement string (e.g., 'fastapi==0.1.0' or 'django>=3.2')."""
@@ -17,17 +18,19 @@ def _parse_requirement(req: str) -> Tuple[str, str]:
         return name.strip(), f"{specifier}{version}"
     return req.strip(), "latest"
 
+
 def parse_pyproject_toml(content: str) -> Dict[str, str]:
     """Parses dependencies from pyproject.toml content."""
     data = tomllib.loads(content)
     dependencies = data.get("project", {}).get("dependencies", [])
-    
+
     parsed_deps = {}
     for req in dependencies:
         name, version = _parse_requirement(req)
         parsed_deps[name] = version
-        
+
     return parsed_deps
+
 
 def parse_requirements_txt(content: str) -> Dict[str, str]:
     """Parses dependencies from requirements.txt content."""
@@ -35,10 +38,11 @@ def parse_requirements_txt(content: str) -> Dict[str, str]:
     parsed_deps = {}
     for line in lines:
         line = line.strip()
-        if line and not line.startswith('#'):
+        if line and not line.startswith("#"):
             name, version = _parse_requirement(line)
             parsed_deps[name] = version
     return parsed_deps
+
 
 def parse_package_json(content: str) -> Dict[str, str]:
     """Parses dependencies from package.json content."""
@@ -48,7 +52,10 @@ def parse_package_json(content: str) -> Dict[str, str]:
     deps.update(dev_deps)
     return deps
 
-def find_and_parse_dependencies(directory: str) -> Optional[Tuple[str, str, Dict[str, str]]]:
+
+def find_and_parse_dependencies(
+    directory: str,
+) -> Optional[Tuple[str, str, Dict[str, str]]]:
     """
     Finds and parses the most relevant dependency file in a directory.
 
@@ -73,5 +80,5 @@ def find_and_parse_dependencies(directory: str) -> Optional[Tuple[str, str, Dict
                 print(f"⚠️ Error parsing {filename}: {e}")
                 # Continue to the next file type if parsing fails
                 continue
-    
-    return None 
+
+    return None

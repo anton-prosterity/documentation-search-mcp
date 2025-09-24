@@ -5,7 +5,7 @@ Manages docker-compose files for local development environments.
 
 import os
 import yaml
-from typing import Dict, List
+from typing import Dict
 
 TEMPLATES: Dict[str, Dict] = {
     "postgres": {
@@ -55,6 +55,7 @@ TEMPLATES: Dict[str, Dict] = {
     },
 }
 
+
 def create_docker_compose(service: str, path: str = ".") -> str:
     """
     Creates a docker-compose.yml file for a given service in the specified path.
@@ -67,16 +68,20 @@ def create_docker_compose(service: str, path: str = ".") -> str:
         The full path to the created docker-compose.yml file.
     """
     if service not in TEMPLATES:
-        raise ValueError(f"Service '{service}' not supported. Available services: {list(TEMPLATES.keys())}")
+        raise ValueError(
+            f"Service '{service}' not supported. Available services: {list(TEMPLATES.keys())}"
+        )
 
     compose_path = os.path.join(path, "docker-compose.yml")
-    
+
     if os.path.exists(compose_path):
         # We can decide whether to overwrite, merge, or fail.
         # For now, we'll fail to avoid accidental data loss.
-        raise FileExistsError(f"A 'docker-compose.yml' already exists at {path}. Please remove it first.")
+        raise FileExistsError(
+            f"A 'docker-compose.yml' already exists at {path}. Please remove it first."
+        )
 
     with open(compose_path, "w") as f:
         yaml.dump(TEMPLATES[service], f, default_flow_style=False, sort_keys=False)
-        
-    return compose_path 
+
+    return compose_path
