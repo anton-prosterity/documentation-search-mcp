@@ -2,6 +2,16 @@
 
 All notable changes to Documentation Search Enhanced MCP Server will be documented in this file.
 
+## [1.3.2] - 2025-09-24
+
+### Added
+- AGENTS.md contributor guide tailored to this repository.
+
+### Changed
+- README: clearer install (`uv sync --all-extras --all-groups`) and testing instructions (core vs. example tests).
+- Example project: added `httpx` dependency and documented `python -m pytest` usage.
+- Codebase formatted with Black; no functional changes.
+
 ## [1.3.1] - 2025-06-28
 
 ### Fixed
