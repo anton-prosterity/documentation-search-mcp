@@ -3,14 +3,14 @@
 An advanced web scraper using Playwright to handle dynamic, JS-heavy sites.
 """
 
-import asyncio
-from playwright.async_api import async_playwright, Page, Browser
+from playwright.async_api import async_playwright, Browser
 from bs4 import BeautifulSoup
 from typing import Optional
 
+
 class PlaywrightScraper:
     """A web scraper that uses a real browser to render pages."""
-    
+
     _browser: Optional[Browser] = None
     _playwright = None
 
@@ -24,36 +24,38 @@ class PlaywrightScraper:
     async def scrape_url(self, url: str) -> str:
         """
         Scrapes a URL using Playwright, returning the clean, readable text content.
-        
+
         This method can handle dynamic content, as it waits for the page
         to fully load and can execute scripts if needed.
         """
         browser = await self._get_browser()
         page = await browser.new_page()
-        
+
         try:
             # Navigate to the page and wait for it to be fully loaded
             await page.goto(url, wait_until="networkidle", timeout=60000)
-            
+
             # Additional waits can be added here if needed, for example:
             # await page.wait_for_selector("main-content-selector", timeout=5000)
 
             # Scroll to the bottom to trigger lazy-loaded content
             await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-            await page.wait_for_timeout(1000) # Wait for any new content to load
+            await page.wait_for_timeout(1000)  # Wait for any new content to load
 
             # Get the page content after JavaScript has rendered
             html_content = await page.content()
-            
+
             # Use BeautifulSoup to parse and clean the final HTML
             soup = BeautifulSoup(html_content, "html.parser")
 
             # Remove non-content elements
-            for element in soup(["script", "style", "nav", "footer", "header", "aside"]):
+            for element in soup(
+                ["script", "style", "nav", "footer", "header", "aside"]
+            ):
                 element.decompose()
-            
+
             # Get clean text
-            text = soup.get_text(separator=' ', strip=True)
+            text = soup.get_text(separator=" ", strip=True)
             return text
 
         except Exception as e:
@@ -69,6 +71,7 @@ class PlaywrightScraper:
         if self._playwright:
             await self._playwright.stop()
 
+
 # --- Global Scraper Instance ---
 scraper = PlaywrightScraper()
 
@@ -77,4 +80,4 @@ scraper = PlaywrightScraper()
 # Example:
 # @atexit.register
 # def cleanup():
-#     asyncio.run(scraper.close()) 
+#     asyncio.run(scraper.close())

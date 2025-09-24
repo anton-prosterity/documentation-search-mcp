@@ -16,7 +16,7 @@ async def demo_scenarios():
     print("-" * 40)
     
     frameworks = ["django", "flask", "fastapi", "tornado"]
-    print(f"Comparing security of popular Python web frameworks...")
+    print("Comparing security of popular Python web frameworks...")
     
     result = await compare_library_security(frameworks, "PyPI")
     print("\nSecurity Rankings:")

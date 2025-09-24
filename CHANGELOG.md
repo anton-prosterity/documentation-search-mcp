@@ -2,6 +2,11 @@
 
 All notable changes to Documentation Search Enhanced MCP Server will be documented in this file.
 
+## [1.3.1] - 2025-06-28
+
+### Fixed
+- Republishing to ensure latest features are correctly uploaded to PyPI.
+
 ## [1.3.0] - 2025-06-26
 
 ### Added
