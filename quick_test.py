@@ -2,14 +2,23 @@
 """Quick test script for Documentation Search Enhanced MCP Server"""
 
 import asyncio
-import json
+import pytest
+
 from src.documentation_search_enhanced.main import (
-    suggest_libraries, get_docs, semantic_search,
-    get_security_summary, get_learning_path,
-    filtered_search, get_code_examples,
-    compare_library_security, suggest_secure_libraries,
-    health_check, get_cache_stats, get_environment_config
+    suggest_libraries,
+    get_docs,
+    semantic_search,
+    get_security_summary,
+    get_learning_path,
+    get_code_examples,
+    compare_library_security,
+    suggest_secure_libraries,
+    health_check,
+    get_environment_config,
 )
+
+
+pytestmark = pytest.mark.skip(reason="Manual smoke script; excluded from automated pytest runs")
 
 async def test_basic_features():
     """Test basic functionality"""
@@ -29,8 +38,10 @@ async def test_basic_features():
     print("\n📖 2. Documentation Retrieval")
     try:
         docs = await get_docs("getting started", "prometheus")
-        print(f"✅ Retrieved {len(docs)} characters from Prometheus docs")
-        print(f"   → First 100 chars: {docs[:100]}...")
+        print("✅ Retrieved Prometheus documentation summary")
+        print(f"   → Libraries processed: {[lib['library'] for lib in docs['libraries']]}")
+        summary = docs.get("summary_markdown", "")
+        print(f"   → Preview:\n{summary[:200]}...")
     except Exception as e:
         print(f"❌ Error: {e}")
     
@@ -54,7 +65,7 @@ async def test_security_features():
     print("\n🛡️ 1. Security Summary")
     try:
         security = await get_security_summary("requests", "PyPI")
-        print(f"✅ Security scan completed:")
+        print("✅ Security scan completed:")
         print(f"   → Library: {security['library']}")
         print(f"   → Score: {security['security_score']}/100 {security['security_badge']}")
         print(f"   → Status: {security['status']}")
@@ -92,7 +103,7 @@ async def test_learning_features():
     print("\n🎓 1. Learning Paths")
     try:
         path = await get_learning_path("fastapi", "beginner")
-        print(f"✅ Generated learning path:")
+        print("✅ Generated learning path:")
         print(f"   → Library: {path['library']}")
         print(f"   → Level: {path['experience_level']}")
         print(f"   → Topics: {path['total_topics']}")
@@ -107,7 +118,7 @@ async def test_learning_features():
     print("\n🔍 2. Semantic Search")
     try:
         results = await semantic_search("authentication JWT", "fastapi", "building secure API")
-        print(f"✅ Semantic search completed:")
+        print("✅ Semantic search completed:")
         print(f"   → Query: {results['query']}")
         print(f"   → Results: {results['total_results']}")
         if results['results']:
@@ -121,7 +132,7 @@ async def test_learning_features():
     print("\n💻 3. Code Examples")
     try:
         examples = await get_code_examples("react", "useState hook", "javascript")
-        print(f"✅ Found code examples:")
+        print("✅ Found code examples:")
         print(f"   → Library: {examples['library']}")
         print(f"   → Topic: {examples['topic']}")
         print(f"   → Total examples: {examples['total_examples']}")

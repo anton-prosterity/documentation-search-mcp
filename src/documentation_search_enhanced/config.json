@@ -1,8 +1,8 @@
 {
-    "version": "1.0.0",
+    "version": "1.3.1",
     "server_config": {
         "name": "documentation-search-enhanced",
-        "version": "1.0.0",
+        "version": "1.3.1",
         "logging_level": "INFO",
         "max_concurrent_requests": 10,
         "request_timeout_seconds": 30,
@@ -90,8 +90,16 @@
             "priority": "high",
             "auto_approve": true
         },
+        "litestar": {
+            "url": "https://docs.litestar.dev/latest/",
+            "category": "web-framework",
+            "learning_curve": "moderate",
+            "tags": ["python", "async", "web", "starlette"],
+            "priority": "medium",
+            "auto_approve": true
+        },
         "django": {
-            "url": "https://docs.djangoproject.com/en/4.2/",
+            "url": "https://docs.djangoproject.com/en/stable/",
             "category": "web-framework",
             "learning_curve": "steep",
             "tags": ["python", "web", "orm", "full-stack"],
@@ -115,7 +123,7 @@
             "auto_approve": true
         },
         "flask": {
-            "url": "https://flask.palletsprojects.com/en/2.3.x/",
+            "url": "https://flask.palletsprojects.com/en/stable/",
             "category": "web-framework",
             "learning_curve": "easy",
             "tags": ["python", "web", "lightweight", "flexible"],
@@ -179,7 +187,7 @@
             "auto_approve": true
         },
         "streamlit": {
-            "url": "https://docs.streamlit.io/en/stable/",
+            "url": "https://docs.streamlit.io/",
             "category": "data-science",
             "learning_curve": "easy",
             "tags": ["python", "data-apps", "visualization", "prototyping"],
@@ -199,6 +207,30 @@
             "category": "ai-service",
             "learning_curve": "easy",
             "tags": ["ai", "llm", "claude", "api"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "langchain": {
+            "url": "https://python.langchain.com/docs/get_started/introduction/",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["ai", "llm", "python", "chains"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "langgraph": {
+            "url": "https://langchain-ai.github.io/langgraph/",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["ai", "agents", "workflow", "langchain"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "llama-index": {
+            "url": "https://docs.llamaindex.ai/",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["ai", "rag", "retrieval", "python"],
             "priority": "high",
             "auto_approve": true
         },
@@ -426,6 +458,14 @@
             "priority": "high",
             "auto_approve": true
         },
+        "polars": {
+            "url": "https://pola-rs.github.io/polars-book/",
+            "category": "data-science",
+            "learning_curve": "moderate",
+            "tags": ["python", "rust", "dataframe", "analytics"],
+            "priority": "medium",
+            "auto_approve": true
+        },
         "ollama": {
             "url": "https://ollama.com/docs",
             "category": "ai-service",
@@ -642,6 +682,14 @@
             "priority": "high",
             "auto_approve": true
         },
+        "apollo-server": {
+            "url": "https://www.apollographql.com/docs/apollo-server/",
+            "category": "api-framework",
+            "learning_curve": "moderate",
+            "tags": ["graphql", "server", "schema", "node"],
+            "priority": "medium",
+            "auto_approve": true
+        },
         "jsonwebtoken": {
             "url": "https://github.com/auth0/node-jsonwebtoken#readme",
             "category": "security",
@@ -656,6 +704,22 @@
             "learning_curve": "easy",
             "tags": ["password", "hashing", "security", "encryption"],
             "priority": "high",
+            "auto_approve": true
+        },
+        "bandit": {
+            "url": "https://bandit.readthedocs.io/en/latest/",
+            "category": "security",
+            "learning_curve": "easy",
+            "tags": ["python", "static-analysis", "security", "lint"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "pip-audit": {
+            "url": "https://pypi.org/project/pip-audit/",
+            "category": "security",
+            "learning_curve": "easy",
+            "tags": ["python", "vulnerability", "audit", "cli"],
+            "priority": "medium",
             "auto_approve": true
         },
         "socket.io": {
@@ -696,6 +760,46 @@
             "learning_curve": "easy",
             "tags": ["javascript", "packages", "dependencies", "registry"],
             "priority": "high",
+            "auto_approve": true
+        },
+        "uv": {
+            "url": "https://docs.astral.sh/uv/",
+            "category": "package-manager",
+            "learning_curve": "easy",
+            "tags": ["python", "tooling", "packaging", "uv"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "poetry": {
+            "url": "https://python-poetry.org/docs/",
+            "category": "package-manager",
+            "learning_curve": "moderate",
+            "tags": ["python", "packaging", "dependency-management", "tooling"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "pipx": {
+            "url": "https://pipx.pypa.io/stable/",
+            "category": "package-manager",
+            "learning_curve": "easy",
+            "tags": ["python", "cli", "isolation", "tooling"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "pnpm": {
+            "url": "https://pnpm.io/motivation",
+            "category": "package-manager",
+            "learning_curve": "easy",
+            "tags": ["javascript", "packages", "workspace", "monorepo"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "bun": {
+            "url": "https://bun.sh/docs",
+            "category": "package-manager",
+            "learning_curve": "easy",
+            "tags": ["javascript", "runtime", "bundler", "tooling"],
+            "priority": "medium",
             "auto_approve": true
         },
         "go": {
@@ -842,6 +946,14 @@
             "priority": "high",
             "auto_approve": true
         },
+        "opentelemetry": {
+            "url": "https://opentelemetry.io/docs/",
+            "category": "monitoring",
+            "learning_curve": "moderate",
+            "tags": ["observability", "tracing", "metrics", "otel"],
+            "priority": "medium",
+            "auto_approve": true
+        },
         "elasticsearch": {
             "url": "https://www.elastic.co/guide/",
             "category": "search-analytics",
@@ -865,6 +977,22 @@
             "tags": ["javascript", "linting", "code-quality", "static-analysis", "typescript"],
             "priority": "high",
             "auto_approve": true
+        },
+        "ruff": {
+            "url": "https://docs.astral.sh/ruff/",
+            "category": "code-quality",
+            "learning_curve": "easy",
+            "tags": ["python", "linting", "static-analysis", "fast"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "black": {
+            "url": "https://black.readthedocs.io/en/stable/",
+            "category": "formatter",
+            "learning_curve": "easy",
+            "tags": ["python", "formatting", "opinionated", "code-style"],
+            "priority": "high",
+            "auto_approve": true
         }
     },
     "categories": {
@@ -873,18 +1001,19 @@
         "version-control": ["git"],
         "ci-cd": ["github-actions"],
         "api-documentation": ["openapi"],
-        "monitoring": ["prometheus", "grafana"],
+        "monitoring": ["prometheus", "grafana", "opentelemetry"],
         "search-analytics": ["elasticsearch"],
         "task-queue": ["celery"],
-        "code-quality": ["eslint"],
-        "web-framework": ["fastapi", "django", "flask", "express"],
+        "code-quality": ["eslint", "ruff"],
+        "formatter": ["black"],
+        "web-framework": ["fastapi", "django", "flask", "express", "litestar"],
         "frontend-framework": ["react", "svelte", "nextjs", "vuejs", "angular", "astro"],
         "mobile-framework": ["react-native", "flutter"],
         "css-framework": ["tailwind", "bootstrap", "mui"],
         "build-tool": ["vite", "webpack"],
         "state-management": ["redux", "zustand"],
-        "api-framework": ["graphql", "apollo-client"],
-        "ai-framework": ["langchain", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv"],
+        "api-framework": ["graphql", "apollo-client", "apollo-server"],
+        "ai-framework": ["langchain", "langgraph", "llama-index", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv"],
         "ai-service": ["openai", "anthropic", "ollama"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
@@ -892,13 +1021,13 @@
         "devops-tool": ["docker", "kubernetes", "terraform", "ansible", "nginx"],
         "testing": ["pytest", "jest", "cypress"],
         "database": ["duckdb", "sqlalchemy", "prisma", "postgresql", "redis", "mongodb"],
-        "data-science": ["pandas", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill", "jupysql"],
+        "data-science": ["pandas", "polars", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill", "jupysql"],
         "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl", "protobuf", "httpx", "pydantic"],
-        "security": ["jsonwebtoken", "bcrypt"],
+        "security": ["jsonwebtoken", "bcrypt", "bandit", "pip-audit"],
         "real-time": ["socket.io"],
         "backend-service": ["firebase", "supabase"],
         "desktop-framework": ["electron"],
-        "package-manager": ["npm"],
+        "package-manager": ["npm", "uv", "poetry", "pipx", "pnpm", "bun"],
         "data-validation": ["pydantic", "zod", "joi"],
         "http-client": ["axios"],
         "authentication": ["auth0", "nextauth"],
