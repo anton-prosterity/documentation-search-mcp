@@ -3,9 +3,11 @@
 An advanced web scraper using Playwright to handle dynamic, JS-heavy sites.
 """
 
-from playwright.async_api import async_playwright, Browser
-from bs4 import BeautifulSoup
+import sys
 from typing import Optional
+
+from bs4 import BeautifulSoup
+from playwright.async_api import Browser, async_playwright
 
 
 class PlaywrightScraper:
@@ -59,7 +61,7 @@ class PlaywrightScraper:
             return text
 
         except Exception as e:
-            print(f"Failed to scrape {url}: {e}")
+            print(f"Failed to scrape {url}: {e}", file=sys.stderr)
             return f"Error: Could not retrieve content from {url}."
         finally:
             await page.close()
