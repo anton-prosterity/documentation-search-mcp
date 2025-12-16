@@ -14,6 +14,7 @@ from .smart_search import smart_search, SearchResult
 from .web_scraper import scraper
 from .config_validator import validate_config, Config as AppConfig
 from .content_enhancer import content_enhancer
+from .version_resolver import version_resolver
 import sys
 import atexit
 
@@ -453,7 +454,7 @@ def get_versioned_docs_url(library: str, version: str, lib_config: Dict) -> str:
 
 
 @mcp.tool()
-async def get_docs(query: str, libraries: LibrariesParam, version: str = "latest"):
+async def get_docs(query: str, libraries: LibrariesParam, version: str = "latest", auto_detect_version: bool = False):
     """
     Search documentation for a given query and one or more libraries.
 
@@ -461,6 +462,7 @@ async def get_docs(query: str, libraries: LibrariesParam, version: str = "latest
         query: The query to search for (e.g., "Chroma DB")
         libraries: A single library or a list of libraries to search in (e.g., "langchain" or ["fastapi", "django"])
         version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
+        auto_detect_version: Automatically detect installed package version. Default: False
 
     Returns:
         Dictionary with structured summaries and supporting metadata
@@ -475,6 +477,13 @@ async def get_docs(query: str, libraries: LibrariesParam, version: str = "latest
     summary_sections: List[str] = []
 
     for library in libraries:
+        # Resolve version (with auto-detection if enabled)
+        resolved_version = await version_resolver.resolve_version(
+            library=library,
+            requested_version=version,
+            auto_detect=auto_detect_version,
+            project_path="."
+        )
         lib_entry: Dict[str, Any] = {
             "library": library,
             "requested_query": query,
@@ -506,13 +515,13 @@ async def get_docs(query: str, libraries: LibrariesParam, version: str = "latest
             continue
 
         # Get version-specific URL
-        versioned_url = get_versioned_docs_url(library, version, lib_config)
+        versioned_url = get_versioned_docs_url(library, resolved_version, lib_config)
 
         # Build search query with version context
         search_query = f"site:{versioned_url} {query}"
-        if version != "latest" and not lib_config.get("version_url_template"):
+        if resolved_version != "latest" and not lib_config.get("version_url_template"):
             # Add version to query if URL doesn't support versioning
-            search_query += f" version {version}"
+            search_query += f" version {resolved_version}"
 
         search_results = await search_web(search_query, num_results=5)
         organic_results = (search_results.get("organic") or [])[:3]
@@ -706,7 +715,7 @@ async def get_cache_stats():
 
 @mcp.tool()
 async def semantic_search(
-    query: str, libraries: LibrariesParam, context: Optional[str] = None, version: str = "latest"
+    query: str, libraries: LibrariesParam, context: Optional[str] = None, version: str = "latest", auto_detect_version: bool = False
 ):
     """
     Enhanced semantic search across one or more libraries with relevance ranking.
@@ -716,6 +725,7 @@ async def semantic_search(
         libraries: A single library or a list of libraries to search in.
         context: Optional context about your project or use case.
         version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
+        auto_detect_version: Automatically detect installed package version. Default: False
 
     Returns:
         Enhanced search results with relevance scores and metadata, ranked across all libraries.
@@ -775,6 +785,7 @@ async def filtered_search(
     difficulty_level: Optional[str] = None,
     has_code_examples: Optional[bool] = None,
     version: str = "latest",
+    auto_detect_version: bool = False,
 ):
     """
     Search with advanced filtering options.
@@ -786,6 +797,7 @@ async def filtered_search(
         difficulty_level: Filter by difficulty ("beginner", "intermediate", "advanced")
         has_code_examples: Filter for content with code examples (true/false)
         version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
+        auto_detect_version: Automatically detect installed package version. Default: False
 
     Returns:
         Filtered search results matching specified criteria
@@ -1939,7 +1951,7 @@ def _get_prerequisites(library: str, experience_level: str) -> List[str]:
 
 
 @mcp.tool()
-async def get_code_examples(library: str, topic: str, language: str = "python", version: str = "latest"):
+async def get_code_examples(library: str, topic: str, language: str = "python", version: str = "latest", auto_detect_version: bool = False):
     """
     Get curated code examples for a specific topic and library.
 
@@ -1948,6 +1960,7 @@ async def get_code_examples(library: str, topic: str, language: str = "python", 
         topic: The specific topic or feature
         language: Programming language for examples
         version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
+        auto_detect_version: Automatically detect installed package version. Default: False
 
     Returns:
         Curated code examples with explanations
