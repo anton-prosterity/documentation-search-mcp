@@ -40,6 +40,14 @@ This directory contains ready-to-use examples showing how to integrate and use t
 }
 ```
 
+#### For Codex CLI
+```bash
+codex mcp add documentation-search-enhanced \
+  --env SERPER_API_KEY=your_key_here \
+  --env FASTMCP_LOG_LEVEL=ERROR \
+  -- uvx documentation-search-enhanced@latest
+```
+
 ### 🔧 **Advanced Configuration Examples**
 
 #### Production Configuration
