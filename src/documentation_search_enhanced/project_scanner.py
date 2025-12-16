@@ -5,6 +5,7 @@ Scans project directories to find and parse dependency files.
 
 import os
 import json
+import sys
 from typing import Dict, Tuple, Optional
 import re
 import tomllib
@@ -77,7 +78,7 @@ def find_and_parse_dependencies(
                 dependencies = parser_func(content)
                 return filename, ecosystem, dependencies
             except Exception as e:
-                print(f"⚠️ Error parsing {filename}: {e}")
+                print(f"⚠️ Error parsing {filename}: {e}", file=sys.stderr)
                 # Continue to the next file type if parsing fails
                 continue
 

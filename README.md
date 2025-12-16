@@ -27,6 +27,20 @@ Configure your assistant to launch the server:
 ```
 The process stays running and listens for JSON-RPC calls; stop it with `Ctrl+C` when finished.
 
+## Codex CLI
+Add the server using Codex’s built-in MCP manager:
+```bash
+codex mcp add documentation-search-enhanced \
+  --env SERPER_API_KEY=your_serper_api_key_here \
+  -- uvx documentation-search-enhanced@latest
+```
+To run from a local checkout instead:
+```bash
+codex mcp add documentation-search-enhanced \
+  --env SERPER_API_KEY=your_serper_api_key_here \
+  -- uv run python src/documentation_search_enhanced/main.py
+```
+
 ## Development Workflow
 ```bash
 git clone https://github.com/antonmishel/documentation-search-mcp.git
