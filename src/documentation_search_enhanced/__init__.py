@@ -5,7 +5,7 @@ An enhanced Model Context Protocol (MCP) server for searching documentation
 across popular libraries with caching, real-time web search, and library insights.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.4.0"
 __author__ = "Anton Mishel"
 __email__ = "your-email@example.com"
 
