@@ -422,14 +422,45 @@ def _cleanup_sync() -> None:
 atexit.register(_cleanup_sync)
 
 
-@mcp.tool()
-async def get_docs(query: str, libraries: LibrariesParam):
+def get_versioned_docs_url(library: str, version: str, lib_config: Dict) -> str:
     """
-    Search the latest docs for a given query and one or more libraries.
+    Build version-specific documentation URL.
+
+    Args:
+        library: Library name
+        version: Requested version (e.g., "4.2", "stable", "latest")
+        lib_config: Library configuration from config.json
+
+    Returns:
+        Versioned documentation URL
+    """
+    base_url = lib_config.get("url", "")
+
+    # If version is "latest", return base URL as-is
+    if version == "latest":
+        return base_url
+
+    # Check if library supports version templates
+    template = lib_config.get("version_url_template")
+    if template:
+        return template.format(version=version)
+
+    # Handle common patterns by replacing stable/latest in URL
+    versioned_url = base_url.replace("/stable/", f"/{version}/")
+    versioned_url = versioned_url.replace("/latest/", f"/{version}/")
+
+    return versioned_url
+
+
+@mcp.tool()
+async def get_docs(query: str, libraries: LibrariesParam, version: str = "latest"):
+    """
+    Search documentation for a given query and one or more libraries.
 
     Args:
         query: The query to search for (e.g., "Chroma DB")
         libraries: A single library or a list of libraries to search in (e.g., "langchain" or ["fastapi", "django"])
+        version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
 
     Returns:
         Dictionary with structured summaries and supporting metadata
@@ -474,7 +505,15 @@ async def get_docs(query: str, libraries: LibrariesParam):
             )
             continue
 
-        search_query = f"site:{docs_root} {query}"
+        # Get version-specific URL
+        versioned_url = get_versioned_docs_url(library, version, lib_config)
+
+        # Build search query with version context
+        search_query = f"site:{versioned_url} {query}"
+        if version != "latest" and not lib_config.get("version_url_template"):
+            # Add version to query if URL doesn't support versioning
+            search_query += f" version {version}"
+
         search_results = await search_web(search_query, num_results=5)
         organic_results = (search_results.get("organic") or [])[:3]
 
@@ -667,7 +706,7 @@ async def get_cache_stats():
 
 @mcp.tool()
 async def semantic_search(
-    query: str, libraries: LibrariesParam, context: Optional[str] = None
+    query: str, libraries: LibrariesParam, context: Optional[str] = None, version: str = "latest"
 ):
     """
     Enhanced semantic search across one or more libraries with relevance ranking.
@@ -676,6 +715,7 @@ async def semantic_search(
         query: The search query.
         libraries: A single library or a list of libraries to search in.
         context: Optional context about your project or use case.
+        version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
 
     Returns:
         Enhanced search results with relevance scores and metadata, ranked across all libraries.
@@ -734,6 +774,7 @@ async def filtered_search(
     content_type: Optional[str] = None,
     difficulty_level: Optional[str] = None,
     has_code_examples: Optional[bool] = None,
+    version: str = "latest",
 ):
     """
     Search with advanced filtering options.
@@ -744,6 +785,7 @@ async def filtered_search(
         content_type: Filter by content type ("tutorial", "reference", "example", "guide")
         difficulty_level: Filter by difficulty ("beginner", "intermediate", "advanced")
         has_code_examples: Filter for content with code examples (true/false)
+        version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
 
     Returns:
         Filtered search results matching specified criteria
@@ -1897,7 +1939,7 @@ def _get_prerequisites(library: str, experience_level: str) -> List[str]:
 
 
 @mcp.tool()
-async def get_code_examples(library: str, topic: str, language: str = "python"):
+async def get_code_examples(library: str, topic: str, language: str = "python", version: str = "latest"):
     """
     Get curated code examples for a specific topic and library.
 
@@ -1905,6 +1947,7 @@ async def get_code_examples(library: str, topic: str, language: str = "python"):
         library: The library to search for examples
         topic: The specific topic or feature
         language: Programming language for examples
+        version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
 
     Returns:
         Curated code examples with explanations
