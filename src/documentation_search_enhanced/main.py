@@ -3,11 +3,12 @@ import os
 import hashlib
 import time
 from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List, Union
+from typing import Annotated, Any, Dict, List, Optional
 import asyncio
 import httpx
 from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
+from pydantic import BeforeValidator
 from importlib import resources
 from .smart_search import smart_search, SearchResult
 from .web_scraper import scraper
@@ -20,12 +21,33 @@ import atexit
 load_dotenv()
 
 # Initialize the MCP server
-mcp = FastMCP("docs")
+mcp = FastMCP("documentation_search_enhanced")
 USER_AGENT = "docs-app/1.0"
 SERPER_URL = "https://google.serper.dev/search"
 
 # Environment variables (removing API key exposure)
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
+
+
+def _normalize_libraries(value: Any) -> List[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        parts = [part.strip() for part in value.split(",")]
+        return [part for part in parts if part]
+    if isinstance(value, (list, tuple, set)):
+        libraries: List[str] = []
+        for item in value:
+            if item is None:
+                continue
+            item_str = str(item).strip()
+            if item_str:
+                libraries.append(item_str)
+        return libraries
+    return [str(value).strip()]
+
+
+LibrariesParam = Annotated[List[str], BeforeValidator(_normalize_libraries)]
 
 
 # Simple in-memory cache with TTL
@@ -401,7 +423,7 @@ atexit.register(_cleanup_sync)
 
 
 @mcp.tool()
-async def get_docs(query: str, libraries: Union[str, List[str]]):
+async def get_docs(query: str, libraries: LibrariesParam):
     """
     Search the latest docs for a given query and one or more libraries.
 
@@ -415,7 +437,7 @@ async def get_docs(query: str, libraries: Union[str, List[str]]):
     await enforce_rate_limit("get_docs")
 
     if isinstance(libraries, str):
-        libraries = [libraries]
+        libraries = [lib.strip() for lib in libraries.split(",") if lib.strip()]
 
     config_dict = config_model.model_dump()
     library_summaries: List[Dict[str, Any]] = []
@@ -645,7 +667,7 @@ async def get_cache_stats():
 
 @mcp.tool()
 async def semantic_search(
-    query: str, libraries: Union[str, List[str]], context: Optional[str] = None
+    query: str, libraries: LibrariesParam, context: Optional[str] = None
 ):
     """
     Enhanced semantic search across one or more libraries with relevance ranking.
@@ -661,7 +683,7 @@ async def semantic_search(
     await enforce_rate_limit("semantic_search")
 
     if isinstance(libraries, str):
-        libraries = [libraries]
+        libraries = [lib.strip() for lib in libraries.split(",") if lib.strip()]
 
     search_tasks = [
         smart_search.semantic_search(query, lib, context) for lib in libraries

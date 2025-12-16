@@ -6,6 +6,7 @@ Provides comprehensive vulnerability analysis, license compliance, and security 
 import os
 import json
 import asyncio
+import sys
 import httpx
 import uuid
 from datetime import datetime, timedelta
@@ -211,7 +212,7 @@ class SnykIntegration:
                     )
                     
         except Exception as e:
-            print(f"Snyk scan error for {package_name}: {e}")
+            print(f"Snyk scan error for {package_name}: {e}", file=sys.stderr)
             return SnykPackageInfo(
                 name=package_name,
                 version=version, 
@@ -331,7 +332,7 @@ class SnykIntegration:
                     compliance_results["license_summary"][license.name] += 1
                     
             except Exception as e:
-                print(f"License check error for {package_name}: {e}")
+                print(f"License check error for {package_name}: {e}", file=sys.stderr)
         
         return compliance_results
     
@@ -574,7 +575,7 @@ async def get_snyk_security_report(library_name: str, version: str = "latest",
         )
         
     except Exception as e:
-        print(f"Snyk security report error: {e}")
+        print(f"Snyk security report error: {e}", file=sys.stderr)
         # Return empty report on error
         return SecurityReport(
             library_name=library_name,

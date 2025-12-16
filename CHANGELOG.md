@@ -2,6 +2,18 @@
 
 All notable changes to Documentation Search Enhanced MCP Server will be documented in this file.
 
+## [1.4.0] - 2025-12-16
+
+### Added
+- Codex CLI setup instructions in `README.md` and `samples/README.md`.
+
+### Changed
+- MCP server name now reports as `documentation_search_enhanced` (was `docs`) for clearer tool namespacing in MCP clients.
+- `get_docs` and `semantic_search` now publish a simpler `libraries` input schema (array of strings) while still accepting a single/comma-separated string.
+
+### Fixed
+- All internal logging/diagnostic `print()` output now goes to stderr to avoid corrupting stdio MCP transport (important for Codex CLI).
+
 ## [1.3.2] - 2025-09-24
 
 ### Added
