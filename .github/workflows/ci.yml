@@ -224,8 +224,10 @@ jobs:
         run: |
           python -m venv test-install-env
           source test-install-env/bin/activate
-          pip install dist/*.whl
-          documentation-search-enhanced --help || echo "CLI help check completed"
+          # Install without dependencies to avoid disk space issues with large ML libraries
+          pip install --no-deps dist/*.whl
+          # Verify package structure and imports
+          python -c "import documentation_search_enhanced; print(f'Package version: {documentation_search_enhanced.__version__}')"
           deactivate
 
       - name: Upload build artifacts
