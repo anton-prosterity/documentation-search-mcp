@@ -9,10 +9,10 @@
 This Model Context Protocol server delivers documentation search, vulnerability auditing, and project bootstrapping in one place. It runs as a long-lived process that serves requests from MCP-compatible clients such as Claude Desktop or Cursor.
 
 ## Core Capabilities
-- Aggregate semantic search across 100+ documentation sources.
-- Scan local Python projects for dependency vulnerabilities.
-- Generate starter scaffolds (FastAPI, React) and developer environment files.
-- Provide learning paths, curated code examples, and library comparisons on demand.
+- **AI-Powered Semantic Search**: Vector embeddings + hybrid reranking across 100+ documentation sources for superior relevance.
+- **Security-First Approach**: Scan local Python projects for dependency vulnerabilities with multi-tool analysis.
+- **Project Scaffolding**: Generate production-ready starters (FastAPI, React) and developer environment files.
+- **Developer Productivity**: Learning paths, curated code examples, and library security comparisons on demand.
 
 ## Quick Start
 ```bash
@@ -64,6 +64,31 @@ uv run python src/documentation_search_enhanced/main.py
 
 ## Configuration
 Ask your assistant for the current configuration via the `get_current_config` tool, save it as `config.json`, then adjust sources or caching preferences. Validate changes locally with `uv run python src/documentation_search_enhanced/config_validator.py`. Keep secrets in `.env` rather than committing them.
+
+## AI-Powered Semantic Search
+The server now features **vector-based semantic search** with hybrid reranking for significantly improved relevance:
+
+### How It Works
+- **Vector Embeddings**: Uses sentence-transformers (all-MiniLM-L6-v2) to generate 384-dimensional semantic embeddings
+- **Hybrid Scoring**: Combines three signals with configurable weights:
+  - Semantic similarity (50%): True meaning-based matching via cosine similarity
+  - Keyword relevance (30%): Precise term matching for specific queries
+  - Source authority (20%): Official docs, code examples, and URL quality signals
+- **FAISS Index**: Lightning-fast similarity search over large documentation corpora
+
+### Benefits
+- **Better Understanding**: Finds semantically related content even with different terminology
+- **Improved Ranking**: Hybrid approach balances semantic understanding with keyword precision
+- **Production Ready**: Compact 120MB model, efficient L2-normalized embeddings
+- **Flexible**: Enable/disable vector reranking with `use_vector_rerank` parameter
+
+### Usage
+Vector reranking is **enabled by default** in `semantic_search`. To disable:
+```python
+semantic_search(query="FastAPI auth", libraries=["fastapi"], use_vector_rerank=False)
+```
+
+This feature addresses the #1 competitive gap vs Context7 while maintaining our security and scaffolding advantages.
 
 ## Tools at a Glance
 Key MCP tools include `get_docs`, `semantic_search`, `get_learning_path`, `get_code_examples`, `scan_project_dependencies`, `generate_project_starter`, `manage_dev_environment`, `get_security_summary`, and `compare_library_security`.
