@@ -45,7 +45,7 @@ codex mcp add documentation-search-enhanced \
 To run from a local checkout instead:
 ```bash
 codex mcp add documentation-search-enhanced \
-  -- uv run python src/documentation_search_enhanced/main.py
+  -- bash -lc 'cd /path/to/documentation-search-mcp && uv run python -m documentation_search_enhanced.main'
 ```
 
 ## Development Workflow
@@ -55,7 +55,7 @@ cd documentation-search-mcp
 uv sync --all-extras --all-groups  # include dev tools
 # Optional: enable Serper-powered search
 # echo "SERPER_API_KEY=your_key_here" > .env
-uv run python src/documentation_search_enhanced/main.py
+uv run python -m documentation_search_enhanced.main
 ```
 - Run core tests: `uv run pytest --ignore=pytest-test-project`.
 - Run example FastAPI tests: `cd pytest-test-project && uv run --all-extras python -m pytest -q`.
