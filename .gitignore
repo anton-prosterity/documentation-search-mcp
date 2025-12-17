@@ -18,3 +18,8 @@ DYNAMIC_CONFIG_ANALYSIS.md
 HYBRID_SETUP_GUIDE.md
 TECHNICAL_DEEP_DIVE.md
 TEST_CURSOR_INTEGRATION.md
+
+# Generated docs site index assets
+docs_site_index.json
+docs_site_index.json.gz
+docs_site_index.json.docs_site_index.json.gz

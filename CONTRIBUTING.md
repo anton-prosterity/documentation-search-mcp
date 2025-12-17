@@ -61,9 +61,9 @@ Ready to dive into the code?
 ## 🛠️ Development Setup
 
 ### **Prerequisites**
-- Python 3.8+
+- Python 3.12+
 - UV package manager (recommended)
-- Serper API key (free at serper.dev)
+- Optional: Serper API key (free at serper.dev)
 
 ### **Setup Steps**
 ```bash
@@ -75,7 +75,8 @@ cd documentation-search-mcp
 uv sync
 
 # 3. Set up environment
-echo "SERPER_API_KEY=your_key_here" > .env
+# Optional: enable Serper-powered search
+# echo "SERPER_API_KEY=your_key_here" > .env
 
 # 4. Test the setup
 python src/documentation_search_enhanced/main.py

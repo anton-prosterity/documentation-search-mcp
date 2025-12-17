@@ -2,16 +2,29 @@ import json
 import os
 import hashlib
 import time
+import logging
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Annotated, Any, Dict, List, Optional
 import asyncio
+import anyio
 import httpx
 from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 from pydantic import BeforeValidator
-from importlib import resources
 from .smart_search import smart_search, SearchResult
 from .web_scraper import scraper
+from .site_search import (
+    load_preindexed_state,
+    preindex_site,
+    save_preindexed_state,
+    search_site_via_sitemap,
+)
+from .site_index_downloader import (
+    ensure_site_index_file,
+    load_site_index_settings_from_env,
+)
 from .config_validator import validate_config, Config as AppConfig
 from .content_enhancer import content_enhancer
 from .version_resolver import version_resolver
@@ -21,13 +34,65 @@ import atexit
 # Load the environment variables
 load_dotenv()
 
-# Initialize the MCP server
-mcp = FastMCP("documentation_search_enhanced")
+logger = logging.getLogger(__name__)
+
 USER_AGENT = "docs-app/1.0"
 SERPER_URL = "https://google.serper.dev/search"
 
 # Environment variables (removing API key exposure)
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
+
+
+@asynccontextmanager
+async def mcp_lifespan(_: FastMCP):
+    async def async_heartbeat() -> None:
+        # Work around environments where asyncio's cross-thread wakeups can be delayed.
+        # The MCP stdio transport uses AnyIO worker threads for stdin/stdout; without
+        # periodic loop wake-ups, those thread completions may not be processed.
+        while True:
+            await anyio.sleep(0.1)
+
+    async with anyio.create_task_group() as tg:
+        tg.start_soon(async_heartbeat)
+
+        try:
+            global http_client
+            if http_client is None:
+                http_client = httpx.AsyncClient(timeout=httpx.Timeout(30.0, read=60.0))
+
+            settings = load_site_index_settings_from_env(cwd=os.getcwd())
+            try:
+                result = await ensure_site_index_file(
+                    http_client,
+                    settings=settings,
+                    user_agent=USER_AGENT,
+                )
+                status = result.get("status")
+                if status == "downloaded":
+                    logger.debug(
+                        "Downloaded docs search index: %s (%s)",
+                        result.get("path"),
+                        result.get("url"),
+                    )
+                elif status == "error":
+                    print(
+                        f"⚠️ Docs search index download failed: {result.get('errors') or result.get('error')}",
+                        file=sys.stderr,
+                    )
+            except Exception as e:
+                print(f"⚠️ Docs search index download failed: {e}", file=sys.stderr)
+
+            if load_preindexed_state(settings.path):
+                logger.debug("Loaded docs search index: %s", settings.path)
+
+            yield {}
+        finally:
+            tg.cancel_scope.cancel()
+            await shutdown_resources()
+
+
+# Initialize the MCP server
+mcp = FastMCP("documentation_search_enhanced", lifespan=mcp_lifespan)
 
 
 def _normalize_libraries(value: Any) -> List[str]:
@@ -217,17 +282,17 @@ def load_config() -> AppConfig:
     try:
         # 1. Prioritize local config file
         if os.path.exists(local_config_path):
-            print("📝 Found local config.json. Loading...", file=sys.stderr)
+            logger.debug("Found local config.json. Loading...")
             with open(local_config_path, "r") as f:
                 config_data = json.load(f)
         else:
             # 2. Fallback to packaged config
             try:
-                config_text = resources.read_text(
-                    "documentation_search_enhanced", "config.json"
+                packaged_config_path = Path(__file__).with_name("config.json")
+                config_data = json.loads(
+                    packaged_config_path.read_text(encoding="utf-8")
                 )
-                config_data = json.loads(config_text)
-            except (FileNotFoundError, ModuleNotFoundError):
+            except (FileNotFoundError, json.JSONDecodeError):
                 # This is a critical failure if the package is broken
                 print("FATAL: Packaged config.json not found.", file=sys.stderr)
                 raise
@@ -241,7 +306,7 @@ def load_config() -> AppConfig:
 
     try:
         validated_config = validate_config(config_data)
-        print("✅ Configuration successfully loaded and validated.", file=sys.stderr)
+        logger.debug("Configuration successfully loaded and validated.")
         return validated_config
     except Exception as e:  # Pydantic's ValidationError
         print(
@@ -255,13 +320,16 @@ def load_config() -> AppConfig:
 # Load configuration
 config_model = load_config()
 config = config_model.model_dump()  # Use the dict version for existing logic
+real_time_search_enabled = (
+    config.get("server_config", {}).get("features", {}).get("real_time_search", True)
+)
 docs_urls = {}
 # Handle both old simple URL format and new enhanced format
 for lib_name, lib_data in config.get("docs_urls", {}).items():
     if isinstance(lib_data, dict):
-        docs_urls[lib_name] = lib_data.get("url", "")
+        docs_urls[lib_name] = str(lib_data.get("url") or "").strip()
     else:
-        docs_urls[lib_name] = lib_data
+        docs_urls[lib_name] = str(lib_data or "").strip()
 
 cache_config = config.get("cache", {"enabled": False})
 cache_persistence_enabled = cache_config.get("persistence_enabled", False)
@@ -280,6 +348,9 @@ cache = (
     if cache_config.get("enabled", False)
     else None
 )
+
+site_index_settings = load_site_index_settings_from_env(cwd=os.getcwd())
+site_index_path = site_index_settings.path
 
 http_client: Optional[httpx.AsyncClient] = None
 scrape_semaphore = asyncio.Semaphore(
@@ -305,17 +376,27 @@ async def enforce_rate_limit(tool_name: str) -> None:
 async def search_web_with_retry(
     query: str, max_retries: int = 3, num_results: int = 3
 ) -> dict:
-    """Search web with exponential backoff retry logic"""
-    if not SERPER_API_KEY:
-        print(
-            "⚠️ SERPER_API_KEY not set - web search functionality will be limited",
-            file=sys.stderr,
-        )
-        return {"organic": []}
+    """Search documentation pages, with retries.
 
+    Uses Serper when configured; otherwise falls back to on-site docs search
+    (MkDocs/Sphinx indexes when available, otherwise sitemap discovery).
+    """
     global http_client
     if http_client is None:
         http_client = httpx.AsyncClient(timeout=httpx.Timeout(30.0, read=60.0))
+
+    if not SERPER_API_KEY:
+        try:
+            return await search_site_via_sitemap(
+                query,
+                http_client,
+                user_agent=USER_AGENT,
+                num_results=num_results,
+                allow_network=real_time_search_enabled,
+            )
+        except Exception as e:
+            print(f"Fallback site search failed: {e}", file=sys.stderr)
+            return {"organic": []}
 
     payload = json.dumps({"q": query, "num": num_results})
     headers = {
@@ -340,18 +421,18 @@ async def search_web_with_retry(
                     f"Timeout after {max_retries} attempts for query: {query}",
                     file=sys.stderr,
                 )
-                return {"organic": []}
+                break
             await asyncio.sleep(2**attempt)  # Exponential backoff
 
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 429:  # Rate limited
                 if attempt == max_retries - 1:
                     print(f"Rate limited after {max_retries} attempts", file=sys.stderr)
-                    return {"organic": []}
+                    break
                 await asyncio.sleep(2 ** (attempt + 2))  # Longer wait for rate limits
             else:
                 print(f"HTTP error {e.response.status_code}: {e}", file=sys.stderr)
-                return {"organic": []}
+                break
 
         except Exception as e:
             if attempt == max_retries - 1:
@@ -359,10 +440,21 @@ async def search_web_with_retry(
                     f"Unexpected error after {max_retries} attempts: {e}",
                     file=sys.stderr,
                 )
-                return {"organic": []}
+                break
             await asyncio.sleep(2**attempt)
 
-    return {"organic": []}
+    # Serper is optional; fall back to sitemap search if it fails.
+    try:
+        return await search_site_via_sitemap(
+            query,
+            http_client,
+            user_agent=USER_AGENT,
+            num_results=num_results,
+            allow_network=real_time_search_enabled,
+        )
+    except Exception as e:
+        print(f"Fallback site search failed: {e}", file=sys.stderr)
+        return {"organic": []}
 
 
 async def fetch_url_with_cache(url: str, max_retries: int = 3) -> str:
@@ -435,7 +527,7 @@ def get_versioned_docs_url(library: str, version: str, lib_config: Dict) -> str:
     Returns:
         Versioned documentation URL
     """
-    base_url = lib_config.get("url", "")
+    base_url = str(lib_config.get("url") or "")
 
     # If version is "latest", return base URL as-is
     if version == "latest":
@@ -649,7 +741,7 @@ async def health_check():
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.head(
-                    url,
+                    str(url),
                     timeout=httpx.Timeout(10.0),
                     headers={"User-Agent": USER_AGENT},
                     follow_redirects=True,
@@ -716,6 +808,70 @@ async def get_cache_stats():
         "path": cache.persist_path,
     }
     return details
+
+
+@mcp.tool()
+async def preindex_docs(
+    libraries: LibrariesParam,
+    include_sitemap: bool = False,
+    persist_path: Optional[str] = None,
+    max_concurrent_sites: int = 3,
+):
+    """
+    Pre-download and persist docs site indexes for Serper-free search.
+
+    This caches MkDocs/Sphinx search indexes (and optionally sitemaps) to disk so the
+    server can search supported documentation sites without requiring Serper.
+    """
+    await enforce_rate_limit("preindex_docs")
+
+    targets = libraries or sorted(docs_urls.keys())
+    if not targets:
+        return {
+            "status": "no_targets",
+            "message": "No libraries configured to preindex",
+        }
+
+    global http_client
+    if http_client is None:
+        http_client = httpx.AsyncClient(timeout=httpx.Timeout(30.0, read=60.0))
+
+    concurrency = max(1, min(int(max_concurrent_sites), 10))
+    semaphore = asyncio.Semaphore(concurrency)
+
+    async def _run_one(library: str) -> Dict[str, Any]:
+        docs_root = docs_urls.get(library)
+        if not docs_root:
+            return {"library": library, "status": "unsupported"}
+
+        async with semaphore:
+            summary = await preindex_site(
+                docs_root,
+                http_client,
+                user_agent=USER_AGENT,
+                include_sitemap=include_sitemap,
+            )
+            summary["library"] = library
+            return summary
+
+    results = await asyncio.gather(*[_run_one(lib) for lib in targets])
+
+    path = persist_path or site_index_path
+    try:
+        save_preindexed_state(path)
+        persisted: Dict[str, Any] = {"status": "ok", "path": path}
+    except Exception as e:
+        persisted = {"status": "error", "path": path, "error": str(e)}
+
+    return {
+        "status": "ok",
+        "persist": persisted,
+        "real_time_search_enabled": real_time_search_enabled,
+        "include_sitemap": include_sitemap,
+        "max_concurrent_sites": concurrency,
+        "total_libraries": len(targets),
+        "results": results,
+    }
 
 
 @mcp.tool()
@@ -1442,9 +1598,10 @@ async def scan_project_dependencies(project_path: str = "."):
         }
 
     total_deps = len(dependencies)
-    print(
-        f"🔎 Found {total_deps} dependencies in '{filename}'. Scanning for vulnerabilities...",
-        file=sys.stderr,
+    logger.debug(
+        "Found %s dependencies in %s. Scanning for vulnerabilities...",
+        total_deps,
+        filename,
     )
 
     scan_tasks = [
@@ -1887,14 +2044,20 @@ async def snyk_license_check(project_path: str = ".", policy: str = "permissive"
         # Risk assessment
         risk_assessment = {
             "policy_applied": selected_policy["name"],
-            "overall_compliance": "compliant"
-            if compliance_report["non_compliant_packages"] == 0
-            else "non-compliant",
-            "risk_level": "low"
-            if compliance_report["non_compliant_packages"] == 0
-            else "high"
-            if compliance_report["non_compliant_packages"] > 5
-            else "medium",
+            "overall_compliance": (
+                "compliant"
+                if compliance_report["non_compliant_packages"] == 0
+                else "non-compliant"
+            ),
+            "risk_level": (
+                "low"
+                if compliance_report["non_compliant_packages"] == 0
+                else (
+                    "high"
+                    if compliance_report["non_compliant_packages"] > 5
+                    else "medium"
+                )
+            ),
             "action_required": compliance_report["non_compliant_packages"] > 0,
         }
 
