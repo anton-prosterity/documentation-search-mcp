@@ -881,9 +881,15 @@ async def semantic_search(
     context: Optional[str] = None,
     version: str = "latest",
     auto_detect_version: bool = False,
+    use_vector_rerank: bool = True,
 ):
     """
-    Enhanced semantic search across one or more libraries with relevance ranking.
+    Enhanced semantic search across one or more libraries with AI-powered relevance ranking.
+
+    Uses hybrid search combining:
+    - Vector embeddings for semantic similarity (50% weight)
+    - Keyword matching for precise results (30% weight)
+    - Source authority and metadata (20% weight)
 
     Args:
         query: The search query.
@@ -891,10 +897,13 @@ async def semantic_search(
         context: Optional context about your project or use case.
         version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
         auto_detect_version: Automatically detect installed package version. Default: False
+        use_vector_rerank: Enable vector-based semantic reranking for better relevance. Default: True
 
     Returns:
-        Enhanced search results with relevance scores and metadata, ranked across all libraries.
+        Enhanced search results with AI-powered relevance scores and metadata, ranked across all libraries.
     """
+    from .reranker import get_reranker
+
     await enforce_rate_limit("semantic_search")
 
     if isinstance(libraries, str):
@@ -912,13 +921,19 @@ async def semantic_search(
             if not isinstance(res_list, Exception):
                 all_results.extend(res_list)  # type: ignore
 
-        # Sort all results from all libraries by relevance score
-        all_results.sort(key=lambda r: r.relevance_score, reverse=True)
+        # Apply vector-based reranking for better semantic relevance
+        if use_vector_rerank and all_results:
+            reranker = get_reranker()
+            all_results = await reranker.rerank(all_results, query, use_semantic=True)
+        else:
+            # Fallback to basic relevance score sorting
+            all_results.sort(key=lambda r: r.relevance_score, reverse=True)
 
         return {
             "query": query,
             "libraries_searched": libraries,
             "total_results": len(all_results),
+            "vector_rerank_enabled": use_vector_rerank,
             "results": [
                 {
                     "source_library": result.source_library,
