@@ -94,9 +94,9 @@ class ContentEnhancer:
         ]
 
         # Add contextual recommendations
-        enhanced["enhancements"][
-            "recommendations"
-        ] = await self.get_contextual_recommendations(library, query)
+        enhanced["enhancements"]["recommendations"] = (
+            await self.get_contextual_recommendations(library, query)
+        )
 
         # Extract and resolve cross-references
         enhanced["enhancements"]["cross_references"] = self.extract_cross_references(
