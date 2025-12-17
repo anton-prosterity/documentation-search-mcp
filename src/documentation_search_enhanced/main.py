@@ -1528,11 +1528,7 @@ async def suggest_secure_libraries(
                         "security_badge": (
                             "🛡️"
                             if score >= 90
-                            else "✅"
-                            if score >= 70
-                            else "⚠️"
-                            if score >= 50
-                            else "🚨"
+                            else "✅" if score >= 70 else "⚠️" if score >= 50 else "🚨"
                         ),
                         "vulnerabilities": security_result.get(
                             "total_vulnerabilities", 0
