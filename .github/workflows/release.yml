@@ -33,10 +33,19 @@ jobs:
       - name: Extract version from pyproject.toml
         id: package-version
         run: |
-          # Extract the [project] version without accidentally matching other keys
-          # like "minversion" (pytest), which would corrupt $GITHUB_ENV. Allow
-          # leading whitespace since TOML permits indentation.
-          PACKAGE_VERSION=$(grep -m1 -oP '^\s*version\s*=\s*"\K[^"]+' pyproject.toml)
+          # Parse TOML to reliably extract `[project].version` (avoid regex pitfalls).
+          PACKAGE_VERSION=$(python - <<'PY'
+          import tomllib
+          from pathlib import Path
+
+          data = tomllib.loads(Path("pyproject.toml").read_bytes())
+          print(data.get("project", {}).get("version", ""))
+          PY
+          )
+          if [ -z "$PACKAGE_VERSION" ]; then
+            echo "❌ Failed to extract [project].version from pyproject.toml" >&2
+            exit 1
+          fi
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
           echo "Package version: $PACKAGE_VERSION"
 
@@ -131,6 +140,12 @@ jobs:
         run: |
           echo "Downloaded artifacts:"
           ls -lah dist/
+
+      - name: Remove non-distribution artifacts
+        run: |
+          # gh-action-pypi-publish only accepts wheels/sdists; keep checksums for
+          # the GitHub Release upload job but exclude them from PyPI publishing.
+          rm -f dist/SHA256SUMS.txt
 
       - name: Publish to PyPI (Trusted Publishing)
         uses: pypa/gh-action-pypi-publish@release/v1
