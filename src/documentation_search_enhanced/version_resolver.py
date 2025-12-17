@@ -20,7 +20,7 @@ class VersionResolver:
         library: str,
         requested_version: str,
         auto_detect: bool = True,
-        project_path: str = "."
+        project_path: str = ".",
     ) -> str:
         """Resolve final version to use for documentation search.
 
@@ -57,20 +57,15 @@ class VersionResolver:
         return None
 
     async def _run_subprocess(
-        self,
-        *cmd: str,
-        timeout: Optional[int] = None
+        self, *cmd: str, timeout: Optional[int] = None
     ) -> Optional[str]:
         """Run subprocess with timeout handling."""
         try:
             proc = await asyncio.create_subprocess_exec(
-                *cmd,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE
+                *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
             )
             stdout, _ = await asyncio.wait_for(
-                proc.communicate(),
-                timeout=timeout or self._timeout
+                proc.communicate(), timeout=timeout or self._timeout
             )
             if proc.returncode == 0:
                 return stdout.decode().strip()
@@ -87,7 +82,9 @@ class VersionResolver:
 
     async def _try_pip_show(self, package: str) -> Optional[str]:
         """Get version via pip show."""
-        output = await self._run_subprocess(sys.executable, "-m", "pip", "show", package)
+        output = await self._run_subprocess(
+            sys.executable, "-m", "pip", "show", package
+        )
         if output:
             if match := re.search(r"Version:\s*(\S+)", output):
                 return self._to_major_minor(match.group(1))
@@ -95,12 +92,16 @@ class VersionResolver:
 
     async def _try_npm_list(self, package: str) -> Optional[str]:
         """Get version via npm list."""
-        output = await self._run_subprocess("npm", "list", package, "--depth=0", "--json")
+        output = await self._run_subprocess(
+            "npm", "list", package, "--depth=0", "--json"
+        )
         if output:
             try:
                 data = json.loads(output)
                 if package in data.get("dependencies", {}):
-                    version = data["dependencies"][package].get("version", "").lstrip("^~")
+                    version = (
+                        data["dependencies"][package].get("version", "").lstrip("^~")
+                    )
                     return self._to_major_minor(version)
             except json.JSONDecodeError:
                 pass
@@ -109,17 +110,16 @@ class VersionResolver:
     async def _try_python_import(self, package: str) -> Optional[str]:
         """Get version via Python import."""
         output = await self._run_subprocess(
-            sys.executable, "-c",
-            f"import {package}; print(getattr({package}, '__version__', ''))"
+            sys.executable,
+            "-c",
+            f"import {package}; print(getattr({package}, '__version__', ''))",
         )
         if output:
             return self._to_major_minor(output)
         return None
 
     async def detect_from_project(
-        self,
-        library: str,
-        project_path: str
+        self, library: str, project_path: str
     ) -> Optional[str]:
         """Parse project dependency files for version."""
         project = Path(project_path)
@@ -142,6 +142,7 @@ class VersionResolver:
         """Parse pyproject.toml for library version."""
         try:
             import tomllib
+
             with open(path, "rb") as f:
                 data = tomllib.load(f)
 
