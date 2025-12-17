@@ -1,0 +1,52 @@
+name: Build Docs Site Index
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-site-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --all-extras --all-groups
+
+      - name: Build docs index
+        run: >
+          uv run python -m documentation_search_enhanced.site_index_builder
+          --output docs_site_index.json
+          --gzip
+          --sitemap missing
+          --max-sitemap-urls 5000
+          --max-concurrency 6
+
+      - name: Upload workflow artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-site-index
+          path: |
+            docs_site_index.json
+            docs_site_index.json.gz
+
+      - name: Upload release assets
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            docs_site_index.json
+            docs_site_index.json.gz
+

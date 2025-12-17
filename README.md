@@ -25,34 +25,36 @@ Configure your assistant to launch the server:
   "mcpServers": {
     "documentation-search-enhanced": {
       "command": "uvx",
-      "args": ["documentation-search-enhanced@latest"],
-      "env": { "SERPER_API_KEY": "your_serper_api_key_here" }
+      "args": ["documentation-search-enhanced@latest"]
     }
   }
 }
 ```
+No API key is required. Optionally set `SERPER_API_KEY` to use Serper-powered search.
+Without it, the server uses a prebuilt docs index (auto-downloaded from GitHub Releases on startup) plus on-site docs search (MkDocs/Sphinx indexes when available).
+Control the download with `DOCS_SITE_INDEX_AUTO_DOWNLOAD`, `DOCS_SITE_INDEX_MAX_AGE_HOURS`, `DOCS_SITE_INDEX_URL(S)`, and `DOCS_SITE_INDEX_PATH`.
+Set `server_config.features.real_time_search=false` to avoid any live crawling and rely only on the downloaded index.
 The process stays running and listens for JSON-RPC calls; stop it with `Ctrl+C` when finished.
 
 ## Codex CLI
 Add the server using Codex’s built-in MCP manager:
 ```bash
 codex mcp add documentation-search-enhanced \
-  --env SERPER_API_KEY=your_serper_api_key_here \
   -- uvx documentation-search-enhanced@latest
 ```
 To run from a local checkout instead:
 ```bash
 codex mcp add documentation-search-enhanced \
-  --env SERPER_API_KEY=your_serper_api_key_here \
   -- uv run python src/documentation_search_enhanced/main.py
 ```
 
 ## Development Workflow
 ```bash
-git clone https://github.com/antonmishel/documentation-search-mcp.git
+git clone https://github.com/anton-prosterity/documentation-search-mcp.git
 cd documentation-search-mcp
 uv sync --all-extras --all-groups  # include dev tools
-echo "SERPER_API_KEY=your_key_here" > .env
+# Optional: enable Serper-powered search
+# echo "SERPER_API_KEY=your_key_here" > .env
 uv run python src/documentation_search_enhanced/main.py
 ```
 - Run core tests: `uv run pytest --ignore=pytest-test-project`.

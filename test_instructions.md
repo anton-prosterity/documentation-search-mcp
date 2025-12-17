@@ -38,7 +38,6 @@ uvx documentation-search-enhanced@latest
       "command": "uvx",
       "args": ["--from", "/Users/antonmishel/workspace/documentation-search-mcp", "documentation-search-enhanced"],
       "env": {
-        "SERPER_API_KEY": "your-serper-api-key-here",
         "ENVIRONMENT": "development"
       }
     }
@@ -161,7 +160,6 @@ Add to your `.cursorrules` or Cursor settings:
       "args": ["--from", ".", "documentation-search-enhanced"],
       "cwd": "/Users/antonmishel/workspace/documentation-search-mcp",
       "env": {
-        "SERPER_API_KEY": "your-key-here",
         "ENVIRONMENT": "development"
       }
     }
@@ -248,8 +246,8 @@ await get_docs("rules plugins", "eslint")
 
 ## Troubleshooting
 
-### SERPER_API_KEY not set
-If you see warnings about SERPER_API_KEY, set it:
+### Optional: Serper-powered search
+If you want Serper-powered search, set:
 ```bash
 export SERPER_API_KEY="your-key-here"
 ```

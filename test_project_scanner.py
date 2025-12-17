@@ -8,7 +8,12 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from src.documentation_search_enhanced.main import scan_project_dependencies
+from documentation_search_enhanced.main import scan_project_dependencies
+from documentation_search_enhanced.vulnerability_scanner import (
+    SecurityReport,
+    SeverityLevel,
+    Vulnerability,
+)
 
 
 def setup_test_project(base: Path, name: str, files: dict) -> Path:
@@ -19,6 +24,63 @@ def setup_test_project(base: Path, name: str, files: dict) -> Path:
         (project_dir / filename).write_text(content)
     print(f"📁 Created test project: '{project_dir}'")
     return project_dir
+
+
+def _fake_security_report(
+    *, library_name: str, ecosystem: str, vulnerabilities: list[Vulnerability]
+) -> SecurityReport:
+    critical = sum(1 for v in vulnerabilities if v.severity == SeverityLevel.CRITICAL)
+    high = sum(1 for v in vulnerabilities if v.severity == SeverityLevel.HIGH)
+    medium = sum(1 for v in vulnerabilities if v.severity == SeverityLevel.MEDIUM)
+    low = sum(1 for v in vulnerabilities if v.severity == SeverityLevel.LOW)
+
+    score = 100.0
+    score -= critical * 25
+    score -= high * 15
+    score -= medium * 5
+    score -= low
+    score = max(0.0, score)
+
+    return SecurityReport(
+        library_name=library_name,
+        ecosystem=ecosystem,
+        scan_date="2025-01-01T00:00:00Z",
+        total_vulnerabilities=len(vulnerabilities),
+        critical_count=critical,
+        high_count=high,
+        medium_count=medium,
+        low_count=low,
+        security_score=score,
+        recommendations=["Update to the latest version."],
+        vulnerabilities=vulnerabilities,
+        latest_secure_version=None,
+    )
+
+
+async def _fake_scan_library(library_name: str, ecosystem: str = "PyPI") -> SecurityReport:
+    if library_name.lower() == "requests":
+        vulnerability = Vulnerability(
+            id="TEST-REQUESTS-001",
+            title="Test vulnerability for requests",
+            description="Simulated vulnerability used for offline unit tests.",
+            severity=SeverityLevel.HIGH,
+            cvss_score=7.5,
+            cve_id="CVE-2099-0001",
+            affected_versions=["<=2.25.0"],
+            fixed_version="2.25.1",
+            published_date="2025-01-01T00:00:00Z",
+            source="osv",
+            references=["https://example.com/advisory"],
+        )
+        return _fake_security_report(
+            library_name=library_name,
+            ecosystem=ecosystem,
+            vulnerabilities=[vulnerability],
+        )
+
+    return _fake_security_report(
+        library_name=library_name, ecosystem=ecosystem, vulnerabilities=[]
+    )
 
 
 async def _run_scanner_tests(base_dir: Path):
@@ -106,6 +168,9 @@ dependencies = []
 
 
 def test_scanner():
+    import documentation_search_enhanced.vulnerability_scanner as scanner_module
+
+    scanner_module.vulnerability_scanner.scan_library = _fake_scan_library
     base_dir = Path(tempfile.mkdtemp(prefix="project_scanner_"))
     try:
         asyncio.run(_run_scanner_tests(base_dir))
