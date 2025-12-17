@@ -95,9 +95,19 @@ jobs:
           bandit -r src/ -f screen || echo "Bandit scan completed"
         continue-on-error: true
 
+      - name: Check if SARIF file exists
+        id: check_sarif
+        run: |
+          if [ -f bandit-report.sarif ]; then
+            echo "sarif_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "sarif_exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Upload SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: steps.check_sarif.outputs.sarif_exists == 'true'
+        continue-on-error: true
         with:
           sarif_file: bandit-report.sarif
           category: bandit
