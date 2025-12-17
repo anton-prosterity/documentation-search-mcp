@@ -87,7 +87,7 @@ jobs:
           version: ${{ env.UV_VERSION }}
 
       - name: Install Bandit
-        run: uv pip install "bandit[toml]"
+        run: uv pip install --system "bandit[toml]"
 
       - name: Run Bandit with SARIF output
         run: |
@@ -171,7 +171,6 @@ jobs:
         uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: moderate
-          allow-licenses: MIT, Apache-2.0, BSD-3-Clause, BSD-2-Clause, ISC, PSF-2.0
           deny-licenses: AGPL-3.0, GPL-3.0
 
   secret-scanning:
