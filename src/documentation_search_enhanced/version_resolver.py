@@ -1,7 +1,6 @@
 """Version resolution for detecting installed package versions."""
 
 import asyncio
-import subprocess
 import json
 import re
 from typing import Optional, Dict
