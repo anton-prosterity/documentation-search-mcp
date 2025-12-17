@@ -2,6 +2,22 @@
 
 All notable changes to Documentation Search Enhanced MCP Server will be documented in this file.
 
+## [Unreleased]
+
+## [1.5.0] - 2025-12-17
+
+### Added
+- GitHub Release assets `docs_site_index.json` and `docs_site_index.json.gz` for Serper-free docs search.
+- Auto-download support for the prebuilt index (env: `DOCS_SITE_INDEX_AUTO_DOWNLOAD`, `DOCS_SITE_INDEX_MAX_AGE_HOURS`, `DOCS_SITE_INDEX_URL(S)`, `DOCS_SITE_INDEX_PATH`).
+- CI workflow to build and upload the index on release publish.
+- HTML link discovery fallback for docs sites without sitemaps/indexes (e.g. `react.dev`).
+
+### Changed
+- `SERPER_API_KEY` is now optional; when unset, documentation search uses a prebuilt docs index (auto-downloaded from GitHub Releases on startup) plus on-site docs search (MkDocs/Sphinx indexes when available).
+- Serper-free sitemap search now prefers live sitemap refreshes when available, falling back to the prebuilt index (and HTML link discovery for sites without sitemaps, e.g. `react.dev`).
+- Playwright scraping now falls back to `httpx` when Playwright cannot launch (common in sandboxed environments).
+- Improved Codex CLI reliability: avoid stdio handshake stalls and reduce default startup output noise.
+
 ## [1.4.1] - 2025-12-16
 
 ### Changed

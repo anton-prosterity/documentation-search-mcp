@@ -184,12 +184,18 @@ class SnykIntegration:
                 test_payload = {
                     "encoding": "plain",
                     "files": {
-                        "requirements.txt"
-                        if snyk_ecosystem == "pip"
-                        else "package.json": {
-                            "contents": f"{package_name}=={version}"
+                        (
+                            "requirements.txt"
                             if snyk_ecosystem == "pip"
-                            else json.dumps({"dependencies": {package_name: version}})
+                            else "package.json"
+                        ): {
+                            "contents": (
+                                f"{package_name}=={version}"
+                                if snyk_ecosystem == "pip"
+                                else json.dumps(
+                                    {"dependencies": {package_name: version}}
+                                )
+                            )
                         }
                     },
                 }

@@ -7,7 +7,7 @@
 
 ## Build, Test, and Development Commands
 - Install deps: `uv sync` (includes dev extras).
-- Run MCP server: `uv run python src/documentation_search_enhanced/main.py` (requires `.env` with `SERPER_API_KEY`).
+- Run MCP server: `uv run python src/documentation_search_enhanced/main.py` (optional: set `SERPER_API_KEY` for Serper-powered search).
 - Test: `uv run pytest`.
 - Lint/format: `uv run ruff check src`, `uv run black src`.
 - Build/publish: `uv build`, `publish_to_pypi.sh`.
@@ -27,7 +27,6 @@
 - PRs: link issues, summarize changes, list validation commands run (`uv run pytest`, linting), update `CHANGELOG.md` for user‑visible changes, attach screenshots/JSON when modifying tool output.
 
 ## Security & Configuration Tips
-- Never commit secrets; load via `.env` (e.g., `SERPER_API_KEY`).
+- Never commit secrets; load via `.env` (e.g., optional `SERPER_API_KEY`).
 - After editing `config.json`, validate: `uv run python src/documentation_search_enhanced/config_validator.py`.
 - Document new env vars in `README.md`; scope and rotate keys if exposure is suspected.
-
