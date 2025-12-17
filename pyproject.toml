@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "documentation-search-enhanced"
-version = "1.4.1"
+version = "1.5.0"
 description = "Enhanced MCP server for searching documentation with OSINT vulnerability scanning, security analysis, and AWS-style deployment"
 readme = "README.md"
 license = "MIT"
@@ -35,9 +35,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/antonmishel/documentation-search-mcp"
-Repository = "https://github.com/antonmishel/documentation-search-mcp"
-Issues = "https://github.com/antonmishel/documentation-search-mcp/issues"
+Homepage = "https://github.com/anton-prosterity/documentation-search-mcp"
+Repository = "https://github.com/anton-prosterity/documentation-search-mcp"
+Issues = "https://github.com/anton-prosterity/documentation-search-mcp/issues"
 
 [project.scripts]
 documentation-search-enhanced = "documentation_search_enhanced.main:main"
@@ -65,4 +65,18 @@ include = [
 [dependency-groups]
 dev = [
     "twine>=6.1.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra"
+norecursedirs = [
+    ".git",
+    ".venv",
+    ".uv-cache",
+    "build",
+    "dist",
+    "pytest-test-project",
+    "samples",
+    "my-test-fastapi-app",
 ]
