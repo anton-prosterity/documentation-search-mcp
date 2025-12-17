@@ -84,11 +84,42 @@ python src/documentation_search_enhanced/main.py
 
 ## 📋 Pull Request Guidelines
 
+### **CI/CD Requirements**
+All pull requests must pass automated checks before merging:
+
+**Required Status Checks:**
+- ✅ **Lint (Ruff)** - Code quality and formatting
+- ✅ **Type Check (mypy)** - Static type checking
+- ✅ **Tests** - All pytest tests must pass
+- ✅ **Build Validation** - Package must build successfully
+- ✅ **Security Scan** - No high-severity vulnerabilities
+
+**To Run Checks Locally:**
+```bash
+# Linting
+uv run ruff check src --fix
+uv run ruff format src
+
+# Type checking
+uv pip install mypy types-PyYAML
+uv run mypy src/documentation_search_enhanced --ignore-missing-imports
+
+# Tests with coverage
+uv run pytest --ignore=pytest-test-project --cov=src/documentation_search_enhanced -v
+
+# Build validation
+uv build
+uv run twine check dist/*
+```
+
 ### **Before Submitting**
 - [ ] Code follows existing style conventions
-- [ ] All tests pass (if applicable)
+- [ ] All tests pass locally
+- [ ] Code is properly formatted (Ruff)
+- [ ] Type hints are added where appropriate
 - [ ] Documentation is updated
 - [ ] Changes are described in PR description
+- [ ] No high-severity security issues
 
 ### **PR Template**
 ```markdown
@@ -105,9 +136,12 @@ Brief description of changes
 - [ ] Tested locally
 - [ ] Added new tests (if applicable)
 - [ ] All existing tests pass
+- [ ] CI checks pass
 
 ## Checklist
 - [ ] Code follows style guidelines
+- [ ] Linting passes (Ruff)
+- [ ] Type checking passes (mypy)
 - [ ] Self-review completed
 - [ ] Documentation updated
 ```
@@ -133,6 +167,54 @@ We're especially looking for help with:
 - **Alternative API integrations**
 - **Machine learning features**
 - **Developer workflow integrations**
+
+## 🚢 Release Process
+
+Releases are fully automated via GitHub Actions:
+
+### **For Maintainers**
+1. **Update Version:**
+   ```bash
+   # Edit pyproject.toml and update version
+   vim pyproject.toml  # Change version = "1.4.1" to "1.5.0"
+   ```
+
+2. **Update CHANGELOG.md:**
+   ```markdown
+   ## [1.5.0] - 2025-01-XX
+   ### Added
+   - New feature description
+   ### Fixed
+   - Bug fix description
+   ```
+
+3. **Commit and Tag:**
+   ```bash
+   git add pyproject.toml CHANGELOG.md
+   git commit -m "chore(release): bump version to 1.5.0"
+   git push origin main
+   git tag v1.5.0
+   git push origin v1.5.0
+   ```
+
+4. **Create GitHub Release:**
+   - Go to [Releases](https://github.com/antonmishel/documentation-search-mcp/releases)
+   - Click "Create a new release"
+   - Select the tag (v1.5.0)
+   - Generate release notes automatically
+   - Publish release
+
+5. **Automated Deployment:**
+   - GitHub Actions automatically builds the package
+   - Validates version consistency
+   - Publishes to PyPI using Trusted Publishing
+   - Uploads build artifacts to GitHub Release
+
+### **Version Numbering**
+Follow [Semantic Versioning](https://semver.org/):
+- **MAJOR** (1.x.x) - Breaking changes
+- **MINOR** (x.1.x) - New features, backwards compatible
+- **PATCH** (x.x.1) - Bug fixes, backwards compatible
 
 ## 🏷️ Issue Labels
 
