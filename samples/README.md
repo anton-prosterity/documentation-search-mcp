@@ -2,6 +2,8 @@
 
 This directory contains ready-to-use examples showing how to integrate and use the documentation-search-enhanced MCP server with different AI assistants and workflows.
 
+No API key is required by default. If you want Serper-powered search, set `SERPER_API_KEY`; otherwise the server uses a prebuilt docs index (auto-downloaded from GitHub Releases on startup) plus on-site docs search (MkDocs/Sphinx indexes when available).
+
 ## 📁 Sample Configurations
 
 ### 🎯 **Basic Setup Examples**
@@ -14,7 +16,6 @@ This directory contains ready-to-use examples showing how to integrate and use t
       "command": "uvx",
       "args": ["documentation-search-enhanced@latest"],
       "env": {
-        "SERPER_API_KEY": "your_key_here",
         "FASTMCP_LOG_LEVEL": "INFO"
       }
     }
@@ -30,7 +31,6 @@ This directory contains ready-to-use examples showing how to integrate and use t
       "command": "uvx",
       "args": ["documentation-search-enhanced@latest"],
       "env": {
-        "SERPER_API_KEY": "your_key_here",
         "FASTMCP_LOG_LEVEL": "ERROR"
       },
       "disabled": false,
@@ -43,7 +43,6 @@ This directory contains ready-to-use examples showing how to integrate and use t
 #### For Codex CLI
 ```bash
 codex mcp add documentation-search-enhanced \
-  --env SERPER_API_KEY=your_key_here \
   --env FASTMCP_LOG_LEVEL=ERROR \
   -- uvx documentation-search-enhanced@latest
 ```
@@ -58,7 +57,6 @@ codex mcp add documentation-search-enhanced \
       "command": "uvx",
       "args": ["documentation-search-enhanced@latest"],
       "env": {
-        "SERPER_API_KEY": "your_production_key",
         "FASTMCP_LOG_LEVEL": "ERROR",
         "GITHUB_TOKEN": "your_github_token_optional"
       },
@@ -81,7 +79,6 @@ codex mcp add documentation-search-enhanced \
       "command": "uvx",
       "args": ["documentation-search-enhanced@latest"],
       "env": {
-        "SERPER_API_KEY": "your_dev_key",
         "FASTMCP_LOG_LEVEL": "DEBUG"
       },
       "disabled": false,
@@ -191,10 +188,7 @@ app.add_middleware(
         "mcp.servers": {
           "documentation-search-enhanced": {
             "command": "uvx",
-            "args": ["documentation-search-enhanced@latest"],
-            "env": {
-              "SERPER_API_KEY": "${env:SERPER_API_KEY}"
-            }
+            "args": ["documentation-search-enhanced@latest"]
           }
         }
       }
@@ -213,7 +207,6 @@ RUN pip install uv
 # Install MCP server
 RUN uvx documentation-search-enhanced@latest
 
-ENV SERPER_API_KEY=""
 ENV FASTMCP_LOG_LEVEL="INFO"
 
 CMD ["uvx", "documentation-search-enhanced@latest"]
@@ -221,9 +214,9 @@ CMD ["uvx", "documentation-search-enhanced@latest"]
 
 ## 🎯 **Best Practices**
 
-### 1. **API Key Management**
+### 1. **Optional Serper API Key**
 ```bash
-# Use environment variables
+# Enable Serper-powered search (optional)
 export SERPER_API_KEY="your_key_here"
 
 # Or use .env files for local development
