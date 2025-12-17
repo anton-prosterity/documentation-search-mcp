@@ -3,7 +3,6 @@
 import logging
 import re
 from typing import List, Optional
-from datetime import datetime
 
 from .vector_search import get_vector_engine
 from .smart_search import SearchResult
@@ -109,9 +108,7 @@ class SearchReranker:
         )
         return scored_results
 
-    async def _calculate_semantic_score(
-        self, query: str, document: str
-    ) -> float:
+    async def _calculate_semantic_score(self, query: str, document: str) -> float:
         """
         Calculate semantic similarity between query and document.
 

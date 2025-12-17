@@ -232,9 +232,7 @@ class TestSearchReranker:
             self._create_search_result(
                 "2", "FastAPI Security", "Authentication in FastAPI", 0.6
             ),
-            self._create_search_result(
-                "3", "Random Doc", "Unrelated content", 0.4
-            ),
+            self._create_search_result("3", "Random Doc", "Unrelated content", 0.4),
         ]
 
         reranked = await reranker.rerank(results, "FastAPI authentication")
@@ -292,7 +290,9 @@ class TestSearchReranker:
         )
 
         results = [community_result, official_result]
-        reranked = await reranker.rerank(results, "FastAPI tutorial", use_semantic=False)
+        reranked = await reranker.rerank(
+            results, "FastAPI tutorial", use_semantic=False
+        )
 
         # Official docs should rank higher due to metadata scoring
         assert reranked[0].url == official_result.url

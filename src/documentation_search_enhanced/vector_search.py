@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import faiss
 import numpy as np
@@ -140,7 +140,9 @@ class VectorSearchEngine:
             index_ids.append(internal_id)
 
         self.next_id += len(documents)
-        logger.info(f"Added {len(documents)} documents to index (total: {self.next_id})")
+        logger.info(
+            f"Added {len(documents)} documents to index (total: {self.next_id})"
+        )
 
         return index_ids
 
