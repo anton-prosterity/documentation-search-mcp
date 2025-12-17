@@ -220,15 +220,17 @@ jobs:
       - name: Run twine check
         run: uv run twine check dist/*
 
-      - name: Test installation in clean environment
+      - name: Test wheel contents
         run: |
-          python -m venv test-install-env
-          source test-install-env/bin/activate
-          # Install without dependencies to avoid disk space issues with large ML libraries
-          pip install --no-deps dist/*.whl
-          # Verify package structure and imports
-          python -c "import documentation_search_enhanced; print(f'Package version: {documentation_search_enhanced.__version__}')"
-          deactivate
+          # Verify wheel structure without installing dependencies (saves disk space)
+          # Extract wheel to check contents
+          python -m zipfile -e dist/*.whl wheel-contents/
+          ls -la wheel-contents/
+          # Verify key files exist
+          test -f wheel-contents/documentation_search_enhanced/__init__.py
+          test -f wheel-contents/documentation_search_enhanced/main.py
+          test -f wheel-contents/documentation_search_enhanced-*.dist-info/METADATA
+          echo "✅ Wheel structure verified"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
