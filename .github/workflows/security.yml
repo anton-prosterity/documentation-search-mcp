@@ -1,0 +1,250 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly Monday 2 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+  actions: read
+
+env:
+  UV_VERSION: "0.4.30"
+  PYTHON_VERSION: "3.13"
+
+jobs:
+  dependency-scan:
+    name: Dependency Scan (Safety & pip-audit)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Export dependencies
+        run: |
+          uv pip freeze > requirements-freeze.txt
+          cat requirements-freeze.txt
+
+      - name: Run Safety check
+        run: |
+          uv pip install safety
+          uv run safety check --json --output safety-report.json || true
+          uv run safety check || echo "Safety check completed with warnings"
+        continue-on-error: true
+
+      - name: Run pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit --format json --output pip-audit-report.json requirements-freeze.txt || true
+          pip-audit requirements-freeze.txt || echo "pip-audit completed with warnings"
+        continue-on-error: true
+
+      - name: Upload scan reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-scan-reports
+          path: |
+            safety-report.json
+            pip-audit-report.json
+            requirements-freeze.txt
+          retention-days: 30
+
+  static-analysis:
+    name: Static Analysis (Bandit)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - name: Install Bandit
+        run: uv pip install "bandit[toml]"
+
+      - name: Run Bandit with SARIF output
+        run: |
+          uv run bandit -r src/ -f sarif -o bandit-report.sarif || true
+          uv run bandit -r src/ -f screen || echo "Bandit scan completed"
+        continue-on-error: true
+
+      - name: Upload SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: bandit-report.sarif
+          category: bandit
+
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-report
+          path: bandit-report.sarif
+          retention-days: 30
+
+  snyk-scan:
+    name: Snyk Security Scan
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Export dependencies for Snyk
+        run: uv pip freeze > requirements.txt
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python@master
+        if: env.SNYK_TOKEN != ''
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --sarif-file-output=snyk-report.sarif
+
+      - name: Upload SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        if: env.SNYK_TOKEN != '' && always()
+        with:
+          sarif_file: snyk-report.sarif
+          category: snyk
+
+      - name: Snyk Monitor
+        uses: snyk/actions/python@master
+        if: env.SNYK_TOKEN != '' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          allow-licenses: MIT, Apache-2.0, BSD-3-Clause, BSD-2-Clause, ISC, PSF-2.0
+          deny-licenses: AGPL-3.0, GPL-3.0
+
+  secret-scanning:
+    name: Secret Scanning (Gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, static-analysis, secret-scanning]
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+
+      - name: Create security summary comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '## 🔒 Security Scan Results\n\n';
+
+            comment += '| Tool | Status |\n';
+            comment += '|------|--------|\n';
+
+            const jobs = [
+              { name: 'Dependency Scan', status: '${{ needs.dependency-scan.result }}' },
+              { name: 'Static Analysis', status: '${{ needs.static-analysis.result }}' },
+              { name: 'Secret Scanning', status: '${{ needs.secret-scanning.result }}' }
+            ];
+
+            jobs.forEach(job => {
+              const icon = job.status === 'success' ? '✅' : job.status === 'failure' ? '❌' : '⚠️';
+              comment += `| ${job.name} | ${icon} ${job.status} |\n`;
+            });
+
+            comment += '\n**Note:** Review detailed reports in the [Actions artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).\n';
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('Security Scan Results')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }

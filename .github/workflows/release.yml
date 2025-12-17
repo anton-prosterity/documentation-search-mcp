@@ -1,0 +1,187 @@
+name: Release - Build & Deploy
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+  id-token: write  # Required for PyPI Trusted Publishing
+
+env:
+  UV_VERSION: "0.4.30"
+  PYTHON_VERSION: "3.13"
+
+jobs:
+  pre-release-validation:
+    name: Pre-Release Validation
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract-version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: extract-version
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+          echo "version=$TAG_VERSION" >> $GITHUB_OUTPUT
+          echo "Git tag version: $TAG_VERSION"
+
+      - name: Extract version from pyproject.toml
+        id: package-version
+        run: |
+          PACKAGE_VERSION=$(grep -oP '(?<=version = ")[^"]+' pyproject.toml)
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "Package version: $PACKAGE_VERSION"
+
+      - name: Compare versions
+        run: |
+          if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "❌ Version mismatch!"
+            echo "Git tag: $TAG_VERSION"
+            echo "pyproject.toml: $PACKAGE_VERSION"
+            exit 1
+          fi
+          echo "✅ Versions match: $TAG_VERSION"
+
+      - name: Check CHANGELOG.md
+        run: |
+          if ! grep -q "## \[$TAG_VERSION\]" CHANGELOG.md; then
+            echo "⚠️  Warning: CHANGELOG.md missing entry for version $TAG_VERSION"
+            echo "This is not a fatal error, but it's recommended to update the CHANGELOG"
+          else
+            echo "✅ CHANGELOG.md contains entry for version $TAG_VERSION"
+          fi
+
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: pre-release-validation
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - name: Install build dependencies
+        run: |
+          uv sync --all-extras
+          uv pip install twine build
+
+      - name: Clean previous builds
+        run: rm -rf dist/ build/ *.egg-info/
+
+      - name: Build package
+        run: uv build
+
+      - name: Verify build artifacts
+        run: |
+          echo "Build artifacts:"
+          ls -lah dist/
+          echo ""
+          echo "Checking for wheel and sdist..."
+          test -f dist/*.whl && echo "✅ Wheel found"
+          test -f dist/*.tar.gz && echo "✅ Source distribution found"
+
+      - name: Run twine check
+        run: uv run twine check dist/*
+
+      - name: Generate SHA256 checksums
+        run: |
+          cd dist
+          sha256sum * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-artifacts
+          path: dist/
+          retention-days: 90
+
+  publish-to-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: pypi
+      url: https://pypi.org/project/documentation-search-enhanced/${{ needs.pre-release-validation.outputs.version }}/
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifacts
+          path: dist/
+
+      - name: Verify artifacts
+        run: |
+          echo "Downloaded artifacts:"
+          ls -lah dist/
+
+      - name: Publish to PyPI (Trusted Publishing)
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          verify-metadata: true
+          skip-existing: false
+          verbose: true
+          print-hash: true
+
+      - name: Verify publication
+        run: |
+          echo "✅ Package published successfully!"
+          echo "PyPI URL: https://pypi.org/project/documentation-search-enhanced/${{ needs.pre-release-validation.outputs.version }}/"
+          echo ""
+          echo "Install with:"
+          echo "  uvx documentation-search-enhanced@${{ needs.pre-release-validation.outputs.version }}"
+          echo "  pip install documentation-search-enhanced==${{ needs.pre-release-validation.outputs.version }}"
+
+  upload-release-assets:
+    name: Upload Release Assets
+    runs-on: ubuntu-latest
+    needs: [pre-release-validation, publish-to-pypi]
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifacts
+          path: dist/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/SHA256SUMS.txt
+          generate_release_notes: true
+          append_body: |
+
+            ## Installation
+
+            Install via uvx (recommended):
+            ```bash
+            uvx documentation-search-enhanced@${{ needs.pre-release-validation.outputs.version }}
+            ```
+
+            Or via pip:
+            ```bash
+            pip install documentation-search-enhanced==${{ needs.pre-release-validation.outputs.version }}
+            ```
+
+            ## Links
+
+            - [PyPI Package](https://pypi.org/project/documentation-search-enhanced/${{ needs.pre-release-validation.outputs.version }}/)
+            - [Documentation](https://github.com/antonmishel/documentation-search-mcp#readme)
+            - [Changelog](https://github.com/antonmishel/documentation-search-mcp/blob/main/CHANGELOG.md)
