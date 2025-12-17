@@ -1,5 +1,11 @@
 # Documentation Search MCP Server
 
+[![CI](https://github.com/antonmishel/documentation-search-mcp/workflows/CI%20-%20Test%20&%20Quality/badge.svg)](https://github.com/antonmishel/documentation-search-mcp/actions/workflows/ci.yml)
+[![Security Scan](https://github.com/antonmishel/documentation-search-mcp/workflows/Security%20Scan/badge.svg)](https://github.com/antonmishel/documentation-search-mcp/actions/workflows/security.yml)
+[![PyPI version](https://badge.fury.io/py/documentation-search-enhanced.svg)](https://pypi.org/project/documentation-search-enhanced/)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This Model Context Protocol server delivers documentation search, vulnerability auditing, and project bootstrapping in one place. It runs as a long-lived process that serves requests from MCP-compatible clients such as Claude Desktop or Cursor.
 
 ## Core Capabilities
