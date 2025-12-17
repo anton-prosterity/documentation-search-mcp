@@ -7,7 +7,7 @@
 
 ## Build, Test, and Development Commands
 - Install deps: `uv sync` (includes dev extras).
-- Run MCP server: `uv run python src/documentation_search_enhanced/main.py` (optional: set `SERPER_API_KEY` for Serper-powered search).
+- Run MCP server: `uv run python -m documentation_search_enhanced.main` (optional: set `SERPER_API_KEY` for Serper-powered search).
 - Test: `uv run pytest`.
 - Lint/format: `uv run ruff check src`, `uv run black src`.
 - Build/publish: `uv build`, `publish_to_pypi.sh`.

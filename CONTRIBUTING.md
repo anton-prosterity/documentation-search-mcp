@@ -26,7 +26,7 @@ The easiest way to contribute! Add support for new documentation sources:
 
 2. **Test it works:**
 ```bash
-python src/documentation_search_enhanced/main.py
+uv run python -m documentation_search_enhanced.main
 # Test search functionality
 ```
 
@@ -79,7 +79,7 @@ uv sync
 # echo "SERPER_API_KEY=your_key_here" > .env
 
 # 4. Test the setup
-python src/documentation_search_enhanced/main.py
+uv run python -m documentation_search_enhanced.main
 # Press Ctrl+C when you see it waiting for input ✅
 ```
 
