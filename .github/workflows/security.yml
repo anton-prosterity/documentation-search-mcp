@@ -105,7 +105,7 @@ jobs:
           fi
 
       - name: Upload SARIF to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: steps.check_sarif.outputs.sarif_exists == 'true'
         continue-on-error: true
         with:
@@ -154,7 +154,7 @@ jobs:
           args: --severity-threshold=high --sarif-file-output=snyk-report.sarif
 
       - name: Upload SARIF to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: env.SNYK_TOKEN != '' && always()
         with:
           sarif_file: snyk-report.sarif
