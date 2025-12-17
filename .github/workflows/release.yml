@@ -33,7 +33,10 @@ jobs:
       - name: Extract version from pyproject.toml
         id: package-version
         run: |
-          PACKAGE_VERSION=$(grep -oP '^version = "\K[^"]+' pyproject.toml)
+          # Extract the [project] version without accidentally matching other keys
+          # like "minversion" (pytest), which would corrupt $GITHUB_ENV.
+          # Allow leading whitespace since TOML permits indentation.
+          PACKAGE_VERSION=$(grep -m1 -oP '^\s*version\s*=\s*"\K[^"]+' pyproject.toml)
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
           echo "Package version: $PACKAGE_VERSION"
 
