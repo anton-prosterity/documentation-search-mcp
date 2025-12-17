@@ -36,9 +36,8 @@ jobs:
           # Parse TOML to reliably extract `[project].version` (avoid regex pitfalls).
           PACKAGE_VERSION=$(python - <<'PY'
           import tomllib
-          from pathlib import Path
-
-          data = tomllib.loads(Path("pyproject.toml").read_bytes())
+          with open("pyproject.toml", "rb") as fh:
+              data = tomllib.load(fh)
           print(data.get("project", {}).get("version", ""))
           PY
           )
