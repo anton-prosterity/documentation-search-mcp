@@ -5,10 +5,8 @@ Provides comprehensive vulnerability analysis, license compliance, and security 
 
 import os
 import json
-import asyncio
 import sys
 import httpx
-import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
@@ -176,7 +174,7 @@ class SnykIntegration:
                 test_payload = {
                     "encoding": "plain",
                     "files": {
-                        f"requirements.txt" if snyk_ecosystem == "pip" else "package.json": {
+                        "requirements.txt" if snyk_ecosystem == "pip" else "package.json": {
                             "contents": f"{package_name}=={version}" if snyk_ecosystem == "pip" else json.dumps({
                                 "dependencies": {package_name: version}
                             })
