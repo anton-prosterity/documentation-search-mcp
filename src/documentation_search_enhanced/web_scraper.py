@@ -37,9 +37,6 @@ class PlaywrightScraper:
             # Navigate to the page and wait for it to be fully loaded
             await page.goto(url, wait_until="networkidle", timeout=60000)
 
-            # Additional waits can be added here if needed, for example:
-            # await page.wait_for_selector("main-content-selector", timeout=5000)
-
             # Scroll to the bottom to trigger lazy-loaded content
             await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             await page.wait_for_timeout(1000)  # Wait for any new content to load
@@ -74,12 +71,4 @@ class PlaywrightScraper:
             await self._playwright.stop()
 
 
-# --- Global Scraper Instance ---
 scraper = PlaywrightScraper()
-
-# Recommended: Add a cleanup function to your main application's exit handler
-# to ensure the browser is closed gracefully.
-# Example:
-# @atexit.register
-# def cleanup():
-#     asyncio.run(scraper.close())
