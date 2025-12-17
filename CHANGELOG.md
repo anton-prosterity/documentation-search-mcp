@@ -2,6 +2,15 @@
 
 All notable changes to Documentation Search Enhanced MCP Server will be documented in this file.
 
+## [1.4.1] - 2025-12-16
+
+### Changed
+- Simplified version_resolver.py from 376 to 190 lines by consolidating duplicate subprocess methods
+- Replaced 1000+ lines of hardcoded learning paths with dynamic 30-line generator
+- Reduced main.py from 2,923 to 1,866 lines (removed 1,057 lines of AI-generated bloat)
+- Removed excessive docstrings and commented placeholder code
+- Improved code maintainability and readability
+
 ## [1.4.0] - 2025-12-16
 
 ### Added
