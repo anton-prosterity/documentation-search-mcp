@@ -1193,44 +1193,450 @@
             "tags": ["security", "best-practices", "vulnerabilities", "web-security", "standards"],
             "priority": "high",
             "auto_approve": true
+        },
+        "dbt": {
+            "url": "https://docs.getdbt.com/docs/introduction",
+            "category": "data-engineering",
+            "learning_curve": "moderate",
+            "tags": ["sql", "data-transformation", "analytics", "etl", "data-warehouse"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "apache-airflow": {
+            "url": "https://airflow.apache.org/docs/",
+            "category": "data-engineering",
+            "learning_curve": "moderate",
+            "tags": ["python", "workflow", "orchestration", "data-pipeline", "scheduling"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "prefect": {
+            "url": "https://docs.prefect.io/",
+            "category": "data-engineering",
+            "learning_curve": "moderate",
+            "tags": ["python", "workflow", "orchestration", "data-pipeline", "modern"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "rabbitmq": {
+            "url": "https://www.rabbitmq.com/documentation.html",
+            "category": "message-broker",
+            "learning_curve": "moderate",
+            "tags": ["message-queue", "amqp", "messaging", "distributed", "broker"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "vercel": {
+            "url": "https://vercel.com/docs",
+            "category": "deployment-platform",
+            "learning_curve": "easy",
+            "tags": ["deployment", "nextjs", "serverless", "hosting", "frontend"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "railway": {
+            "url": "https://docs.railway.app/",
+            "category": "deployment-platform",
+            "learning_curve": "easy",
+            "tags": ["deployment", "hosting", "docker", "database", "simple"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "sentry": {
+            "url": "https://docs.sentry.io/",
+            "category": "monitoring",
+            "learning_curve": "easy",
+            "tags": ["error-tracking", "monitoring", "debugging", "observability", "apm"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "gitlab-ci": {
+            "url": "https://docs.gitlab.com/ee/ci/",
+            "category": "ci-cd",
+            "learning_curve": "moderate",
+            "tags": ["ci", "cd", "gitlab", "pipelines", "automation", "devops"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "helm": {
+            "url": "https://helm.sh/docs/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["kubernetes", "package-manager", "charts", "deployment", "k8s"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "trpc": {
+            "url": "https://trpc.io/docs",
+            "category": "api-framework",
+            "learning_curve": "easy",
+            "tags": ["typescript", "rpc", "type-safe", "fullstack", "api"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "grpc": {
+            "url": "https://grpc.io/docs/",
+            "category": "api-framework",
+            "learning_curve": "moderate",
+            "tags": ["rpc", "protobuf", "microservices", "google", "performance"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "aiohttp": {
+            "url": "https://docs.aiohttp.org/en/stable/",
+            "category": "python-library",
+            "learning_curve": "moderate",
+            "tags": ["python", "async", "http", "client", "server"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "remix": {
+            "url": "https://remix.run/docs",
+            "category": "frontend-framework",
+            "learning_curve": "moderate",
+            "tags": ["react", "fullstack", "ssr", "routing", "modern"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "chakra-ui": {
+            "url": "https://chakra-ui.com/docs/getting-started",
+            "category": "css-framework",
+            "learning_curve": "easy",
+            "tags": ["react", "components", "ui", "accessibility", "design-system"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "threejs": {
+            "url": "https://threejs.org/docs/",
+            "category": "frontend-library",
+            "learning_curve": "moderate",
+            "tags": ["javascript", "3d", "webgl", "graphics", "visualization"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "neon": {
+            "url": "https://neon.tech/docs/introduction",
+            "category": "database",
+            "learning_curve": "easy",
+            "tags": ["postgresql", "serverless", "cloud", "managed", "modern"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "lodash": {
+            "url": "https://lodash.com/docs/",
+            "category": "utility",
+            "learning_curve": "easy",
+            "tags": ["javascript", "utilities", "functional", "helpers", "popular"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "turbo": {
+            "url": "https://turbo.build/repo/docs",
+            "category": "build-tool",
+            "learning_curve": "moderate",
+            "tags": ["monorepo", "build", "cache", "vercel", "tooling"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "ts-node": {
+            "url": "https://typestrong.org/ts-node/",
+            "category": "typescript-tool",
+            "learning_curve": "easy",
+            "tags": ["typescript", "nodejs", "runtime", "development", "repl"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "swc": {
+            "url": "https://swc.rs/docs/getting-started",
+            "category": "build-tool",
+            "learning_curve": "moderate",
+            "tags": ["rust", "compiler", "typescript", "javascript", "fast"],
+            "priority": "medium",
+            "auto_approve": true
+        },
+        "expo": {
+            "url": "https://docs.expo.dev/",
+            "category": "mobile-framework",
+            "learning_curve": "easy",
+            "tags": ["react-native", "mobile", "ios", "android", "cross-platform"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "swiftui": {
+            "url": "https://developer.apple.com/documentation/swiftui/",
+            "category": "mobile-framework",
+            "learning_curve": "moderate",
+            "tags": ["swift", "ios", "apple", "declarative", "native"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "jetpack-compose": {
+            "url": "https://developer.android.com/jetpack/compose/documentation",
+            "category": "mobile-framework",
+            "learning_curve": "moderate",
+            "tags": ["kotlin", "android", "google", "declarative", "native"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "tauri": {
+            "url": "https://tauri.app/v1/guides/",
+            "category": "desktop-framework",
+            "learning_curve": "moderate",
+            "tags": ["rust", "desktop", "cross-platform", "electron-alternative", "lightweight"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "strapi": {
+            "url": "https://docs.strapi.io/",
+            "category": "cms",
+            "learning_curve": "easy",
+            "tags": ["headless-cms", "nodejs", "api", "content-management", "open-source"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "sanity": {
+            "url": "https://www.sanity.io/docs",
+            "category": "cms",
+            "learning_curve": "moderate",
+            "tags": ["headless-cms", "structured-content", "real-time", "api", "modern"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "payload-cms": {
+            "url": "https://payloadcms.com/docs",
+            "category": "cms",
+            "learning_curve": "easy",
+            "tags": ["headless-cms", "typescript", "nodejs", "api", "modern"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "gin": {
+            "url": "https://gin-gonic.com/docs/",
+            "category": "web-framework",
+            "learning_curve": "easy",
+            "tags": ["go", "web", "api", "performance", "lightweight"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "actix-web": {
+            "url": "https://actix.rs/docs/",
+            "category": "web-framework",
+            "learning_curve": "moderate",
+            "tags": ["rust", "web", "api", "async", "performance"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "laravel": {
+            "url": "https://laravel.com/docs",
+            "category": "web-framework",
+            "learning_curve": "moderate",
+            "tags": ["php", "web", "fullstack", "eloquent", "popular"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "rails": {
+            "url": "https://guides.rubyonrails.org/",
+            "category": "web-framework",
+            "learning_curve": "moderate",
+            "tags": ["ruby", "web", "fullstack", "mvc", "convention"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "neo4j": {
+            "url": "https://neo4j.com/docs/",
+            "category": "database",
+            "learning_curve": "moderate",
+            "tags": ["graph-database", "cypher", "nosql", "relationships", "analytics"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "turso": {
+            "url": "https://docs.turso.tech/",
+            "category": "database",
+            "learning_curve": "easy",
+            "tags": ["sqlite", "edge", "distributed", "libsql", "serverless"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "cockroachdb": {
+            "url": "https://www.cockroachlabs.com/docs/",
+            "category": "database",
+            "learning_curve": "moderate",
+            "tags": ["sql", "distributed", "postgresql-compatible", "cloud-native", "resilient"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "dspy": {
+            "url": "https://dspy-docs.vercel.app/",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["python", "llm", "prompt-optimization", "stanford", "programming"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "guidance": {
+            "url": "https://github.com/guidance-ai/guidance",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["python", "llm", "prompt-engineering", "microsoft", "control"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "haystack": {
+            "url": "https://docs.haystack.deepset.ai/",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["python", "nlp", "rag", "search", "deepset"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "together-ai": {
+            "url": "https://docs.together.ai/docs",
+            "category": "ai-service",
+            "learning_curve": "easy",
+            "tags": ["llm", "api", "inference", "cloud", "models"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "replicate": {
+            "url": "https://replicate.com/docs",
+            "category": "ai-service",
+            "learning_curve": "easy",
+            "tags": ["ml", "api", "model-hosting", "deployment", "inference"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "pulumi": {
+            "url": "https://www.pulumi.com/docs/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["infrastructure-as-code", "iac", "cloud", "programming", "modern"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "jenkins": {
+            "url": "https://www.jenkins.io/doc/",
+            "category": "ci-cd",
+            "learning_curve": "moderate",
+            "tags": ["ci", "cd", "automation", "pipelines", "java"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "circleci": {
+            "url": "https://circleci.com/docs/",
+            "category": "ci-cd",
+            "learning_curve": "easy",
+            "tags": ["ci", "cd", "cloud", "automation", "pipelines"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "argocd": {
+            "url": "https://argo-cd.readthedocs.io/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["gitops", "kubernetes", "cd", "deployment", "declarative"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "traefik": {
+            "url": "https://doc.traefik.io/traefik/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["reverse-proxy", "load-balancer", "cloud-native", "kubernetes", "docker"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "apache-spark": {
+            "url": "https://spark.apache.org/docs/latest/",
+            "category": "data-engineering",
+            "learning_curve": "steep",
+            "tags": ["big-data", "distributed", "analytics", "scala", "python"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "apache-kafka": {
+            "url": "https://kafka.apache.org/documentation/",
+            "category": "data-engineering",
+            "learning_curve": "steep",
+            "tags": ["streaming", "distributed", "messaging", "event-driven", "real-time"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "dagster": {
+            "url": "https://docs.dagster.io/",
+            "category": "data-engineering",
+            "learning_curve": "moderate",
+            "tags": ["python", "data-orchestration", "pipeline", "observability", "modern"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "nats": {
+            "url": "https://docs.nats.io/",
+            "category": "message-broker",
+            "learning_curve": "moderate",
+            "tags": ["messaging", "cloud-native", "distributed", "pubsub", "streaming"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "solidjs": {
+            "url": "https://www.solidjs.com/docs/latest",
+            "category": "frontend-framework",
+            "learning_curve": "easy",
+            "tags": ["javascript", "reactive", "performance", "jsx", "modern"],
+            "priority": "low",
+            "auto_approve": true
+        },
+        "alpinejs": {
+            "url": "https://alpinejs.dev/start-here",
+            "category": "frontend-library",
+            "learning_curve": "easy",
+            "tags": ["javascript", "lightweight", "reactive", "simple", "minimal"],
+            "priority": "low",
+            "auto_approve": true
         }
     },
     "categories": {
         "language": ["python", "javascript", "typescript", "go", "rust"],
         "web-platform": ["html", "css", "web-apis", "pwa"],
         "version-control": ["git"],
-        "ci-cd": ["github-actions"],
+        "ci-cd": ["github-actions", "gitlab-ci", "jenkins", "circleci"],
         "api-documentation": ["openapi"],
-        "monitoring": ["prometheus", "grafana", "opentelemetry"],
+        "monitoring": ["prometheus", "grafana", "opentelemetry", "sentry"],
         "search-analytics": ["elasticsearch"],
         "task-queue": ["celery"],
         "code-quality": ["eslint", "ruff"],
         "formatter": ["black", "prettier"],
-        "web-framework": ["fastapi", "django", "flask", "express", "litestar", "nestjs", "spring-boot", "aspnet-core"],
-        "frontend-framework": ["react", "svelte", "nextjs", "vuejs", "angular", "astro"],
-        "mobile-framework": ["react-native", "flutter"],
-        "css-framework": ["tailwind", "bootstrap", "mui", "shadcn-ui"],
-        "build-tool": ["vite", "webpack"],
+        "web-framework": ["fastapi", "django", "flask", "express", "litestar", "nestjs", "spring-boot", "aspnet-core", "gin", "actix-web", "laravel", "rails"],
+        "frontend-framework": ["react", "svelte", "nextjs", "vuejs", "angular", "astro", "remix", "solidjs"],
+        "mobile-framework": ["react-native", "flutter", "expo", "swiftui", "jetpack-compose"],
+        "css-framework": ["tailwind", "bootstrap", "mui", "shadcn-ui", "chakra-ui"],
+        "build-tool": ["vite", "webpack", "turbo", "swc"],
         "state-management": ["redux", "zustand"],
-        "api-framework": ["graphql", "apollo-client", "apollo-server"],
-        "ai-framework": ["langchain", "langgraph", "llama-index", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv", "pinecone", "weaviate", "instructor", "litellm", "chroma", "vllm"],
-        "ai-service": ["openai", "anthropic", "ollama"],
+        "api-framework": ["graphql", "apollo-client", "apollo-server", "trpc", "grpc"],
+        "ai-framework": ["langchain", "langgraph", "llama-index", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv", "pinecone", "weaviate", "instructor", "litellm", "chroma", "vllm", "dspy", "guidance", "haystack"],
+        "ai-service": ["openai", "anthropic", "ollama", "together-ai", "replicate"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
         "cloud-library": ["boto3"],
-        "devops-tool": ["docker", "kubernetes", "terraform", "ansible", "nginx"],
+        "devops-tool": ["docker", "kubernetes", "terraform", "ansible", "nginx", "helm", "pulumi", "argocd", "traefik"],
         "testing": ["pytest", "jest", "cypress", "vitest", "playwright", "testing-library"],
-        "database": ["duckdb", "sqlalchemy", "prisma", "postgresql", "redis", "mongodb", "mysql", "drizzle", "mongoose", "pgvector"],
+        "database": ["duckdb", "sqlalchemy", "prisma", "postgresql", "redis", "mongodb", "mysql", "drizzle", "mongoose", "pgvector", "neon", "neo4j", "turso", "cockroachdb"],
         "data-science": ["pandas", "polars", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill", "jupysql"],
-        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl", "protobuf", "httpx", "pydantic"],
+        "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl", "protobuf", "httpx", "pydantic", "aiohttp"],
         "security": ["jsonwebtoken", "bcrypt", "bandit", "pip-audit", "owasp"],
         "real-time": ["socket.io"],
         "backend-service": ["firebase", "supabase"],
-        "desktop-framework": ["electron"],
+        "desktop-framework": ["electron", "tauri"],
         "package-manager": ["npm", "uv", "poetry", "pipx", "pnpm", "bun"],
         "data-validation": ["pydantic", "zod", "joi"],
         "http-client": ["axios"],
         "authentication": ["auth0", "nextauth", "clerk"],
-        "utility": ["dayjs"]
+        "utility": ["dayjs", "lodash"],
+        "data-engineering": ["dbt", "apache-airflow", "prefect", "apache-spark", "apache-kafka", "dagster"],
+        "message-broker": ["rabbitmq", "nats"],
+        "deployment-platform": ["vercel", "railway"],
+        "typescript-tool": ["ts-node"],
+        "frontend-library": ["threejs", "alpinejs"],
+        "cms": ["strapi", "sanity", "payload-cms"]
     }
-} 
+}
