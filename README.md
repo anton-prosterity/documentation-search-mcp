@@ -32,13 +32,15 @@ pip install documentation-search-enhanced[vector]==1.6.2
 
 ### Claude Desktop
 
+Find your uvx path: `which uvx`
+
 Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "documentation-search-enhanced": {
-      "command": "uvx",
+      "command": "/Users/yourusername/.local/bin/uvx",
       "args": ["documentation-search-enhanced@1.6.2"],
       "env": {
         "SERPER_API_KEY": "optional_key_here"
@@ -48,11 +50,26 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
 }
 ```
 
+Replace `/Users/yourusername/.local/bin/uvx` with your actual uvx path.
+
 ### Codex CLI
 
 ```bash
+# Find your uvx path first
+which uvx
+
+# Then add with full path (replace with your actual path)
+codex mcp add documentation-search-enhanced \
+  -- /Users/yourusername/.local/bin/uvx documentation-search-enhanced@1.6.2
+
+# Or if uvx is in PATH:
 codex mcp add documentation-search-enhanced \
   -- uvx documentation-search-enhanced@1.6.2
+```
+
+If you get a timeout on first run, pre-download dependencies:
+```bash
+uvx documentation-search-enhanced@1.6.2
 ```
 
 ### Environment Variables
