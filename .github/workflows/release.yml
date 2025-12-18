@@ -11,6 +11,7 @@ permissions:
 env:
   UV_VERSION: "0.4.30"
   PYTHON_VERSION: "3.13"
+  UV_LINK_MODE: hardlink
 
 jobs:
   pre-release-validation:
@@ -85,11 +86,6 @@ jobs:
         with:
           version: ${{ env.UV_VERSION }}
 
-      - name: Install build dependencies
-        run: |
-          uv sync --all-extras
-          uv pip install twine build
-
       - name: Clean previous builds
         run: rm -rf dist/ build/ *.egg-info/
 
@@ -106,7 +102,7 @@ jobs:
           test -f dist/*.tar.gz && echo "✅ Source distribution found"
 
       - name: Run twine check
-        run: uv run twine check dist/*
+        run: uv tool run --from twine twine check dist/*
 
       - name: Generate SHA256 checksums
         run: |
