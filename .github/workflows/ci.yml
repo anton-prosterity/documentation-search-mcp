@@ -47,7 +47,7 @@ jobs:
           version: ${{ env.UV_VERSION }}
 
       - name: Cache UV dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/uv
           key: uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('uv.lock') }}
@@ -80,7 +80,7 @@ jobs:
           version: ${{ env.UV_VERSION }}
 
       - name: Cache UV dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/uv
           key: uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('uv.lock') }}
@@ -114,7 +114,7 @@ jobs:
           version: ${{ env.UV_VERSION }}
 
       - name: Cache UV dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/uv
           key: uv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('uv.lock') }}
@@ -124,7 +124,7 @@ jobs:
             uv-${{ runner.os }}-
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-py${{ matrix.python-version }}
@@ -189,7 +189,7 @@ jobs:
           version: ${{ env.UV_VERSION }}
 
       - name: Cache UV dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/uv
           key: uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('uv.lock') }}
