@@ -923,8 +923,16 @@ async def semantic_search(
 
         # Apply vector-based reranking for better semantic relevance
         if use_vector_rerank and all_results:
-            reranker = get_reranker()
-            all_results = await reranker.rerank(all_results, query, use_semantic=True)
+            try:
+                reranker = get_reranker()
+                all_results = await reranker.rerank(all_results, query, use_semantic=True)
+            except ImportError:
+                logger.warning(
+                    "Vector search dependencies not installed. "
+                    "Falling back to basic relevance sorting. "
+                    "Install with: pip install documentation-search-enhanced[vector]"
+                )
+                all_results.sort(key=lambda r: r.relevance_score, reverse=True)
         else:
             # Fallback to basic relevance score sorting
             all_results.sort(key=lambda r: r.relevance_score, reverse=True)
