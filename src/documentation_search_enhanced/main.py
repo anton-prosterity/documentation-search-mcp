@@ -925,7 +925,9 @@ async def semantic_search(
         if use_vector_rerank and all_results:
             try:
                 reranker = get_reranker()
-                all_results = await reranker.rerank(all_results, query, use_semantic=True)
+                all_results = await reranker.rerank(
+                    all_results, query, use_semantic=True
+                )
             except ImportError:
                 logger.warning(
                     "Vector search dependencies not installed. "
