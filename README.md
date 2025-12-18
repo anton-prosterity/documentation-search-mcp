@@ -6,118 +6,119 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This Model Context Protocol server delivers documentation search, vulnerability auditing, and project bootstrapping in one place. It runs as a long-lived process that serves requests from MCP-compatible clients such as Claude Desktop or Cursor.
+MCP server for searching documentation, scanning dependencies for vulnerabilities, and generating project boilerplate. Works with Claude Desktop, Cursor, and other MCP clients.
 
-## Core Capabilities
-- **AI-Powered Semantic Search**: Vector embeddings + hybrid reranking across 100+ documentation sources for superior relevance.
-- **Security-First Approach**: Scan local Python projects for dependency vulnerabilities with multi-tool analysis.
-- **Project Scaffolding**: Generate production-ready starters (FastAPI, React) and developer environment files.
-- **Developer Productivity**: Learning paths, curated code examples, and library security comparisons on demand.
+## Features
 
-## Quick Start
-Install `uv` (includes `uvx`): https://docs.astral.sh/uv/getting-started/installation/
+- Search 100+ documentation sources with optional semantic vector search
+- Scan Python projects for vulnerabilities (Snyk, Safety, OSV)
+- Generate FastAPI and React project starters
+- Learning paths and code examples
+
+## Installation
+
 ```bash
-# Requires Python 3.12+ (works on Python 3.13 too!)
+# Recommended: use uvx (install uv from https://docs.astral.sh/uv)
 uvx documentation-search-enhanced@1.6.2
-```
 
-**Optional: Add AI Vector Search** (Python 3.12 only, adds ~600MB):
-```bash
+# Or with pip in a virtual environment
+pip install documentation-search-enhanced==1.6.2
+
+# Optional: AI semantic search (Python 3.12 only, adds ~600MB)
 pip install documentation-search-enhanced[vector]==1.6.2
 ```
 
-First run can take a few minutes while dependencies download; subsequent starts reuse the cache.
-Configure your assistant to launch the server:
+## Configuration
+
+### Claude Desktop
+
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
 ```json
 {
   "mcpServers": {
     "documentation-search-enhanced": {
       "command": "uvx",
-      "args": ["documentation-search-enhanced"]
+      "args": ["documentation-search-enhanced@1.6.2"],
+      "env": {
+        "SERPER_API_KEY": "optional_key_here"
+      }
     }
   }
 }
 ```
-No API key is required. Optionally set `SERPER_API_KEY` to use Serper-powered search.
-Without it, the server uses a prebuilt docs index (auto-downloaded from GitHub Releases on startup) plus on-site docs search (MkDocs/Sphinx indexes when available).
-Control the download with `DOCS_SITE_INDEX_AUTO_DOWNLOAD`, `DOCS_SITE_INDEX_MAX_AGE_HOURS`, `DOCS_SITE_INDEX_URL(S)`, and `DOCS_SITE_INDEX_PATH`.
-Set `server_config.features.real_time_search=false` to avoid any live crawling and rely only on the downloaded index.
-The process stays running and listens for JSON-RPC calls; stop it with `Ctrl+C` when finished.
 
-## Codex CLI
-Add the server using Codex's built-in MCP manager:
+### Codex CLI
+
 ```bash
 codex mcp add documentation-search-enhanced \
   -- uvx documentation-search-enhanced@1.6.2
 ```
-If Codex reports an MCP startup timeout on first use, run `uvx documentation-search-enhanced@1.6.2`
-once in your terminal to let it download dependencies, then retry.
 
-**Optional: Add AI Vector Search** (requires Python 3.12, adds ~600MB):
-```bash
-# Install with vector extras for semantic search
-pip install documentation-search-enhanced[vector]==1.6.2
-```
+### Environment Variables
 
-To run from a local checkout instead:
-```bash
-codex mcp add documentation-search-enhanced \
-  -- bash -lc 'cd /path/to/documentation-search-mcp && uv run python -m documentation_search_enhanced.main'
-```
+- `SERPER_API_KEY` - Optional. Enables live web search. Without it, uses prebuilt index from GitHub Releases.
+- `DOCS_SITE_INDEX_AUTO_DOWNLOAD` - Set to `false` to disable automatic index downloads
+- `DOCS_SITE_INDEX_PATH` - Custom path for documentation index
 
-## Development Workflow
-```bash
-git clone https://github.com/anton-prosterity/documentation-search-mcp.git
-cd documentation-search-mcp
-uv sync --all-extras --all-groups  # include dev tools
-# Optional: enable Serper-powered search
-# echo "SERPER_API_KEY=your_key_here" > .env
-uv run python -m documentation_search_enhanced.main
-```
-- Run core tests: `uv run pytest --ignore=pytest-test-project`.
-- Run example FastAPI tests: `cd pytest-test-project && uv run --all-extras python -m pytest -q`.
-- Lint: `uv run ruff check src`. Format: `uv run black src` (use `--check` to verify).
-- Build distributions via `uv build`; `publish_to_pypi.sh` wraps the release flow.
+Set `server_config.features.real_time_search=false` in your config to disable live crawling.
 
-## Configuration
-Ask your assistant for the current configuration via the `get_current_config` tool, save it as `config.json`, then adjust sources or caching preferences. Validate changes locally with `uv run python src/documentation_search_enhanced/config_validator.py`. Keep secrets in `.env` rather than committing them.
+## Semantic Search (Optional)
 
-## AI-Powered Semantic Search (Optional)
-The server features **optional vector-based semantic search** with hybrid reranking for significantly improved relevance.
+The `[vector]` extra adds semantic search using sentence-transformers (all-MiniLM-L6-v2) with hybrid reranking:
 
-**Note**: This feature requires the `[vector]` extra and only works on Python 3.12:
-```bash
-pip install documentation-search-enhanced[vector]==1.6.2
-```
+- 50% semantic similarity (cosine)
+- 30% keyword matching
+- 20% source authority
 
-### How It Works
-- **Vector Embeddings**: Uses sentence-transformers (all-MiniLM-L6-v2) to generate 384-dimensional semantic embeddings
-- **Hybrid Scoring**: Combines three signals with configurable weights:
-  - Semantic similarity (50%): True meaning-based matching via cosine similarity
-  - Keyword relevance (30%): Precise term matching for specific queries
-  - Source authority (20%): Official docs, code examples, and URL quality signals
-- **FAISS Index**: Lightning-fast similarity search over large documentation corpora
+Only works on Python 3.12 (PyTorch limitation). Python 3.13 users get keyword-based search.
 
-### Benefits
-- **Better Understanding**: Finds semantically related content even with different terminology
-- **Improved Ranking**: Hybrid approach balances semantic understanding with keyword precision
-- **Production Ready**: Compact 120MB model, efficient L2-normalized embeddings
-- **Flexible**: Enable/disable vector reranking with `use_vector_rerank` parameter
-
-### Usage
-Vector reranking is **enabled by default** when the `[vector]` dependencies are installed. The tool falls back gracefully to keyword-based sorting without them. To explicitly disable:
+To disable vector search even when installed:
 ```python
 semantic_search(query="FastAPI auth", libraries=["fastapi"], use_vector_rerank=False)
 ```
 
-### Installation Options
-- **Standard** (50MB): Works everywhere, fast keyword-based search
-- **With Vector** (650MB): Python 3.12 only, adds AI semantic search
+## Available Tools
 
-The vector search option uses production-ready sentence transformers (all-MiniLM-L6-v2) for semantic understanding, balancing quality with practical performance requirements while maintaining our comprehensive security scanning and project scaffolding capabilities.
+Core MCP tools:
+- `semantic_search` - Search documentation
+- `get_docs` - Fetch specific documentation
+- `get_learning_path` - Generate learning roadmap
+- `get_code_examples` - Find code snippets
+- `scan_project_dependencies` - Vulnerability scan
+- `snyk_scan_project` - Detailed Snyk analysis
+- `generate_project_starter` - Create project boilerplate
+- `manage_dev_environment` - Generate docker-compose files
+- `compare_library_security` - Compare library vulnerabilities
 
-## Tools at a Glance
-Key MCP tools include `get_docs`, `semantic_search`, `get_learning_path`, `get_code_examples`, `scan_project_dependencies`, `generate_project_starter`, `manage_dev_environment`, `get_security_summary`, and `compare_library_security`.
+## Development
 
-## Contributing & License
-Start with the contributor guide in `AGENTS.md` plus the workflow details in `CONTRIBUTING.md`. Follow Conventional Commits, document validation steps in pull requests, and update `CHANGELOG.md` for user-facing adjustments. Released under the MIT License—see `LICENSE` for the full text.
+```bash
+git clone https://github.com/anton-prosterity/documentation-search-mcp.git
+cd documentation-search-mcp
+uv sync --all-extras
+uv run python -m documentation_search_enhanced.main
+```
+
+### Testing
+
+```bash
+uv run pytest --ignore=pytest-test-project  # Core tests
+uv run ruff check src                       # Linting
+uv run ruff format src --check              # Format check
+```
+
+### Configuration
+
+Use the `get_current_config` tool to export current settings to `config.json`. Validate with:
+```bash
+uv run python src/documentation_search_enhanced/config_validator.py
+```
+
+## Contributing
+
+See `CONTRIBUTING.md` for guidelines. Use Conventional Commits for commit messages.
+
+## License
+
+MIT License - see `LICENSE` for details.
