@@ -2,7 +2,10 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
+
+if TYPE_CHECKING:
+    import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +96,7 @@ class VectorSearchEngine:
         if index_path and index_path.exists():
             self.load_index(index_path)
 
-    def embed_documents(self, documents: List[str]) -> np.ndarray:
+    def embed_documents(self, documents: List[str]) -> "np.ndarray":
         """
         Generate embeddings for a list of documents.
 
