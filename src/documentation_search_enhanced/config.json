@@ -1033,6 +1033,166 @@
             "tags": ["python", "formatting", "opinionated", "code-style"],
             "priority": "high",
             "auto_approve": true
+        },
+        "nestjs": {
+            "url": "https://docs.nestjs.com/",
+            "category": "web-framework",
+            "learning_curve": "moderate",
+            "tags": ["typescript", "nodejs", "enterprise", "decorators", "dependency-injection"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "spring-boot": {
+            "url": "https://docs.spring.io/spring-boot/docs/current/reference/html/",
+            "category": "web-framework",
+            "learning_curve": "moderate",
+            "tags": ["java", "enterprise", "microservices", "spring", "jvm"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "aspnet-core": {
+            "url": "https://learn.microsoft.com/en-us/aspnet/core/",
+            "category": "web-framework",
+            "learning_curve": "moderate",
+            "tags": ["csharp", "dotnet", "microsoft", "enterprise", "web"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "mysql": {
+            "url": "https://dev.mysql.com/doc/",
+            "category": "database",
+            "learning_curve": "moderate",
+            "tags": ["sql", "relational", "database", "mysql", "mariadb"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "drizzle": {
+            "url": "https://orm.drizzle.team/docs/overview",
+            "category": "database",
+            "learning_curve": "easy",
+            "tags": ["typescript", "orm", "type-safe", "sql", "modern"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "mongoose": {
+            "url": "https://mongoosejs.com/docs/",
+            "category": "database",
+            "learning_curve": "easy",
+            "tags": ["mongodb", "nodejs", "odm", "schemas", "validation"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "pinecone": {
+            "url": "https://docs.pinecone.io/",
+            "category": "ai-framework",
+            "learning_curve": "easy",
+            "tags": ["vector-database", "ai", "embeddings", "similarity-search", "cloud"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "weaviate": {
+            "url": "https://weaviate.io/developers/weaviate",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["vector-database", "ai", "open-source", "graphql", "semantic-search"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "instructor": {
+            "url": "https://python.useinstructor.com/",
+            "category": "ai-framework",
+            "learning_curve": "easy",
+            "tags": ["python", "llm", "pydantic", "structured-output", "openai"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "litellm": {
+            "url": "https://docs.litellm.ai/docs/",
+            "category": "ai-framework",
+            "learning_curve": "easy",
+            "tags": ["python", "llm", "proxy", "multi-provider", "unified-api"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "chroma": {
+            "url": "https://docs.trychroma.com/",
+            "category": "ai-framework",
+            "learning_curve": "easy",
+            "tags": ["vector-database", "ai", "embeddings", "python", "open-source"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "pgvector": {
+            "url": "https://github.com/pgvector/pgvector",
+            "category": "database",
+            "learning_curve": "moderate",
+            "tags": ["postgresql", "vector-search", "embeddings", "extension", "ai"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "vllm": {
+            "url": "https://docs.vllm.ai/en/latest/",
+            "category": "ai-framework",
+            "learning_curve": "moderate",
+            "tags": ["python", "llm", "inference", "performance", "serving"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "vitest": {
+            "url": "https://vitest.dev/guide/",
+            "category": "testing",
+            "learning_curve": "easy",
+            "tags": ["javascript", "typescript", "vite", "unit-testing", "fast"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "playwright": {
+            "url": "https://playwright.dev/docs/intro",
+            "category": "testing",
+            "learning_curve": "easy",
+            "tags": ["e2e", "testing", "browser", "automation", "cross-browser"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "testing-library": {
+            "url": "https://testing-library.com/docs/",
+            "category": "testing",
+            "learning_curve": "easy",
+            "tags": ["react", "testing", "user-centric", "dom", "accessibility"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "prettier": {
+            "url": "https://prettier.io/docs/en/",
+            "category": "formatter",
+            "learning_curve": "easy",
+            "tags": ["javascript", "typescript", "formatting", "opinionated", "code-style"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "shadcn-ui": {
+            "url": "https://ui.shadcn.com/docs",
+            "category": "css-framework",
+            "learning_curve": "easy",
+            "tags": ["react", "tailwind", "components", "radix", "typescript"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "clerk": {
+            "url": "https://clerk.com/docs",
+            "category": "authentication",
+            "learning_curve": "easy",
+            "tags": ["authentication", "react", "nextjs", "user-management", "modern"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "owasp": {
+            "url": "https://owasp.org/www-project-top-ten/",
+            "category": "security",
+            "learning_curve": "moderate",
+            "tags": ["security", "best-practices", "vulnerabilities", "web-security", "standards"],
+            "priority": "high",
+            "auto_approve": true
         }
     },
     "categories": {
@@ -1045,32 +1205,32 @@
         "search-analytics": ["elasticsearch"],
         "task-queue": ["celery"],
         "code-quality": ["eslint", "ruff"],
-        "formatter": ["black"],
-        "web-framework": ["fastapi", "django", "flask", "express", "litestar"],
+        "formatter": ["black", "prettier"],
+        "web-framework": ["fastapi", "django", "flask", "express", "litestar", "nestjs", "spring-boot", "aspnet-core"],
         "frontend-framework": ["react", "svelte", "nextjs", "vuejs", "angular", "astro"],
         "mobile-framework": ["react-native", "flutter"],
-        "css-framework": ["tailwind", "bootstrap", "mui"],
+        "css-framework": ["tailwind", "bootstrap", "mui", "shadcn-ui"],
         "build-tool": ["vite", "webpack"],
         "state-management": ["redux", "zustand"],
         "api-framework": ["graphql", "apollo-client", "apollo-server"],
-        "ai-framework": ["langchain", "langgraph", "llama-index", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv"],
+        "ai-framework": ["langchain", "langgraph", "llama-index", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv", "pinecone", "weaviate", "instructor", "litellm", "chroma", "vllm"],
         "ai-service": ["openai", "anthropic", "ollama"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
         "cloud-library": ["boto3"],
         "devops-tool": ["docker", "kubernetes", "terraform", "ansible", "nginx"],
-        "testing": ["pytest", "jest", "cypress"],
-        "database": ["duckdb", "sqlalchemy", "prisma", "postgresql", "redis", "mongodb"],
+        "testing": ["pytest", "jest", "cypress", "vitest", "playwright", "testing-library"],
+        "database": ["duckdb", "sqlalchemy", "prisma", "postgresql", "redis", "mongodb", "mysql", "drizzle", "mongoose", "pgvector"],
         "data-science": ["pandas", "polars", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill", "jupysql"],
         "python-library": ["requests", "pillow", "pymupdf", "tqdm", "rdflib", "openpyxl", "protobuf", "httpx", "pydantic"],
-        "security": ["jsonwebtoken", "bcrypt", "bandit", "pip-audit"],
+        "security": ["jsonwebtoken", "bcrypt", "bandit", "pip-audit", "owasp"],
         "real-time": ["socket.io"],
         "backend-service": ["firebase", "supabase"],
         "desktop-framework": ["electron"],
         "package-manager": ["npm", "uv", "poetry", "pipx", "pnpm", "bun"],
         "data-validation": ["pydantic", "zod", "joi"],
         "http-client": ["axios"],
-        "authentication": ["auth0", "nextauth"],
+        "authentication": ["auth0", "nextauth", "clerk"],
         "utility": ["dayjs"]
     }
 } 
