@@ -12,12 +12,14 @@ wheels/
 
 # Local documentation files (not tracked in git)
 COMPETITIVE_ANALYSIS.md
+COMPETITIVE_STRATEGY.pdf
 CURSOR_COMMUNITY_POST.md
 DEMO_VIDEO_SCRIPT.md
 DYNAMIC_CONFIG_ANALYSIS.md
 HYBRID_SETUP_GUIDE.md
 TECHNICAL_DEEP_DIVE.md
 TEST_CURSOR_INTEGRATION.md
+COMPETITIVE_STRATEGY.md
 
 # Generated docs site index assets
 docs_site_index.json
