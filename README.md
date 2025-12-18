@@ -17,12 +17,15 @@ This Model Context Protocol server delivers documentation search, vulnerability 
 ## Quick Start
 Install `uv` (includes `uvx`): https://docs.astral.sh/uv/getting-started/installation/
 ```bash
-# Requires Python 3.12+
-uvx documentation-search-enhanced
-
-# Or pin a specific version:
-# uvx documentation-search-enhanced@1.6.1
+# Requires Python 3.12+ (works on Python 3.13 too!)
+uvx documentation-search-enhanced@1.6.2
 ```
+
+**Optional: Add AI Vector Search** (Python 3.12 only, adds ~600MB):
+```bash
+pip install documentation-search-enhanced[vector]==1.6.2
+```
+
 First run can take a few minutes while dependencies download; subsequent starts reuse the cache.
 Configure your assistant to launch the server:
 ```json
@@ -42,13 +45,20 @@ Set `server_config.features.real_time_search=false` to avoid any live crawling a
 The process stays running and listens for JSON-RPC calls; stop it with `Ctrl+C` when finished.
 
 ## Codex CLI
-Add the server using Codex’s built-in MCP manager:
+Add the server using Codex's built-in MCP manager:
 ```bash
 codex mcp add documentation-search-enhanced \
-  -- uvx documentation-search-enhanced
+  -- uvx documentation-search-enhanced@1.6.2
 ```
-If Codex reports an MCP startup timeout on first use, run `uvx documentation-search-enhanced`
+If Codex reports an MCP startup timeout on first use, run `uvx documentation-search-enhanced@1.6.2`
 once in your terminal to let it download dependencies, then retry.
+
+**Optional: Add AI Vector Search** (requires Python 3.12, adds ~600MB):
+```bash
+# Install with vector extras for semantic search
+pip install documentation-search-enhanced[vector]==1.6.2
+```
+
 To run from a local checkout instead:
 ```bash
 codex mcp add documentation-search-enhanced \
@@ -72,8 +82,13 @@ uv run python -m documentation_search_enhanced.main
 ## Configuration
 Ask your assistant for the current configuration via the `get_current_config` tool, save it as `config.json`, then adjust sources or caching preferences. Validate changes locally with `uv run python src/documentation_search_enhanced/config_validator.py`. Keep secrets in `.env` rather than committing them.
 
-## AI-Powered Semantic Search
-The server now features **vector-based semantic search** with hybrid reranking for significantly improved relevance:
+## AI-Powered Semantic Search (Optional)
+The server features **optional vector-based semantic search** with hybrid reranking for significantly improved relevance.
+
+**Note**: This feature requires the `[vector]` extra and only works on Python 3.12:
+```bash
+pip install documentation-search-enhanced[vector]==1.6.2
+```
 
 ### How It Works
 - **Vector Embeddings**: Uses sentence-transformers (all-MiniLM-L6-v2) to generate 384-dimensional semantic embeddings
@@ -90,10 +105,14 @@ The server now features **vector-based semantic search** with hybrid reranking f
 - **Flexible**: Enable/disable vector reranking with `use_vector_rerank` parameter
 
 ### Usage
-Vector reranking is **enabled by default** in `semantic_search`. To disable:
+Vector reranking is **enabled by default** when the `[vector]` dependencies are installed. The tool falls back gracefully to keyword-based sorting without them. To explicitly disable:
 ```python
 semantic_search(query="FastAPI auth", libraries=["fastapi"], use_vector_rerank=False)
 ```
+
+### Installation Options
+- **Standard** (50MB): Works everywhere, fast keyword-based search
+- **With Vector** (650MB): Python 3.12 only, adds AI semantic search
 
 This feature addresses the #1 competitive gap vs Context7 while maintaining our security and scaffolding advantages.
 
