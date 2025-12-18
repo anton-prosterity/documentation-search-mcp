@@ -114,7 +114,7 @@ semantic_search(query="FastAPI auth", libraries=["fastapi"], use_vector_rerank=F
 - **Standard** (50MB): Works everywhere, fast keyword-based search
 - **With Vector** (650MB): Python 3.12 only, adds AI semantic search
 
-This feature addresses the #1 competitive gap vs Context7 while maintaining our security and scaffolding advantages.
+The vector search option uses production-ready sentence transformers (all-MiniLM-L6-v2) for semantic understanding, balancing quality with practical performance requirements while maintaining our comprehensive security scanning and project scaffolding capabilities.
 
 ## Tools at a Glance
 Key MCP tools include `get_docs`, `semantic_search`, `get_learning_path`, `get_code_examples`, `scan_project_dependencies`, `generate_project_starter`, `manage_dev_environment`, `get_security_summary`, and `compare_library_security`.
