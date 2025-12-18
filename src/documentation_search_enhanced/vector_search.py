@@ -4,11 +4,21 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 
-import faiss
-import numpy as np
-from sentence_transformers import SentenceTransformer
-
 logger = logging.getLogger(__name__)
+
+# Try to import vector search dependencies (optional)
+try:
+    import faiss
+    import numpy as np
+    from sentence_transformers import SentenceTransformer
+
+    VECTOR_SEARCH_AVAILABLE = True
+except ImportError as e:
+    VECTOR_SEARCH_AVAILABLE = False
+    logger.warning(
+        f"Vector search dependencies not available: {e}. "
+        "Install with: pip install documentation-search-enhanced[vector]"
+    )
 
 
 class SearchResult:
@@ -59,6 +69,12 @@ class VectorSearchEngine:
             model_name: Name of the sentence-transformers model to use
             index_path: Optional path to save/load FAISS index
         """
+        if not VECTOR_SEARCH_AVAILABLE:
+            raise ImportError(
+                "Vector search dependencies not installed. "
+                "Install with: pip install documentation-search-enhanced[vector]"
+            )
+
         self.model_name = model_name
         self.index_path = index_path
         self.dimension = 384  # all-MiniLM-L6-v2 embedding dimension
