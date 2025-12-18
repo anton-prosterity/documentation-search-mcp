@@ -19,13 +19,13 @@ MCP server for searching documentation, scanning dependencies for vulnerabilitie
 
 ```bash
 # Recommended: use uvx (install uv from https://docs.astral.sh/uv)
-uvx documentation-search-enhanced@1.6.2
+uvx documentation-search-enhanced@1.6.3
 
 # Or with pip in a virtual environment
-pip install documentation-search-enhanced==1.6.2
+pip install documentation-search-enhanced==1.6.3
 
 # Optional: AI semantic search (Python 3.12 only, adds ~600MB)
-pip install documentation-search-enhanced[vector]==1.6.2
+pip install documentation-search-enhanced[vector]==1.6.3
 ```
 
 ## Configuration
@@ -41,7 +41,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "documentation-search-enhanced": {
       "command": "/Users/yourusername/.local/bin/uvx",
-      "args": ["documentation-search-enhanced@1.6.2"],
+      "args": ["documentation-search-enhanced@1.6.3"],
       "env": {
         "SERPER_API_KEY": "optional_key_here"
       }
@@ -60,16 +60,29 @@ which uvx
 
 # Then add with full path (replace with your actual path)
 codex mcp add documentation-search-enhanced \
-  -- /Users/yourusername/.local/bin/uvx documentation-search-enhanced@1.6.2
+  -- /Users/yourusername/.local/bin/uvx documentation-search-enhanced@1.6.3
 
 # Or if uvx is in PATH:
 codex mcp add documentation-search-enhanced \
-  -- uvx documentation-search-enhanced@1.6.2
+  -- uvx documentation-search-enhanced@1.6.3
+```
+
+**With SERPER API Key** (enables live web search):
+```bash
+codex mcp add documentation-search-enhanced \
+  --env SERPER_API_KEY=your_key_here \
+  -- /Users/yourusername/.local/bin/uvx documentation-search-enhanced@1.6.3
+```
+
+**Without SERPER API Key** (uses prebuilt index from GitHub Releases):
+```bash
+codex mcp add documentation-search-enhanced \
+  -- /Users/yourusername/.local/bin/uvx documentation-search-enhanced@1.6.3
 ```
 
 If you get a timeout on first run, pre-download dependencies:
 ```bash
-uvx documentation-search-enhanced@1.6.2
+uvx documentation-search-enhanced@1.6.3
 ```
 
 ### Environment Variables
