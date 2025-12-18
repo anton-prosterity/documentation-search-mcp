@@ -8,6 +8,8 @@
 
 MCP server for searching documentation, scanning dependencies for vulnerabilities, and generating project boilerplate. Works with Claude Desktop, Cursor, and other MCP clients.
 
+**📚 [Read the comprehensive tutorial](TUTORIAL.md)** for detailed examples and workflows.
+
 ## Features
 
 - Search 100+ documentation sources with optional semantic vector search
