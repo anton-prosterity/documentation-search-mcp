@@ -26,6 +26,7 @@ permissions:
 env:
   UV_VERSION: "0.4.30"
   PYTHON_VERSION: "3.13"
+  UV_LINK_MODE: hardlink
 
 jobs:
   lint:
@@ -49,19 +50,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/uv
-          key: uv-${{ runner.os }}-${{ hashFiles('**/uv.lock') }}
+          key: uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('uv.lock') }}
           restore-keys: |
+            uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-
             uv-${{ runner.os }}-
 
-      - name: Install dependencies
-        run: uv sync --all-extras
-
       - name: Run Ruff check
-        run: uv run ruff check src --output-format=github
+        run: uv tool run --from ruff ruff check src --output-format=github
         continue-on-error: false
 
       - name: Run Ruff format check
-        run: uv run ruff format src --check
+        run: uv tool run --from ruff ruff format src --check
 
   type-check:
     name: Type Check (mypy)
@@ -84,17 +83,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/uv
-          key: uv-${{ runner.os }}-${{ hashFiles('**/uv.lock') }}
+          key: uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('uv.lock') }}
           restore-keys: |
+            uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-
             uv-${{ runner.os }}-
 
-      - name: Install dependencies
-        run: |
-          uv sync --all-extras
-          uv pip install mypy types-PyYAML
-
       - name: Run mypy
-        run: uv run mypy src/documentation_search_enhanced --ignore-missing-imports --python-version=3.12
+        run: uv tool run --from mypy --with types-PyYAML mypy src/documentation_search_enhanced --ignore-missing-imports --python-version=3.12
         continue-on-error: true
 
   test:
@@ -122,9 +117,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/uv
-          key: uv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
+          key: uv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('uv.lock') }}
           restore-keys: |
             uv-${{ runner.os }}-py${{ matrix.python-version }}-
+            uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-
+            uv-${{ runner.os }}-
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -195,14 +192,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/uv
-          key: uv-${{ runner.os }}-${{ hashFiles('**/uv.lock') }}
+          key: uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-${{ hashFiles('uv.lock') }}
           restore-keys: |
+            uv-${{ runner.os }}-py${{ env.PYTHON_VERSION }}-
             uv-${{ runner.os }}-
-
-      - name: Install build dependencies
-        run: |
-          uv sync --all-extras
-          uv pip install twine build
 
       - name: Clean previous builds
         run: rm -rf dist/ build/ *.egg-info/
@@ -218,7 +211,7 @@ jobs:
           test -f dist/*.tar.gz
 
       - name: Run twine check
-        run: uv run twine check dist/*
+        run: uv tool run --from twine twine check dist/*
 
       - name: Test wheel contents
         run: |
