@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Documentation Search Enhanced - MCP Server" description="MCP server for searching documentation, scanning vulnerabilities, and generating project boilerplate. Works with Claude Desktop, Cursor, and other MCP clients.">
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+      <div class="text-center">
+        <h1 class="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
+          Documentation Search Enhanced
+        </h1>
+        <p class="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          MCP server for searching 180+ documentation sources, scanning vulnerabilities, and generating project boilerplate
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/tutorial" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+            Get Started
+          </a>
+          <a href="https://github.com/anton-prosterity/documentation-search-mcp" target="_blank" class="inline-block bg-white text-gray-700 px-8 py-3 rounded-lg font-semibold border-2 border-gray-300 hover:border-gray-400 transition">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Features</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
+          <div class="text-blue-600 mb-4">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Documentation Search</h3>
+          <p class="text-gray-600">Search 180+ curated documentation sources with optional semantic vector search powered by AI</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-lg">
+          <div class="text-red-600 mb-4">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Security Scanning</h3>
+          <p class="text-gray-600">Scan Python projects for vulnerabilities using Snyk, Safety, and OSV databases</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
+          <div class="text-green-600 mb-4">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Project Generation</h3>
+          <p class="text-gray-600">Generate FastAPI and React project starters with best practices built-in</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg">
+          <div class="text-purple-600 mb-4">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Learning Paths</h3>
+          <p class="text-gray-600">Get curated learning roadmaps and code examples for any technology stack</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Start Section -->
+  <div class="py-20 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Quick Start</h2>
+
+      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Installation</h3>
+        <div class="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+          <div class="mb-2"># Recommended: use uvx</div>
+          <div class="text-green-400">uvx documentation-search-enhanced@1.8.0</div>
+          <div class="mt-4 mb-2"># Or with pip in a virtual environment</div>
+          <div class="text-green-400">pip install documentation-search-enhanced==1.8.0</div>
+          <div class="mt-4 mb-2"># Optional: AI semantic search (Python 3.12 only)</div>
+          <div class="text-green-400">pip install documentation-search-enhanced[vector]==1.8.0</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Configuration</h3>
+        <p class="text-gray-600 mb-4">Add to your Claude Desktop config at <code class="bg-gray-100 px-2 py-1 rounded">~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+        <div class="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+          <pre>{`{
+  "mcpServers": {
+    "documentation-search-enhanced": {
+      "command": "/Users/yourusername/.local/bin/uvx",
+      "args": ["documentation-search-enhanced@1.8.0"],
+      "env": {
+        "SERPER_API_KEY": "optional_key_here"
+      }
+    }
+  }
+}`}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supported Libraries Section -->
+  <div class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-4">180+ Supported Libraries</h2>
+      <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        Comprehensive coverage across all major technology stacks with curated documentation sources
+      </p>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        {['Python', 'FastAPI', 'Django', 'React', 'Vue.js', 'Next.js', 'Node.js', 'Express', 'TypeScript', 'PostgreSQL', 'MongoDB', 'Redis', 'Docker', 'Kubernetes', 'AWS', 'Azure', 'TensorFlow', 'PyTorch', 'Tailwind', 'GraphQL', 'Prisma', 'Supabase', 'NestJS', 'Drizzle'].map((lib) => (
+          <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-lg text-center hover:shadow-md transition">
+            <div class="font-semibold text-gray-900">{lib}</div>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-center text-gray-500 mt-8">
+        And 150+ more libraries covering data engineering, AI/ML, DevOps, mobile, and more
+      </p>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="py-20 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold mb-6">Ready to Get Started?</h2>
+      <p class="text-xl mb-8 text-blue-100">
+        Read our comprehensive tutorial to learn how to use all features with detailed examples
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/tutorial" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition">
+          Read Tutorial
+        </a>
+        <a href="https://github.com/anton-prosterity/documentation-search-mcp" target="_blank" class="inline-block bg-transparent text-white border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+          Star on GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
