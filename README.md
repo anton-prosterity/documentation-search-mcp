@@ -15,17 +15,22 @@ This Model Context Protocol server delivers documentation search, vulnerability 
 - **Developer Productivity**: Learning paths, curated code examples, and library security comparisons on demand.
 
 ## Quick Start
+Install `uv` (includes `uvx`): https://docs.astral.sh/uv/getting-started/installation/
 ```bash
 # Requires Python 3.12+
-uvx documentation-search-enhanced@latest
+uvx documentation-search-enhanced
+
+# Or pin a specific version:
+# uvx documentation-search-enhanced@1.6.1
 ```
+First run can take a few minutes while dependencies download; subsequent starts reuse the cache.
 Configure your assistant to launch the server:
 ```json
 {
   "mcpServers": {
     "documentation-search-enhanced": {
       "command": "uvx",
-      "args": ["documentation-search-enhanced@latest"]
+      "args": ["documentation-search-enhanced"]
     }
   }
 }
@@ -40,8 +45,10 @@ The process stays running and listens for JSON-RPC calls; stop it with `Ctrl+C` 
 Add the server using Codex’s built-in MCP manager:
 ```bash
 codex mcp add documentation-search-enhanced \
-  -- uvx documentation-search-enhanced@latest
+  -- uvx documentation-search-enhanced
 ```
+If Codex reports an MCP startup timeout on first use, run `uvx documentation-search-enhanced`
+once in your terminal to let it download dependencies, then retry.
 To run from a local checkout instead:
 ```bash
 codex mcp add documentation-search-enhanced \
