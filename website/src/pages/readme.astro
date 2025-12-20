@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { readFileSync } from 'fs';
+import { marked } from 'marked';
+import { join } from 'path';
+
+const readmePath = join(process.cwd(), '../README.md');
+const readmeMarkdown = readFileSync(readmePath, 'utf-8');
+const readmeHtml = marked(readmeMarkdown);
+---
+
+<Layout title="Documentation - Documentation Search Enhanced" description="MCP server for searching documentation, scanning dependencies for vulnerabilities, and generating project boilerplate.">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <article class="prose prose-slate lg:prose-lg max-w-none" set:html={readmeHtml} />
+  </div>
+</Layout>
+
+<style is:global>
+  .prose {
+    color: #1e293b;
+  }
+  .prose h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #0f172a;
+  }
+  .prose h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    color: #1e293b;
+  }
+  .prose h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #334155;
+  }
+  .prose p {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+  }
+  .prose ul, .prose ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .prose li {
+    margin-bottom: 0.5rem;
+    line-height: 1.75;
+  }
+  .prose code {
+    background-color: #f1f5f9;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    color: #dc2626;
+    font-weight: 600;
+  }
+  .prose pre {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  .prose pre code {
+    background-color: transparent;
+    color: #e2e8f0;
+    padding: 0;
+    font-weight: 400;
+  }
+  .prose a {
+    color: #2563eb;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+  .prose a:hover {
+    color: #1d4ed8;
+  }
+  .prose strong {
+    color: #0f172a;
+    font-weight: 600;
+  }
+  .prose img {
+    display: inline;
+    margin: 0 0.25rem;
+  }
+</style>
