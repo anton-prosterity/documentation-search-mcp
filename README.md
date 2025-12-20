@@ -12,7 +12,7 @@ MCP server for searching documentation, scanning dependencies for vulnerabilitie
 
 ## Features
 
-- Search 180+ curated documentation sources with optional semantic vector search
+- Search 190+ curated documentation sources with optional semantic vector search
 - Scan Python projects for vulnerabilities (Snyk, Safety, OSV)
 - Generate FastAPI and React project starters
 - Learning paths and code examples

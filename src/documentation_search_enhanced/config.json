@@ -222,6 +222,22 @@
             "priority": "high",
             "auto_approve": true
         },
+        "google-ai": {
+            "url": "https://ai.google.dev/docs",
+            "category": "ai-service",
+            "learning_curve": "easy",
+            "tags": ["ai", "llm", "gemini", "google", "api"],
+            "priority": "high",
+            "auto_approve": true
+        },
+        "codex-cli": {
+            "url": "https://docs.codex.sh/",
+            "category": "ai-service",
+            "learning_curve": "easy",
+            "tags": ["ai", "cli", "mcp", "anthropic", "developer-tools"],
+            "priority": "medium",
+            "auto_approve": true
+        },
         "langchain": {
             "url": "https://python.langchain.com/docs/get_started/introduction/",
             "category": "ai-framework",
@@ -608,6 +624,14 @@
             "learning_curve": "moderate",
             "tags": ["infrastructure", "iac", "cloud", "automation"],
             "priority": "high",
+            "auto_approve": true
+        },
+        "terragrunt": {
+            "url": "https://terragrunt.gruntwork.io/docs/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["infrastructure", "iac", "terraform", "wrapper", "dry"],
+            "priority": "medium",
             "auto_approve": true
         },
         "ansible": {
@@ -1538,6 +1562,14 @@
             "priority": "low",
             "auto_approve": true
         },
+        "fluxcd": {
+            "url": "https://fluxcd.io/flux/",
+            "category": "devops-tool",
+            "learning_curve": "moderate",
+            "tags": ["gitops", "kubernetes", "cd", "deployment", "declarative", "cncf"],
+            "priority": "medium",
+            "auto_approve": true
+        },
         "traefik": {
             "url": "https://doc.traefik.io/traefik/",
             "category": "devops-tool",
@@ -1614,11 +1646,11 @@
         "state-management": ["redux", "zustand"],
         "api-framework": ["graphql", "apollo-client", "apollo-server", "trpc", "grpc"],
         "ai-framework": ["langchain", "langgraph", "llama-index", "promptflow", "autogen", "scikit-learn", "transformers", "datasets", "accelerate", "spacy", "faiss-cpu", "rank-bm25", "pytorch", "tensorflow", "opencv", "pinecone", "weaviate", "instructor", "litellm", "chroma", "vllm", "dspy", "guidance", "haystack"],
-        "ai-service": ["openai", "anthropic", "ollama", "together-ai", "replicate"],
+        "ai-service": ["openai", "anthropic", "google-ai", "codex-cli", "ollama", "together-ai", "replicate"],
         "runtime": ["nodejs"],
         "cloud-platform": ["aws", "google-cloud", "azure"],
         "cloud-library": ["boto3"],
-        "devops-tool": ["docker", "kubernetes", "terraform", "ansible", "nginx", "helm", "pulumi", "argocd", "traefik"],
+        "devops-tool": ["docker", "kubernetes", "terraform", "terragrunt", "ansible", "nginx", "helm", "pulumi", "argocd", "fluxcd", "traefik"],
         "testing": ["pytest", "jest", "cypress", "vitest", "playwright", "testing-library"],
         "database": ["duckdb", "sqlalchemy", "prisma", "postgresql", "redis", "mongodb", "mysql", "drizzle", "mongoose", "pgvector", "neon", "neo4j", "turso", "cockroachdb"],
         "data-science": ["pandas", "polars", "streamlit", "numpy", "matplotlib", "networkx", "ipywidgets", "pyvis", "papermill", "jupysql"],
