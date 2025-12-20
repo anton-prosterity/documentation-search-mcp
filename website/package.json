@@ -12,7 +12,11 @@
     "node": ">=20.11.0"
   },
   "dependencies": {
-    "astro": "^5.16.6"
+    "@astrojs/markdown-remark": "^6.3.10",
+    "@astrojs/mdx": "^4.3.13",
+    "astro": "^5.16.6",
+    "marked": "^15.0.12",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
