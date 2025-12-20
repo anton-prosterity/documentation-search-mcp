@@ -4,6 +4,12 @@ import { readFileSync } from 'fs';
 import { marked } from 'marked';
 import { join } from 'path';
 
+// Configure marked to render properly
+marked.setOptions({
+  gfm: true,
+  breaks: false,
+});
+
 const readmePath = join(process.cwd(), '../README.md');
 const readmeMarkdown = readFileSync(readmePath, 'utf-8');
 const readmeHtml = marked(readmeMarkdown);
@@ -90,7 +96,14 @@ const readmeHtml = marked(readmeMarkdown);
     font-weight: 600;
   }
   .prose img {
-    display: inline;
+    display: inline-block;
+    margin: 0 0.25rem 0.5rem 0;
+    vertical-align: middle;
+    height: auto;
+    max-height: 20px;
+  }
+  .prose p img {
+    display: inline-block;
     margin: 0 0.25rem;
   }
 </style>
