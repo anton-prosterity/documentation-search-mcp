@@ -92,6 +92,24 @@ uvx documentation-search-enhanced@1.9.0
 - `SERPER_API_KEY` - Optional. Enables live web search. Without it, uses prebuilt index from GitHub Releases.
 - `DOCS_SITE_INDEX_AUTO_DOWNLOAD` - Set to `false` to disable automatic index downloads
 - `DOCS_SITE_INDEX_PATH` - Custom path for documentation index
+- `DOCS_CONFIG_URL` / `DOCS_CONFIG_URLS` - Optional. Remote docs catalog URL(s) (e.g., Cloudflare R2)
+- `DOCS_CONFIG_AUTO_DOWNLOAD` - Enable remote catalog fetch (defaults to true when URLs are set)
+- `DOCS_CONFIG_PATH` - Custom cache path for the remote catalog
+- `DOCS_CONFIG_MAX_AGE_HOURS` - TTL for remote catalog refresh
+- `DOCS_CONFIG_ETAG_PATH` - Optional path to store the catalog ETag
+- `DOCS_BACKEND_URL` - Optional. Docs backend API base URL (e.g., Cloudflare Worker)
+- `DOCS_BACKEND_API_KEY` - Optional. Bearer token for backend API
+- `DOCS_BACKEND_TIMEOUT_SECONDS` - Backend request timeout
+
+When a remote catalog is configured, `docs_urls` (and optional `categories`) are loaded from it and used as the source of truth for available libraries.
+
+## Cloudflare Backend (Optional)
+
+The Cloudflare Worker backend + Terraform are kept in a private repo:
+`https://github.com/gemini2026/documentation-search-backend` (access required).
+
+It hosts the docs catalog, ingestion pipeline, and semantic search. Configure
+`DOCS_CONFIG_URL`/`DOCS_CONFIG_URLS` and `DOCS_BACKEND_URL` to point to your deployment.
 
 Set `server_config.features.real_time_search=false` in your config to disable live crawling.
 
