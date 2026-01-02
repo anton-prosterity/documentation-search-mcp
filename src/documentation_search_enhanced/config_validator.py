@@ -63,7 +63,7 @@ class Config(BaseModel):
     cache: CacheConfig = Field(default_factory=CacheConfig)
     rate_limiting: RateLimitingConfig = Field(default_factory=RateLimitingConfig)
     docs_urls: Dict[str, DocsURL]
-    categories: Dict[str, List[str]]
+    categories: Dict[str, List[str]] = Field(default_factory=dict)
 
     @field_validator("server_config", "cache", "rate_limiting", mode="before")
     @classmethod

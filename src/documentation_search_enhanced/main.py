@@ -25,6 +25,16 @@ from .site_index_downloader import (
     ensure_site_index_file,
     load_site_index_settings_from_env,
 )
+from .catalog_loader import (
+    load_catalog_payload,
+    load_catalog_settings_from_env,
+    merge_catalog_config,
+)
+from .backend_client import (
+    backend_get_docs,
+    backend_search,
+    load_backend_config,
+)
 from .config_validator import validate_config, Config as AppConfig
 from .content_enhancer import content_enhancer
 from .version_resolver import version_resolver
@@ -41,6 +51,7 @@ SERPER_URL = "https://google.serper.dev/search"
 
 # Environment variables (removing API key exposure)
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
+backend_config = load_backend_config()
 
 
 @asynccontextmanager
@@ -305,6 +316,20 @@ def load_config() -> AppConfig:
         raise FileNotFoundError("Could not find or load config.json")
 
     try:
+        catalog_settings = load_catalog_settings_from_env(cwd=os.getcwd())
+        catalog_payload, catalog_result = load_catalog_payload(
+            catalog_settings, user_agent=USER_AGENT
+        )
+        if catalog_payload:
+            config_data = merge_catalog_config(config_data, catalog_payload)
+            logger.debug(
+                "Loaded docs catalog override: %s",
+                catalog_result.get("status", "unknown"),
+            )
+    except Exception as e:
+        logger.warning("Docs catalog override failed: %s", e)
+
+    try:
         validated_config = validate_config(config_data)
         logger.debug("Configuration successfully loaded and validated.")
         return validated_config
@@ -330,6 +355,8 @@ for lib_name, lib_data in config.get("docs_urls", {}).items():
         docs_urls[lib_name] = str(lib_data.get("url") or "").strip()
     else:
         docs_urls[lib_name] = str(lib_data or "").strip()
+
+content_enhancer.set_library_terms(list(docs_urls.keys()))
 
 cache_config = config.get("cache", {"enabled": False})
 cache_persistence_enabled = cache_config.get("persistence_enabled", False)
@@ -487,6 +514,12 @@ async def fetch_url(url: str) -> str:
 
 # Configure smart search now that the helpers are in place
 smart_search.configure(docs_urls, search_web)
+try:
+    from .reranker import get_reranker
+
+    get_reranker().set_official_domains(docs_urls.values())
+except Exception:
+    pass
 
 
 async def shutdown_resources() -> None:
@@ -569,6 +602,11 @@ async def get_docs(
     if isinstance(libraries, str):
         libraries = [lib.strip() for lib in libraries.split(",") if lib.strip()]
 
+    global http_client
+    backend = backend_config or load_backend_config()
+    if backend and http_client is None:
+        http_client = httpx.AsyncClient(timeout=httpx.Timeout(30.0, read=60.0))
+
     config_dict = config_model.model_dump()
     library_summaries: List[Dict[str, Any]] = []
     summary_sections: List[str] = []
@@ -587,6 +625,49 @@ async def get_docs(
             "status": "searched",
             "results": [],
         }
+
+        if backend and http_client is not None:
+            backend_payload = await backend_get_docs(
+                http_client,
+                backend,
+                library=library,
+                version=resolved_version,
+                topic=query,
+                limit=3,
+            )
+            backend_results = (backend_payload or {}).get("results") or []
+            if backend_results:
+                lib_entry["status"] = "backend"
+                library_lines = [f"### {library}"]
+
+                for result in backend_results[:3]:
+                    title = result.get("title") or result.get("url") or "Documentation"
+                    summary = (
+                        result.get("snippet")
+                        or result.get("content")
+                        or "No summary available."
+                    )
+                    url = result.get("url") or ""
+                    lib_entry["results"].append(
+                        {
+                            "title": title,
+                            "url": url,
+                            "summary": summary,
+                        }
+                    )
+                    trimmed_summary = (
+                        summary[:200] + "..." if len(summary) > 200 else summary
+                    )
+                    if url:
+                        library_lines.append(
+                            f"- [{title}]({url}): {trimmed_summary}"
+                        )
+                    else:
+                        library_lines.append(f"- {title}: {trimmed_summary}")
+
+                library_summaries.append(lib_entry)
+                summary_sections.append("\n".join(library_lines))
+                continue
 
         lib_config = config_dict.get("docs_urls", {}).get(library, {})
         auto_approve = lib_config.get("auto_approve", True)
@@ -909,6 +990,50 @@ async def semantic_search(
     if isinstance(libraries, str):
         libraries = [lib.strip() for lib in libraries.split(",") if lib.strip()]
 
+    global http_client
+    backend = backend_config or load_backend_config()
+    if backend and http_client is None:
+        http_client = httpx.AsyncClient(timeout=httpx.Timeout(30.0, read=60.0))
+
+    if backend and http_client is not None:
+        backend_results: List[Dict[str, Any]] = []
+        for lib in libraries:
+            payload = await backend_search(
+                http_client,
+                backend,
+                query=query,
+                library=lib,
+                version=version,
+                limit=10,
+                context=context,
+            )
+            results = (payload or {}).get("results") or []
+            for result in results:
+                backend_results.append(
+                    {
+                        "source_library": result.get("library") or lib,
+                        "title": result.get("title") or result.get("url") or "",
+                        "url": result.get("url") or "",
+                        "snippet": result.get("snippet") or "",
+                        "relevance_score": float(result.get("score") or 0.0),
+                        "content_type": result.get("content_type") or "reference",
+                        "difficulty_level": result.get("difficulty_level")
+                        or "unknown",
+                        "estimated_read_time": result.get("estimated_read_time")
+                        or "unknown",
+                        "has_code_examples": bool(result.get("has_code_examples", False)),
+                    }
+                )
+
+        if backend_results:
+            return {
+                "query": query,
+                "libraries_searched": libraries,
+                "total_results": len(backend_results),
+                "vector_rerank_enabled": False,
+                "results": backend_results[:10],
+            }
+
     search_tasks = [
         smart_search.semantic_search(query, lib, context) for lib in libraries
     ]
@@ -1221,6 +1346,7 @@ async def get_environment_config():
     from .config_manager import config_manager
 
     config = config_manager.get_config()
+    backend = load_backend_config()
 
     return {
         "environment": config_manager.environment,
@@ -1243,6 +1369,10 @@ async def get_environment_config():
             "requests_per_minute": config["rate_limiting"]["requests_per_minute"],
         },
         "features": config["server_config"]["features"],
+        "backend": {
+            "configured": backend is not None,
+            "base_url": backend.base_url if backend else None,
+        },
         "total_libraries": len(config_manager.get_docs_urls()),
         "available_libraries": list(config_manager.get_docs_urls().keys())[
             :10

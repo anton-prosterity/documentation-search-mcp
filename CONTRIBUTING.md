@@ -7,7 +7,7 @@ Thank you for your interest in contributing! This project thrives on community c
 ### 📚 **Add New Libraries**
 The easiest way to contribute! Add support for new documentation sources:
 
-1. **Add to `src/documentation_search_enhanced/config.json`:**
+1. **Add to `src/documentation_search_enhanced/config.json` (or the remote catalog if configured):**
 ```json
 {
   "docs_urls": {
@@ -15,11 +15,10 @@ The easiest way to contribute! Add support for new documentation sources:
       "url": "https://docs.yourlibrary.com/",
       "category": "web-framework",
       "learning_curve": "moderate",
-      "tags": ["python", "web", "api"]
+      "tags": ["python", "web", "api"],
+      "priority": "medium",
+      "auto_approve": true
     }
-  },
-  "categories": {
-    "web-framework": ["fastapi", "django", "flask", "your_library"]
   }
 }
 ```

@@ -50,6 +50,16 @@ class ContentEnhancer:
     def __init__(self):
         self.version_cache = {}
         self.cross_ref_cache = {}
+        self._library_terms: List[str] = []
+        self._library_regex: Optional[re.Pattern[str]] = None
+
+    def set_library_terms(self, terms: List[str]) -> None:
+        self._library_terms = sorted({term for term in terms if term})
+        if not self._library_terms:
+            self._library_regex = None
+            return
+        pattern = r"\b(" + "|".join(map(re.escape, self._library_terms)) + r")\b"
+        self._library_regex = re.compile(pattern, re.IGNORECASE)
 
     async def enhance_content(
         self, content: str, library: str, query: str
@@ -386,17 +396,9 @@ class ContentEnhancer:
         """Extract cross-references to other libraries or concepts"""
         cross_refs = []
 
-        # Common library mentions
-        library_patterns = [
-            r"\b(fastapi|django|flask|express|react|vue|angular)\b",
-            r"\b(numpy|pandas|matplotlib|scikit-learn)\b",
-            r"\b(tensorflow|pytorch|keras)\b",
-            r"\b(docker|kubernetes|aws|azure|gcp)\b",
-        ]
-
-        for pattern in library_patterns:
-            matches = re.finditer(pattern, content, re.IGNORECASE)
-            cross_refs.extend([match.group(1).lower() for match in matches])
+        if self._library_regex:
+            matches = re.finditer(self._library_regex, content)
+            cross_refs.extend([match.group(0).lower() for match in matches])
 
         # Remove the current library from cross-references
         cross_refs = [ref for ref in cross_refs if ref != library.lower()]
@@ -408,56 +410,6 @@ class ContentEnhancer:
     ) -> List[Dict[str, str]]:
         """Get contextual recommendations based on library and query"""
         recommendations = []
-
-        # Library-specific recommendations
-        lib_recommendations = {
-            "fastapi": [
-                {
-                    "type": "related_library",
-                    "name": "pydantic",
-                    "reason": "Data validation and settings",
-                },
-                {
-                    "type": "related_library",
-                    "name": "uvicorn",
-                    "reason": "ASGI server for FastAPI",
-                },
-                {
-                    "type": "concept",
-                    "name": "async/await",
-                    "reason": "Essential for FastAPI performance",
-                },
-            ],
-            "react": [
-                {
-                    "type": "related_library",
-                    "name": "typescript",
-                    "reason": "Type safety for React applications",
-                },
-                {
-                    "type": "related_library",
-                    "name": "tailwind",
-                    "reason": "Utility-first CSS framework",
-                },
-                {"type": "concept", "name": "hooks", "reason": "Modern React pattern"},
-            ],
-            "django": [
-                {
-                    "type": "related_library",
-                    "name": "django-rest-framework",
-                    "reason": "API development",
-                },
-                {
-                    "type": "related_library",
-                    "name": "celery",
-                    "reason": "Background tasks",
-                },
-                {"type": "concept", "name": "orm", "reason": "Database abstraction"},
-            ],
-        }
-
-        if library.lower() in lib_recommendations:
-            recommendations.extend(lib_recommendations[library.lower()])
 
         # Query-specific recommendations
         query_lower = query.lower()
@@ -504,7 +456,7 @@ class ContentEnhancer:
 
         try:
             # Try to get version info from PyPI for Python packages
-            if library in ["fastapi", "django", "flask", "pandas", "numpy"]:
+            if re.match(r"^[a-z0-9][a-z0-9._-]*$", library.lower()):
                 async with httpx.AsyncClient() as client:
                     response = await client.get(
                         f"https://pypi.org/pypi/{library}/json", timeout=5.0

@@ -2,7 +2,8 @@
 
 import logging
 import re
-from typing import List, Optional
+from typing import Iterable, List, Optional
+from urllib.parse import urlparse
 
 from .vector_search import get_vector_engine
 from .smart_search import SearchResult
@@ -45,6 +46,15 @@ class SearchReranker:
             self.metadata_weight /= total
 
         self.vector_engine = get_vector_engine()
+        self._official_domains: set[str] = set()
+
+    def set_official_domains(self, urls: Iterable[str]) -> None:
+        domains: set[str] = set()
+        for url in urls:
+            parsed = urlparse(url)
+            if parsed.netloc:
+                domains.add(parsed.netloc.lower())
+        self._official_domains = domains
 
     async def rerank(
         self,
@@ -157,15 +167,8 @@ class SearchReranker:
 
         # Source authority scoring
         url_lower = result.url.lower()
-        if any(
-            domain in url_lower
-            for domain in [
-                "docs.python.org",
-                "fastapi.tiangolo.com",
-                "reactjs.org",
-                "docs.djangoproject.com",
-            ]
-        ):
+        url_host = urlparse(result.url).netloc.lower()
+        if self._official_domains and url_host in self._official_domains:
             score += 0.3  # Official documentation
         elif any(
             domain in url_lower

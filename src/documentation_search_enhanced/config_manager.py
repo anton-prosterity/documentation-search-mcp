@@ -5,10 +5,19 @@ Supports development, staging, and production environments with different settin
 
 import json
 import os
+import logging
 from typing import Dict, Any, Optional
 from importlib import resources
 from dataclasses import dataclass
 
+from .catalog_loader import (
+    load_catalog_payload,
+    load_catalog_settings_from_env,
+    merge_catalog_config,
+)
+
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class EnvironmentConfig:
@@ -78,6 +87,18 @@ class ConfigManager:
         except Exception:
             # Final fallback - return minimal config
             config = {"docs_urls": {}, "cache": {"enabled": True}}
+
+        try:
+            catalog_settings = load_catalog_settings_from_env(cwd=os.getcwd())
+            catalog_payload, catalog_result = load_catalog_payload(catalog_settings)
+            if catalog_payload:
+                config = merge_catalog_config(config, catalog_payload)
+                logger.debug(
+                    "Loaded docs catalog override: %s",
+                    catalog_result.get("status", "unknown"),
+                )
+        except Exception as e:
+            logger.warning("Docs catalog override failed: %s", e)
 
         return config
 

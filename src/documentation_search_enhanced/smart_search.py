@@ -34,6 +34,8 @@ class SmartSearch:
             None
         )
         self._results_limit = 5
+        self._library_terms: List[str] = []
+        self._library_regex: Optional[re.Pattern[str]] = None
 
     def configure(
         self,
@@ -46,6 +48,19 @@ class SmartSearch:
         self._docs_url_map = docs_url_map
         self._search_fn = search_fn
         self._results_limit = results_limit
+        self._library_terms = sorted(docs_url_map.keys())
+        self._library_regex = self._build_library_regex(self._library_terms)
+
+    def _build_library_regex(
+        self, terms: List[str]
+    ) -> Optional[re.Pattern[str]]:
+        if not terms:
+            return None
+        escaped = [re.escape(term) for term in terms if term]
+        if not escaped:
+            return None
+        pattern = r"\b(" + "|".join(escaped) + r")\b"
+        return re.compile(pattern, re.IGNORECASE)
 
     async def semantic_search(
         self, query: str, library: str, context: Optional[str] = None
@@ -78,44 +93,6 @@ class SmartSearch:
         """Expand query with semantically related terms"""
         expanded_terms = [query]
 
-        # Library-specific semantic expansions
-        semantic_expansions = {
-            "fastapi": {
-                "auth": ["authentication", "security", "JWT", "OAuth", "middleware"],
-                "database": ["SQLAlchemy", "ORM", "models", "async database"],
-                "api": ["endpoints", "routes", "REST", "OpenAPI", "swagger"],
-                "middleware": ["CORS", "authentication", "logging", "request"],
-                "async": ["asyncio", "concurrent", "await", "asynchronous"],
-            },
-            "react": {
-                "state": ["useState", "setState", "hooks", "context"],
-                "component": ["JSX", "props", "lifecycle", "functional"],
-                "routing": ["React Router", "navigation", "link"],
-                "forms": ["controlled", "uncontrolled", "validation"],
-                "hooks": ["useEffect", "useState", "useContext", "custom hooks"],
-            },
-            "django": {
-                "auth": ["authentication", "permissions", "user model", "login"],
-                "database": ["models", "ORM", "migrations", "queries"],
-                "views": ["class-based", "function-based", "generic views"],
-                "forms": ["ModelForm", "validation", "widgets"],
-                "admin": ["admin interface", "ModelAdmin", "customization"],
-            },
-            "langchain": {
-                "chains": ["LLMChain", "sequential", "pipeline", "workflow"],
-                "agents": ["tools", "ReAct", "planning", "execution"],
-                "memory": ["conversation", "buffer", "summary", "retrieval"],
-                "embeddings": ["vector", "similarity", "semantic search"],
-                "retrieval": ["RAG", "documents", "vector store", "similarity"],
-            },
-        }
-
-        # Add semantic expansions for the library
-        if library in semantic_expansions:
-            for key_term, expansions in semantic_expansions[library].items():
-                if key_term.lower() in query.lower():
-                    expanded_terms.extend(expansions)
-
         # Add context-based expansions
         if context:
             context_terms = self.extract_context_terms(context, library)
@@ -142,18 +119,9 @@ class SmartSearch:
         """Extract relevant terms from user context"""
         context_terms = []
 
-        # Extract mentioned technologies
-        tech_patterns = [
-            r"\b(react|vue|angular|svelte)\b",
-            r"\b(fastapi|django|flask|express)\b",
-            r"\b(python|javascript|typescript|node)\b",
-            r"\b(docker|kubernetes|aws|azure)\b",
-            r"\b(postgresql|mysql|mongodb|redis)\b",
-        ]
-
-        for pattern in tech_patterns:
-            matches = re.finditer(pattern, context, re.IGNORECASE)
-            context_terms.extend([match.group(1).lower() for match in matches])
+        if self._library_regex:
+            matches = re.finditer(self._library_regex, context)
+            context_terms.extend([match.group(0).lower() for match in matches])
 
         # Extract use case indicators
         use_case_patterns = {
@@ -237,18 +205,6 @@ class SmartSearch:
             score += 20
         elif query_lower in snippet:
             score += 15
-
-        # Library-specific bonuses
-        library_keywords = {
-            "fastapi": ["endpoint", "pydantic", "async", "uvicorn", "api"],
-            "react": ["component", "jsx", "hooks", "state", "props"],
-            "django": ["model", "view", "template", "admin", "orm"],
-        }
-
-        if library in library_keywords:
-            for keyword in library_keywords[library]:
-                if keyword in snippet:
-                    score += 5
 
         # Content type bonuses
         if "example" in title or "tutorial" in title:
