@@ -123,9 +123,9 @@ The `[vector]` extra adds semantic search using sentence-transformers (all-MiniL
 
 Only works on Python 3.12 (PyTorch limitation). Python 3.13 users get keyword-based search.
 
-To disable vector search even when installed:
+Vector rerank is opt-in. Enable it explicitly:
 ```python
-semantic_search(query="FastAPI auth", libraries=["fastapi"], use_vector_rerank=False)
+semantic_search(query="FastAPI auth", libraries=["fastapi"], use_vector_rerank=True)
 ```
 
 ## Available Tools

@@ -962,7 +962,7 @@ async def semantic_search(
     context: Optional[str] = None,
     version: str = "latest",
     auto_detect_version: bool = False,
-    use_vector_rerank: bool = True,
+    use_vector_rerank: bool = False,
 ):
     """
     Enhanced semantic search across one or more libraries with AI-powered relevance ranking.
@@ -978,7 +978,7 @@ async def semantic_search(
         context: Optional context about your project or use case.
         version: Library version to search (e.g., "4.2", "stable", "latest"). Default: "latest"
         auto_detect_version: Automatically detect installed package version. Default: False
-        use_vector_rerank: Enable vector-based semantic reranking for better relevance. Default: True
+        use_vector_rerank: Enable vector-based semantic reranking for better relevance. Default: False
 
     Returns:
         Enhanced search results with AI-powered relevance scores and metadata, ranked across all libraries.

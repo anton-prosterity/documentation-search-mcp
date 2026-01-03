@@ -45,8 +45,13 @@ class SearchReranker:
             self.keyword_weight /= total
             self.metadata_weight /= total
 
-        self.vector_engine = get_vector_engine()
+        self.vector_engine = None
         self._official_domains: set[str] = set()
+
+    def _get_vector_engine(self):
+        if self.vector_engine is None:
+            self.vector_engine = get_vector_engine()
+        return self.vector_engine
 
     def set_official_domains(self, urls: Iterable[str]) -> None:
         domains: set[str] = set()
@@ -131,8 +136,9 @@ class SearchReranker:
         """
         try:
             # Generate embeddings
-            query_embedding = self.vector_engine.embed_documents([query])
-            doc_embedding = self.vector_engine.embed_documents([document])
+            engine = self._get_vector_engine()
+            query_embedding = engine.embed_documents([query])
+            doc_embedding = engine.embed_documents([document])
 
             # Calculate cosine similarity
             import numpy as np
