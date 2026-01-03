@@ -5,7 +5,6 @@ import re
 from typing import Iterable, List, Optional
 from urllib.parse import urlparse
 
-from .vector_search import get_vector_engine
 from .smart_search import SearchResult
 
 logger = logging.getLogger(__name__)
@@ -50,6 +49,8 @@ class SearchReranker:
 
     def _get_vector_engine(self):
         if self.vector_engine is None:
+            from .vector_search import get_vector_engine
+
             self.vector_engine = get_vector_engine()
         return self.vector_engine
 
